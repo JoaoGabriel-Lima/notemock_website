@@ -114,3 +114,8 @@
     flex-direction: column;
   }
 }
+html,
+body,
+main {
+  overflow-y: scroll;
+}
