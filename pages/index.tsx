@@ -68,7 +68,7 @@ const Home: NextPage = () => {
                         className="bg-gray-500 rounded-full w-10 h-10 mr-7 bg-cover"
                         style={{
                           backgroundImage: `url(${
-                            session ? session.user.image : ""
+                            session ? session.user!.image : ""
                           })`,
                         }}
                       ></div>
@@ -104,7 +104,7 @@ const Home: NextPage = () => {
                                   Logged as:
                                   <br />
                                   <span className="font-bold text-left left-0">
-                                    {session.user.email}
+                                    {session.user!.email}
                                   </span>
                                 </h4>
                               ) : (
@@ -382,7 +382,7 @@ const Home: NextPage = () => {
                       <h2 className="text-white text-4xl mt-14 font-bold">
                         Good morning,
                         <br />
-                        {session ? session.user.name : "Not Logged In"}
+                        {session ? session.user!.name : "Not Logged In"}
                       </h2>
                       <div className="page-filter-options w-full flex items-center justify-start mt-14">
                         <button
