@@ -6,7 +6,7 @@ export const HomeCointainer = styled.div`
   * {
     box-sizing: content-box;
     transition: all 0.2s ease;
-
+    -webkit-tap-highlight-color: transparent;
     outline: none;
   }
   *:focus {
@@ -46,16 +46,6 @@ export const HomeCointainer = styled.div`
     justify-content: flex-start;
     align-items: flex-start;
   }
-  nav {
-    position: fixed;
-    width: 100%;
-    min-height: 80px;
-    height: 90px;
-    background-color: #21212b;
-    box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
-    z-index: 14;
-  }
-
   .bg-color {
     background-color: #21212b;
   }
@@ -85,14 +75,6 @@ export const HomeCointainer = styled.div`
   .menuicon {
     font-size: 37px;
     margin-left: 35px;
-  }
-
-  #nav-content {
-    z-index: 14;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
   }
   details summary {
     cursor: pointer;
@@ -364,134 +346,16 @@ export const HomeCointainer = styled.div`
     display: none;
   }
 
-  .textmenucolor {
-    color: #e75876;
-  }
-  .bgmenucolor {
-    background-color: #e75876;
-  }
-
   .todonotation + .todonotation {
     margin-top: 25px;
   }
-  #add_todo_btn {
-    border-width: 0px;
-    min-width: 2.25rem;
-    min-height: 2.25rem;
-    margin-right: calc(1.75rem + 0px);
-  }
 
-  .search-box {
-    width: fit-content;
-    height: fit-content;
-    position: relative;
-    min-width: 34px;
-  }
-  .input-search {
-    height: 24px;
-    width: auto;
-    max-width: 0px;
-    border-style: none;
-    /* padding: 10px; */
-    padding-top: 10px;
-    padding-bottom: 10px;
-    /* padding-right: 35px; */
-    /* padding-bottom: 7px; */
-    font-size: 14px;
-    font-weight: 400;
-    /* letter-spacing: 2px; */
-    outline: none;
-    border-radius: 25px;
-    transition: all 0.5s ease-in-out;
-    /* background-color: #22a6b3; */
-    /* padding-right: 10px; */
-    padding-left: 15px;
-    font-family: "Inter";
-    color: rgba(255, 255, 255, 0.9);
-  }
-  .input-search::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 14px;
-    font-family: "Inter";
-    /* letter-spacing: 2px; */
-    font-weight: 400;
-  }
-  .btn-search {
-    /* width: 50px;
-    height: 50px; */
-    border-style: none;
-    font-size: 15px;
-    font-weight: bold;
-    padding-right: 10px;
-
-    outline: none;
-    cursor: pointer;
-    /* border-radius: 50%; */
-    position: absolute;
-    right: 0px;
-    color: #ffffff;
-    background-color: transparent;
-    pointer-events: painted;
-  }
-  .bx-bell {
-    margin-left: calc(1.75rem - 10px);
-  }
-  .btn-search:focus {
-    background-color: #181820;
-  }
-  .btn-search ~ .input-search:focus {
-    background-color: #181820;
-  }
-  .btn-search:focus ~ .input-search,
-  .input-search:focus {
-    /* width: auto; */
-    max-width: 200px;
-    border-radius: 10px;
-    background-color: #181820;
-    /* border-bottom: 0.5px solid rgba(255, 255, 255, 0.2); */
-    transition: all 0.3s ease-in;
-  }
-  /* #todo + #todo {
-    margin-top: 25px;
-  } */
-  /* .input-search:focus {
-    width: 200px;
-    font-family: "Inter";
-    border-radius: 0px;
-    background-color: #181820;
-    border-bottom: 0.5px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease-in;
-
-  } */
-  /* input {
-    display: none;
-  } */
-  @media only screen and (max-width: 875px) {
-    .btn-search:focus ~ .input-search,
-    .input-search:focus {
-      max-width: 150px;
-    }
-  }
   @media only screen and (max-width: 750px) {
     .body {
       /* overflow-y: auto; */
     }
     .android {
       display: block;
-    }
-    #add_todo_btn {
-      position: fixed;
-      border-width: 2px;
-      z-index: 9;
-      right: 0;
-      bottom: 30px;
-      width: 3.5rem;
-      height: 3.5rem;
-      border-radius: 1rem;
-      box-shadow: 0px 4px 20px rgba(225, 65, 118, 0.3);
-    }
-    #add_todo_btn i {
-      font-size: 2rem;
     }
     #closesidebar {
       transition: all 0.5s ease;
@@ -502,7 +366,7 @@ export const HomeCointainer = styled.div`
       right: 0;
       bottom: 0;
       display: none;
-      z-index: 10;
+      z-index: 4;
       background-color: rgba(0, 0, 0, 0.3);
       opacity: 0;
     }
@@ -513,12 +377,14 @@ export const HomeCointainer = styled.div`
       opacity: 1;
     }
     #sidebar {
-      z-index: 11;
+      z-index: 4 !important;
       width: 0px;
     }
+    #sidebar.active {
+      z-index: 11 !important;
+    }
     .icon-holder {
-      min-width: 0px;
-      min-height: 0px;
+      z-index: 1;
       /* transition: all 0s ease; */
     }
     .icon-holder .androidsidebaricon {
@@ -536,16 +402,16 @@ export const HomeCointainer = styled.div`
       transition: all 0.2s ease;
     }
     .links_name {
-      width: 0px;
-      margin-left: 0;
-      font-size: 0px;
+      z-index: 4;
     }
     #sidebar.active .links_name {
+      z-index: 11;
       width: auto;
       margin-left: 16px;
       font-size: 16px;
     }
     #sidebar.active .icon-holder {
+      z-index: 11;
       min-width: 40.75px;
       min-height: 38px;
       /* transition: all 0 ease; */
@@ -556,28 +422,8 @@ export const HomeCointainer = styled.div`
     #notes_section {
       width: 100%;
     }
-
-    #dashboard-button,
-    #collections-button {
-      display: none;
-    }
-    .menuicon {
-      margin-left: 20px;
-    }
     .tooltip {
       display: none;
-    }
-    #btn {
-      margin-right: 20px;
-    }
-  }
-  @media only screen and (max-width: 370px) {
-    .bx-bell,
-    .bellmenu {
-      display: none;
-    }
-    .search-box {
-      margin-right: 1.1rem;
     }
   }
   @media only screen and (max-width: 313px) {
@@ -585,9 +431,6 @@ export const HomeCointainer = styled.div`
       margin: 0;
       padding-left: 10px;
       padding-right: 10px;
-    }
-    .search-box {
-      display: none;
     }
   }
 `;
