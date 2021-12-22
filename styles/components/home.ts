@@ -6,10 +6,8 @@ export const HomeCointainer = styled.div`
   * {
     box-sizing: content-box;
     transition: all 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-overflow-scrolling: touch !important;
+
     outline: none;
-    scroll-behavior: smooth !important;
   }
   *:focus {
     background-color: 0;
@@ -190,7 +188,8 @@ export const HomeCointainer = styled.div`
     width: 122px;
     font-family: "Inter";
     font-weight: 550;
-    background: rgba(255, 255, 255, 1);
+    background: #21212b;
+    color: white;
     line-height: 35px;
     text-align: center;
     box-shadow: 0 3px 20px rgba(0, 0, 0, 0.1);

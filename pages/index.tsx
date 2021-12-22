@@ -7,8 +7,12 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import TodoItem from "../components/Todo_Item";
 import Todo from "../components/Todo";
+import { useSession, signIn, signOut } from "next-auth/react";
+
+function none() {}
 
 const Home: NextPage = () => {
+  const { data: session } = useSession();
   return (
     <div>
       <Head>
@@ -60,10 +64,14 @@ const Home: NextPage = () => {
                 <Menu as="div" className="relative inline-block">
                   <div>
                     <Menu.Button className="inline-flex mt-2 justify-center w-full text-sm font-medium focus:outline-none focus-visible:ring-opacity-75">
-                      <img
-                        className="bg-gray-500 rounded-full w-10 h-10 mr-7"
-                        src="https://avatars.githubusercontent.com/JoaoGabriel-Lima"
-                      ></img>
+                      <div
+                        className="bg-gray-500 rounded-full w-10 h-10 mr-7 bg-cover"
+                        style={{
+                          backgroundImage: `url(${
+                            session ? session.user.image : ""
+                          })`,
+                        }}
+                      ></div>
                     </Menu.Button>
                   </div>
                   <Transition
@@ -75,91 +83,110 @@ const Home: NextPage = () => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-6  w-56 mt-2 origin-top-right todo-bg-header divide-y divide-blue-300/[.10] ring-1 rounded-xl shadow-lg ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute right-6  w-56 min-w-max mt-2 origin-top-right todo-bg-header divide-y divide-blue-300/[.10] ring-1 rounded-xl shadow-lg ring-black ring-opacity-5 focus:outline-none">
                       <div className="px-1 py-1 ">
                         <Menu.Item>
                           {({ active }) => (
                             <button
+                              onClick={session ? () => none() : () => signIn()}
                               className={`${
                                 active
-                                  ? "cursor-default text-white"
+                                  ? `${session ? "" : "bgmenucolor"} ${
+                                      session
+                                        ? "cursor-default"
+                                        : "cursor-pointer"
+                                    } text-white`
                                   : "text-white"
                               } group flex rounded-md w-full flex-col py-3 text-sm`}
                             >
-                              {/* {active ? (
-                                <EditActiveIcon
-                                  className="w-5 h-5 mr-2 ml-2"
-                                  aria-hidden="true"
-                                />
+                              {session ? (
+                                <h4 className="ml-3 flex flex-col items-start justify-center mr-3">
+                                  Logged as:
+                                  <br />
+                                  <span className="font-bold text-left left-0">
+                                    {session.user.email}
+                                  </span>
+                                </h4>
                               ) : (
-                                <EditInactiveIcon
-                                  className="w-5 h-5 mr-2 ml-2"
-                                  aria-hidden="true"
-                                />
-                              )} */}
-                              <h4 className="ml-3 flex flex-col items-start justify-center">
-                                Logged as:
-                                <br />
-                                <span className="font-bold text-left left-0">
-                                  rosa_eulalia@hotmail.com
-                                </span>
-                              </h4>
+                                <h4 className="ml-3 flex flex-col items-start justify-center">
+                                  Você não está logado.
+                                  <br />
+                                  <span className="font-bold text-left left-0">
+                                    Faça login com Google
+                                  </span>
+                                </h4>
+                              )}
                             </button>
                           )}
                         </Menu.Item>
                       </div>
-                      <div className="px-1 py-1">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button
-                              className={`${
-                                active ? "bgmenucolor text-white" : "text-white"
-                              } group flex rounded-md items-center w-full py-2 text-sm`}
-                            >
-                              {active ? (
-                                <i className="bx bx-cog text-pink-200 ml-3 text-xl  mr-2"></i>
-                              ) : (
-                                <i className="bx bx-cog textmenucolor ml-3 text-xl  mr-2"></i>
+                      {session ? (
+                        <div>
+                          <div className="px-1 py-1">
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  className={`${
+                                    active
+                                      ? "bgmenucolor text-white"
+                                      : "text-white"
+                                  } group flex rounded-md items-center w-full py-2 text-sm`}
+                                >
+                                  {active ? (
+                                    <i className="bx bx-cog text-pink-200 ml-3 text-xl  mr-2"></i>
+                                  ) : (
+                                    <i className="bx bx-cog textmenucolor ml-3 text-xl  mr-2"></i>
+                                  )}
+                                  Account settings
+                                </button>
                               )}
-                              Account settings
-                            </button>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button
-                              className={`${
-                                active ? "bgmenucolor text-white" : "text-white"
-                              } group flex rounded-md items-center w-full py-2 text-sm`}
-                            >
-                              {active ? (
-                                <i className="bx bx-support text-pink-200 ml-3 text-xl  mr-2"></i>
-                              ) : (
-                                <i className="bx bx-support textmenucolor ml-3 text-xl  mr-2"></i>
+                            </Menu.Item>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  className={`${
+                                    active
+                                      ? "bgmenucolor text-white"
+                                      : "text-white"
+                                  } group flex rounded-md items-center w-full py-2 text-sm`}
+                                >
+                                  {active ? (
+                                    <i className="bx bx-support text-pink-200 ml-3 text-xl  mr-2"></i>
+                                  ) : (
+                                    <i className="bx bx-support textmenucolor ml-3 text-xl  mr-2"></i>
+                                  )}
+                                  Support
+                                </button>
                               )}
-                              Support
-                            </button>
-                          )}
-                        </Menu.Item>
-                      </div>
-                      <div className="px-1 py-1">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button
-                              className={`${
-                                active ? "bgmenucolor text-white" : "text-white"
-                              } group flex rounded-md items-center w-full py-3 text-sm`}
-                            >
-                              {active ? (
-                                <i className="bx bx-exit text-pink-200 ml-3 text-xl mr-2"></i>
-                              ) : (
-                                <i className="bx bx-exit textmenucolor ml-3 text-xl  mr-2"></i>
+                            </Menu.Item>
+                          </div>
+                          <div className="px-1 py-1 border-t border-slate-600/[.4] ">
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  onClick={
+                                    session ? () => signOut() : () => none()
+                                  }
+                                  className={`${
+                                    active
+                                      ? "bgmenucolor text-white"
+                                      : "text-white"
+                                  } group flex rounded-md items-center w-full py-3 text-sm`}
+                                >
+                                  {active ? (
+                                    <i className="bx bx-exit text-pink-200 ml-3 text-xl mr-2"></i>
+                                  ) : (
+                                    <i className="bx bx-exit textmenucolor ml-3 text-xl  mr-2"></i>
+                                  )}
+                                  Sign Out
+                                </button>
                               )}
-                              Sign Out
-                            </button>
-                          )}
-                        </Menu.Item>
-                      </div>
+                            </Menu.Item>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </Menu.Items>
                   </Transition>
                 </Menu>
@@ -308,146 +335,152 @@ const Home: NextPage = () => {
                 id="dashboard-page-content"
                 className="w-full max-w-3xl flex items-start justify-start mt-10 overflow-y-auto"
               >
-                <div className="mr-7 ml-7 w-full dash-margins">
-                  <div className="page_overview flex w-full justify-between items-center">
-                    <h4 className="text-white font-medium text-xl">
-                      Dashboard
-                    </h4>
-                    <Menu as="div" className="relative inline-block">
-                      <div>
-                        <Menu.Button className="inline-flex justify-center w-full text-sm font-medium focus:outline-none focus-visible:ring-opacity-75">
-                          <i className="bx bx-dots-horizontal-rounded cursor-pointer text-gray-400 text-2xl"></i>
-                        </Menu.Button>
-                      </div>
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-100"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
-                      >
-                        <Menu.Items className="absolute right-0  w-56 origin-top-right todo-bg-header divide-y divide-blue-300/[.10] ring-1 rounded-xl shadow-lg ring-black ring-opacity-5 focus:outline-none">
-                          <div className="px-1 py-1">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <button
-                                  className={`${
-                                    active
-                                      ? "bgmenucolor text-white"
-                                      : "text-white"
-                                  } group flex rounded-xl items-center w-full py-3 text-sm `}
-                                >
-                                  <span className="ml-3">Change View Mode</span>
-                                </button>
-                              )}
-                            </Menu.Item>
-                          </div>
-                        </Menu.Items>
-                      </Transition>
-                    </Menu>
-                  </div>
-                  <div className="page_treatment flex w-full flex-col justify-start items-start">
-                    <h2 className="text-white text-4xl mt-14 font-bold">
-                      Good morning,
-                      <br />
-                      Rosa Eulalia
-                    </h2>
-                    <div className="page-filter-options w-full flex items-center justify-start mt-14">
-                      <button
-                        id="daily_overview"
-                        className="mr-4 pr-7 pl-7 h-12 bg-[#414052] rounded-2xl font-medium text-white text-base"
-                      >
-                        Daily Overview
-                      </button>
-                      <button
-                        id="statistics"
-                        className=" pr-7 pl-7 h-11 border-[#414052] border-2 rounded-2xl font-medium text-white text-base"
-                      >
-                        Statistic
-                      </button>
+                {session ? (
+                  <div className="mr-7 ml-7 w-full dash-margins">
+                    <div className="page_overview flex w-full justify-between items-center">
+                      <h4 className="text-white font-medium text-xl">
+                        Dashboard
+                      </h4>
+                      <Menu as="div" className="relative inline-block">
+                        <div>
+                          <Menu.Button className="inline-flex justify-center w-full text-sm font-medium focus:outline-none focus-visible:ring-opacity-75">
+                            <i className="bx bx-dots-horizontal-rounded cursor-pointer text-gray-400 text-2xl"></i>
+                          </Menu.Button>
+                        </div>
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute right-0  w-56 origin-top-right todo-bg-header divide-y divide-blue-300/[.10] ring-1 rounded-xl shadow-lg ring-black ring-opacity-5 focus:outline-none">
+                            <div className="px-1 py-1">
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <button
+                                    className={`${
+                                      active
+                                        ? "bgmenucolor text-white"
+                                        : "text-white"
+                                    } group flex rounded-xl items-center w-full py-3 text-sm `}
+                                  >
+                                    <span className="ml-3">
+                                      Change View Mode
+                                    </span>
+                                  </button>
+                                )}
+                              </Menu.Item>
+                            </div>
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
                     </div>
+                    <div className="page_treatment flex w-full flex-col justify-start items-start">
+                      <h2 className="text-white text-4xl mt-14 font-bold">
+                        Good morning,
+                        <br />
+                        {session ? session.user.name : "Not Logged In"}
+                      </h2>
+                      <div className="page-filter-options w-full flex items-center justify-start mt-14">
+                        <button
+                          id="daily_overview"
+                          className="mr-4 pr-7 pl-7 h-12 bg-[#414052] rounded-2xl font-medium text-white text-base"
+                        >
+                          Daily Overview
+                        </button>
+                        <button
+                          id="statistics"
+                          className=" pr-7 pl-7 h-11 border-[#414052] border-2 rounded-2xl font-medium text-white text-base"
+                        >
+                          Statistic
+                        </button>
+                      </div>
+                    </div>
+
+                    <section
+                      id="todos"
+                      className="flex w-full flex-col items-center mt-10 mb-10"
+                    >
+                      <Todo
+                        groupcolor="#997de7"
+                        groupname="Travels"
+                        iconname="paper-plane"
+                      >
+                        <TodoItem
+                          groupcolor="#997de7"
+                          itemcontent="Ir para São Paulo"
+                          itemtime="2022-04-02"
+                          checked={false}
+                        />
+
+                        <TodoItem
+                          groupcolor="#997de7"
+                          itemcontent="Cabo Frio com o Nego e com o Bielll 🥳🪅🎉"
+                          itemtime="2022-02-21"
+                          checked={false}
+                        />
+                        <TodoItem
+                          groupcolor="#997de7"
+                          itemcontent="Assistir Homem Aranha com Julia, já tá na hora"
+                          itemtime="2021-12-28"
+                          checked={false}
+                        />
+                      </Todo>
+
+                      <Todo
+                        groupcolor="#ee8b61"
+                        groupname="Code"
+                        iconname="code-alt"
+                      >
+                        <TodoItem
+                          groupcolor="#ee8b61"
+                          itemcontent="Como fazer maconha com maizena e javascript 🍂"
+                          itemtime="2021-12-21"
+                        />
+
+                        <TodoItem
+                          groupcolor="#ee8b61"
+                          itemcontent="Procurar esse tal de java pra pedir umas dicas"
+                          itemtime="2021-10-21"
+                          checked={true}
+                        />
+                        <TodoItem
+                          groupcolor="#ee8b61"
+                          itemcontent="Não tenho dinheiro para comprar açaí 😢"
+                          itemtime="2021-12-22"
+                        />
+                      </Todo>
+
+                      <Todo
+                        groupcolor="#fc76a1"
+                        groupname="Games"
+                        iconname="game"
+                      >
+                        <TodoItem
+                          groupcolor="#fc76a1"
+                          itemcontent="Dormir até desmaiar"
+                          itemtime="2022-01-22"
+                        />
+
+                        <TodoItem
+                          groupcolor="#fc76a1"
+                          itemcontent="Matar o toriel de manhã se não programar nada 😳"
+                          itemtime="2021-11-21"
+                        />
+                        <TodoItem
+                          groupcolor="#fc76a1"
+                          itemcontent="Dormir até desmaiar"
+                          itemtime="2021-12-28"
+                        />
+                      </Todo>
+                    </section>
                   </div>
-
-                  <section
-                    id="todos"
-                    className="flex w-full flex-col items-center mt-10 mb-10"
-                  >
-                    <Todo
-                      groupcolor="#997de7"
-                      groupname="Travels"
-                      iconname="paper-plane"
-                    >
-                      <TodoItem
-                        groupcolor="#997de7"
-                        itemcontent="Ir para São Paulo"
-                        itemtime="2022-04-02"
-                        checked={false}
-                      />
-
-                      <TodoItem
-                        groupcolor="#997de7"
-                        itemcontent="Cabo Frio com o Nego e com o Bielll 🥳🪅🎉"
-                        itemtime="2022-02-21"
-                        checked={false}
-                      />
-                      <TodoItem
-                        groupcolor="#997de7"
-                        itemcontent="Assistir Homem Aranha com Julia, já tá na hora"
-                        itemtime="2021-12-28"
-                        checked={false}
-                      />
-                    </Todo>
-
-                    <Todo
-                      groupcolor="#ee8b61"
-                      groupname="Code"
-                      iconname="code-alt"
-                    >
-                      <TodoItem
-                        groupcolor="#ee8b61"
-                        itemcontent="Como fazer maconha com maizena e javascript 🍂"
-                        itemtime="2021-12-21"
-                      />
-
-                      <TodoItem
-                        groupcolor="#ee8b61"
-                        itemcontent="Procurar esse tal de java pra pedir umas dicas"
-                        itemtime="2021-10-21"
-                        checked={true}
-                      />
-                      <TodoItem
-                        groupcolor="#ee8b61"
-                        itemcontent="Não tenho dinheiro para comprar açaí 😢"
-                        itemtime="2021-12-22"
-                      />
-                    </Todo>
-
-                    <Todo
-                      groupcolor="#fc76a1"
-                      groupname="Games"
-                      iconname="game"
-                    >
-                      <TodoItem
-                        groupcolor="#fc76a1"
-                        itemcontent="Dormir até desmaiar"
-                        itemtime="2022-01-22"
-                      />
-
-                      <TodoItem
-                        groupcolor="#fc76a1"
-                        itemcontent="Matar o toriel de manhã se não programar nada 😳"
-                        itemtime="2021-11-21"
-                      />
-                      <TodoItem
-                        groupcolor="#fc76a1"
-                        itemcontent="Dormir até desmaiar"
-                        itemtime="2021-12-28"
-                      />
-                    </Todo>
-                  </section>
-                </div>
+                ) : (
+                  ""
+                )}
               </div>
             </section>
           </section>
