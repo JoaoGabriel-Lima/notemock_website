@@ -11,7 +11,7 @@ function Sidebar() {
     if (typeof window !== "undefined") {
       const sidebar: any = document.getElementById("sidebar");
       if (screen.width > 750) {
-        if (localStorage.getItem("opened") == null) {
+        if (localStorage.getItem("opened") == "null") {
         } else {
           if (localStorage.getItem("opened") == "true") {
             sidebar.classList.add("active");

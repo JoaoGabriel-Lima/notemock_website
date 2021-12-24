@@ -1,6 +1,5 @@
 /* eslint-disable require-jsdoc */
 import React, { useEffect, useLayoutEffect } from "react";
-import sidebarScript from "../pages/scripts/sidebar";
 import { SidebardContainer } from "../styles/components/sidebar";
 import Navbar from "./navbar";
 import Sidebar from "./sidebar";
@@ -11,7 +10,56 @@ function Layout(props: any) {
   const useIsomorphicLayoutEffect = canUseDOM ? useLayoutEffect : useEffect;
 
   useIsomorphicLayoutEffect(() => {
-    sidebarScript();
+    if (typeof window !== "undefined") {
+      const btn: any = document.getElementById("btn");
+      const sidebar: any = document.getElementById("sidebar");
+      const content: any = document.getElementById("notes_section");
+      const close: any = document.getElementById("closesidebar");
+      const main: any = document.querySelector("main");
+
+      if (screen.width > 750) {
+        if (localStorage.getItem("opened") == "null") {
+        } else {
+          if (localStorage.getItem("opened") == "true") {
+            content.classList.add("active");
+            close.classList.add("active");
+            main.classList.add("active");
+          } else {
+            content.classList.remove("active");
+            close.classList.remove("active");
+            main.classList.remove("active");
+          }
+        }
+      }
+
+      btn.onclick = function () {
+        sidebar.classList.toggle("active");
+        content.classList.toggle("active");
+        close.classList.toggle("active");
+        main.classList.toggle("active");
+        main.classList.toggle("body");
+
+        if (sidebar.classList.contains("active")) {
+          localStorage.setItem("opened", "true");
+        } else {
+          localStorage.setItem("opened", "null");
+        }
+      };
+
+      close.onclick = function () {
+        sidebar.classList.toggle("active");
+        content.classList.toggle("active");
+        close.classList.toggle("active");
+        main.classList.toggle("active");
+        main.classList.toggle("body");
+
+        if (sidebar.classList.contains("active")) {
+          localStorage.setItem("opened", "true");
+        } else {
+          localStorage.setItem("opened", "null");
+        }
+      };
+    }
   }, []);
 
   return (
