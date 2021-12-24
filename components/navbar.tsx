@@ -3,7 +3,9 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Navbarlayout } from "../styles/components/navbar";
-
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 /** This is a description of the foo function.
  * @param {string} - This is a description of the foo parameter.
  * @return {string} This is a description of what the function returns.
@@ -14,28 +16,79 @@ function Navbar() {
    */
   function none() {}
   const { data: session } = useSession();
+  const router = useRouter();
+  const url = router.pathname;
+  let isDashboard;
+  if (url == "/") {
+    isDashboard = true;
+  } else {
+    isDashboard = false;
+  }
+  // console.log(router.pathname);
   return (
     <Navbarlayout>
       {/* Make a creativa navbar */}
       <div id="nav-content" className="justify-between">
         <div id="nav-right-details" className="flex items-center">
           <i id="btn" className="bx bx-menu text-gray-400 menuicon mr-10"></i>
-
-          <div
-            id="dashboard-button"
-            className="text-white cursor-pointer font-semibold mr-10 flex items-center"
-          >
-            <i className="bx bx-compass mr-3 text-3xl"></i>
-            <h4 className={`text-base`}>Dashboard</h4>
-          </div>
-
-          <div
-            id="collections-button"
-            className="text-gray-500 cursor-pointer font-semibold mr-10 flex items-center"
-          >
-            <i className="bx bx-collection mr-3 text-3xl"></i>
-            <h4 className="text-base">Collections</h4>
-          </div>
+          <AnimatePresence>
+            <Link href="/">
+              <motion.div
+                initial={
+                  isDashboard
+                    ? { color: "rgb(107, 114, 128)" }
+                    : { color: "rgb(255, 255, 255)" }
+                }
+                animate={
+                  isDashboard
+                    ? { color: "rgb(255, 255, 255)" }
+                    : { color: "rgb(107, 114, 128)" }
+                }
+                exit={
+                  isDashboard
+                    ? { color: "rgb(107, 114, 128)" }
+                    : { color: "rgb(255, 255, 255)" }
+                }
+                transition={{ type: "spring", duration: 0.05 }}
+                id="dashboard-button"
+                className={`${
+                  isDashboard ? "text-white" : "text-gray-500"
+                } cursor-pointer font-semibold mr-10 flex items-center`}
+              >
+                <i className="bx bx-compass mr-3 text-3xl"></i>
+                <h4 className={`text-base`}>Dashboard</h4>
+              </motion.div>
+            </Link>
+          </AnimatePresence>
+          <AnimatePresence>
+            <Link href="/collections">
+              <motion.div
+                initial={
+                  isDashboard
+                    ? { color: "rgb(255, 255, 255)" }
+                    : { color: "rgb(107, 114, 128)" }
+                }
+                animate={
+                  isDashboard
+                    ? { color: "rgb(107, 114, 128)" }
+                    : { color: "rgb(255, 255, 255)" }
+                }
+                exit={
+                  isDashboard
+                    ? { color: "rgb(255, 255, 255)" }
+                    : { color: "rgb(107, 114, 128)" }
+                }
+                transition={{ type: "spring", duration: 0.05 }}
+                id="collections-button"
+                className={`${
+                  isDashboard ? "text-gray-500" : "text-white"
+                } cursor-pointer font-semibold mr-10 flex items-center`}
+              >
+                <i className="bx bx-collection mr-3 text-3xl"></i>
+                <h4 className="text-base">Collections</h4>
+              </motion.div>
+            </Link>
+          </AnimatePresence>
         </div>
         <div
           id="nav-right-details"
@@ -223,12 +276,18 @@ function Navbar() {
               placeholder="Search a Task"
             />
           </div>
-          <div
-            id="add_todo_btn"
-            className="cursor-pointer bg-gradient-to-tr from-pink-600 border-2 border-white/[.4] to-orange-300 w-9 h-9 rounded-xl flex justify-center items-center"
-          >
-            <i className="bx bx-plus text-white text-2xl"></i>
-          </div>
+          {session ? (
+            <Link href="/collections">
+              <div
+                id="add_todo_btn"
+                className="cursor-pointer bg-gradient-to-tr from-pink-600 border-2 border-white/[.4] to-orange-300 w-9 h-9 rounded-xl flex justify-center items-center"
+              >
+                <i className="bx bx-plus text-white text-2xl"></i>
+              </div>
+            </Link>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </Navbarlayout>

@@ -5,7 +5,7 @@ import classnames from "classnames";
  * @param {string} props - This is a description of the foo parameter.
  * @return {string} This is a description of what the function returns.
  */
-function Todo(props: any) {
+function ToDo(props: any) {
   const iconholder = classnames(
     "icon-holder mr-4 ml-5",
     `bg-${props.groupcolor}`
@@ -50,4 +50,4 @@ function Todo(props: any) {
     </div>
   );
 }
-export default Todo;
+export default ToDo;

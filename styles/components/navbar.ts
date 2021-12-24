@@ -123,10 +123,10 @@ export const Navbarlayout = styled.nav`
   }
 
   .textmenucolor {
-    color: #e75876;
+    color: #e95f5f;
   }
   .bgmenucolor {
-    background-color: #e75876;
+    background-color: #e95f5f;
   }
   #btn {
     cursor: pointer;

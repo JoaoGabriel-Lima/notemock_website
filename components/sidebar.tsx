@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 /** This is a description of the foo function.
  * @param {string} - This is a description of the foo parameter.
  * @return {string} This is a description of what the function returns.
  */
 function Sidebar() {
+  const canUseDOM = typeof window !== "undefined";
+  const useIsomorphicLayoutEffect = canUseDOM ? useLayoutEffect : useEffect;
+
+  useIsomorphicLayoutEffect(() => {
+    if (typeof window !== "undefined") {
+      const sidebar: any = document.getElementById("sidebar");
+      if (screen.width > 750) {
+        if (localStorage.getItem("opened") == null) {
+        } else {
+          if (localStorage.getItem("opened") == "true") {
+            sidebar.classList.add("active");
+          } else {
+            sidebar.classList.remove("active");
+          }
+        }
+      }
+    }
+  }, []);
   return (
     <section id="sidebar">
       <h4>Collections</h4>

@@ -6,7 +6,7 @@ import scss from "../styles/home.module.scss";
  * @param {string} props - This is a description of the foo parameter.
  * @return {string} This is a description of what the function returns.
  */
-function TodoItem(props: any) {
+function ToDoItem(props: any) {
   let isChecked = props.checked;
   /** This is a description of the foo function.
    * @return {boolean} This is a description of what the function returns.
@@ -134,4 +134,4 @@ function TodoItem(props: any) {
 // TodoItem.defaultProps = {
 //   color: "gray",
 // };
-export default TodoItem;
+export default ToDoItem;

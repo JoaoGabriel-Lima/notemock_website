@@ -18,10 +18,18 @@ export default NextAuth({
     }),
     // Passwordless / email sign in
   ],
+  pages: {
+    signIn: "/signin",
+  },
   jwt: {
+    secret: process.env.JWT_SECRET,
     encryption: true,
   },
-  secret: "INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw",
+  session: {
+    jwt: true,
+  },
+  secret: process.env.JWT_SECRET,
+
   //   callbacks: {
   //     async jwt(token, account) {
   //       if (account?.accessToken) {
