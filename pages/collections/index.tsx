@@ -10,6 +10,8 @@ import { Menu, Transition } from "@headlessui/react";
 import { CollectionsGrid } from "../../styles/components/collections/grid";
 import "react-circular-progressbar/dist/styles.css";
 import Collection from "../../components/Collections/Collection";
+import { Tab } from "@headlessui/react";
+import { motion } from "framer-motion";
 const Collections: NextPage = () => {
   //   const { data: session } = useSession();
   return (
@@ -67,8 +69,8 @@ const Collections: NextPage = () => {
             </Menu>
           </div>
           <div className="page_treatment flex w-full flex-col justify-start items-start">
-            <div className="page-filter-options w-full flex items-center justify-start">
-              <button
+            <div className="page-filter-options w-full flex flex-col items-start justify-center">
+              {/* <button
                 id="statistics"
                 className=" mr-4 pr-7 pl-7 h-11 border-[#414052] border-2 rounded-2xl font-medium cursor-pointer text-white text-base"
               >
@@ -79,46 +81,120 @@ const Collections: NextPage = () => {
                 className=" pr-7 pl-7 h-12 bg-[#414052] rounded-2xl font-medium text-white text-base cursor-pointer"
               >
                 All Collections
-              </button>
+              </button> */}
+              <Tab.Group vertical={true} defaultIndex={1}>
+                <Tab.List>
+                  <Tab
+                    className={({ selected }) =>
+                      (selected
+                        ? "h-12 bg-[#414052]"
+                        : "h-12 outline outline-[#414052] outline-2") +
+                      " box-border mr-4 pr-7 pl-7 rounded-2xl font-medium cursor-pointer text-white text-base"
+                    }
+                  >
+                    Favorites
+                  </Tab>
+                  <Tab
+                    className={({ selected }) =>
+                      (selected
+                        ? "h-12 bg-[#414052]"
+                        : "h-12 outline outline-[#414052] outline-2") +
+                      " box-border pr-7 pl-7 rounded-2xl font-medium text-white text-base cursor-pointer"
+                    }
+                  >
+                    All Collections
+                  </Tab>
+                </Tab.List>
+                <Tab.Panels className="w-full">
+                  <Tab.Panel className="w-full">
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="w-full"
+                    >
+                      <CollectionsGrid className="grid w-full justify-center mt-8 ease-in mb-8">
+                        <Collection
+                          groupnane="Games"
+                          groupicon="dizzy"
+                          groupprogress={13}
+                          groupmax={13}
+                          groupcolor="#e7bb43"
+                        />
+                        <Collection
+                          groupnane="Encomendas"
+                          groupicon="package"
+                          groupprogress={5}
+                          groupmax={5}
+                          groupcolor="#4f8cd1"
+                        />
+                        <Collection
+                          groupnane="Travels"
+                          groupicon="world"
+                          groupprogress={3}
+                          groupmax={6}
+                          groupcolor="#44a15c"
+                        />
+                      </CollectionsGrid>
+                    </motion.div>
+                  </Tab.Panel>
+                  <Tab.Panel className="w-full">
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="w-full"
+                    >
+                      <CollectionsGrid className="grid w-full justify-center mt-8 ease-in mb-8">
+                        <Collection
+                          groupnane="School"
+                          groupicon="book"
+                          groupprogress={4}
+                          groupmax={6}
+                          groupcolor="#e743a3"
+                        />
+                        <Collection
+                          groupnane="Games"
+                          groupicon="dizzy"
+                          groupprogress={13}
+                          groupmax={13}
+                          groupcolor="#e7bb43"
+                        />
+                        <Collection
+                          groupnane="Code"
+                          groupicon="code-alt"
+                          groupprogress={2}
+                          groupmax={9}
+                          groupcolor="#e64f4f"
+                        />
+                        <Collection
+                          groupnane="Encomendas"
+                          groupicon="package"
+                          groupprogress={5}
+                          groupmax={5}
+                          groupcolor="#4f8cd1"
+                        />
+                        <Collection
+                          groupnane="Travels"
+                          groupicon="world"
+                          groupprogress={3}
+                          groupmax={6}
+                          groupcolor="#44a15c"
+                        />
+                        <div className="w-full h-24 flex justify-center items-start cursor-pointer">
+                          <div className="flex items-center w-full h-full justify-center border-[3px] border-[#21212B] hover:border-[#2A2A37] rounded-3xl">
+                            <i className="bx bx-plus text-3xl text-[#8A8A8E]"></i>
+                          </div>
+                        </div>
+                      </CollectionsGrid>
+                    </motion.div>
+                  </Tab.Panel>
+                </Tab.Panels>
+              </Tab.Group>
             </div>
           </div>
-          <CollectionsGrid className="grid w-full justify-center mt-8 ease-in mb-8">
-            <Collection
-              groupnane="School"
-              groupicon="book"
-              groupprogress={4}
-              groupmax={6}
-              groupcolor="#e743a3"
-            />
-            <Collection
-              groupnane="Games"
-              groupicon="dizzy"
-              groupprogress={13}
-              groupmax={13}
-              groupcolor="#e7bb43"
-            />
-            <Collection
-              groupnane="Code"
-              groupicon="code-alt"
-              groupprogress={2}
-              groupmax={9}
-              groupcolor="#e64f4f"
-            />
-            <Collection
-              groupnane="Encomendas"
-              groupicon="package"
-              groupprogress={5}
-              groupmax={5}
-              groupcolor="#4f8cd1"
-            />
-            <Collection
-              groupnane="Travels"
-              groupicon="world"
-              groupprogress={3}
-              groupmax={6}
-              groupcolor="#44a15c"
-            />
-          </CollectionsGrid>
         </Layout>
       </HomeCointainer>
     </>

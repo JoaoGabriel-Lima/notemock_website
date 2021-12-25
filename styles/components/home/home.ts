@@ -7,7 +7,7 @@ export const HomeCointainer = styled.div`
     box-sizing: content-box;
     transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
-    outline: none;
+    /* outline: none; */
   }
   *:focus {
     background-color: 0;
