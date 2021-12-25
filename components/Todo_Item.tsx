@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import React from "react";
+import React, { useState } from "react";
 import { CheckboxContainer } from "../styles/components/home/checkbox";
 import scss from "../styles/home.module.scss";
 /** This is a description of the foo function.
@@ -7,16 +7,10 @@ import scss from "../styles/home.module.scss";
  * @return {string} This is a description of what the function returns.
  */
 function ToDoItem(props: any) {
-  let isChecked = props.checked;
   /** This is a description of the foo function.
-   * @return {boolean} This is a description of what the function returns.
+  //  * @return {boolean} This is a description of what the function returns.
    * @param {string} e - This is a description of the foo parameter.
    */
-  function toggleCheck(e: any) {
-    isChecked = !isChecked;
-    // console.log(isChecked);
-    return e;
-  }
   // if the day has already gone, return a negative number
   // if the day has not yet gone, return a positive number
   // if the date is today, return 0
@@ -95,6 +89,8 @@ function ToDoItem(props: any) {
       return blue;
     }
   }
+
+  const [isOpen, setIsOpen] = useState(props.checked);
   return (
     <CheckboxContainer
       color={colorsoftodo()}
@@ -105,10 +101,9 @@ function ToDoItem(props: any) {
         type="checkbox"
         id={scss.todo_checkbox}
         className={`w-6 checkbox h-6 rounded-xl c_color_pink checked:bg-[${props.groupcolor}] border-[${props.groupcolor}] border-4`}
-        defaultChecked={isChecked}
-        onChange={(e) => {
-          toggleCheck(e);
-        }}
+        defaultChecked={props.checked}
+        onClick={() => setIsOpen(!isOpen)}
+        checked={isOpen}
         style={{
           borderColor: props.groupcolor,
         }}
@@ -117,9 +112,14 @@ function ToDoItem(props: any) {
         className={scss.todo_label}
         htmlFor="todo_checkbox"
         data-content={props.itemcontent}
+        onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex ml-4 flex-col justify-center items-start">
-          <h4 className="text-white font-normal">{props.itemcontent}</h4>
+        <div className="flex ml-4 flex-col justify-center items-start cursor-pointer">
+          <h4
+            className={`${isOpen ? "text-gray-400" : "text-white"} font-normal`}
+          >
+            {props.itemcontent}
+          </h4>
           <div className="flex justify-start items-center">
             <i className={`bx bx-calendar-alt mr-1 ${props.color} text-md`}></i>
             <h5 className={`${props.color} font-light text-sm`}>
