@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 import React, { useEffect, useLayoutEffect } from "react";
-import { SidebardContainer } from "../styles/components/sidebar";
+import { SidebardContainer } from "../styles/components/home/sidebar";
 import Navbar from "./navbar";
 import Sidebar from "./sidebar";
 import { AnimatePresence, motion } from "framer-motion";

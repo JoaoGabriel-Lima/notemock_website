@@ -2,7 +2,7 @@ import React from "react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Navbarlayout } from "../styles/components/navbar";
+import { Navbarlayout } from "../styles/components/home/navbar";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -34,11 +34,11 @@ function Navbar() {
           <AnimatePresence>
             <Link href="/">
               <motion.div
-                initial={
-                  isDashboard
-                    ? { color: "rgb(107, 114, 128)" }
-                    : { color: "rgb(255, 255, 255)" }
-                }
+                // initial={
+                //   isDashboard
+                //     ? { color: "rgb(107, 114, 128)" }
+                //     : { color: "rgb(255, 255, 255)" }
+                // }
                 animate={
                   isDashboard
                     ? { color: "rgb(255, 255, 255)" }
@@ -51,9 +51,7 @@ function Navbar() {
                 }
                 transition={{ type: "spring", duration: 0.05 }}
                 id="dashboard-button"
-                className={`${
-                  isDashboard ? "text-white" : "text-gray-500"
-                } cursor-pointer font-semibold mr-10 flex items-center`}
+                className={`text-gray-500 cursor-pointer font-semibold mr-10 flex items-center`}
               >
                 <i className="bx bx-compass mr-3 text-3xl"></i>
                 <h4 className={`text-base`}>Dashboard</h4>
@@ -63,11 +61,11 @@ function Navbar() {
           <AnimatePresence>
             <Link href="/collections">
               <motion.div
-                initial={
-                  isDashboard
-                    ? { color: "rgb(255, 255, 255)" }
-                    : { color: "rgb(107, 114, 128)" }
-                }
+                // initial={
+                //   isDashboard
+                //     ? { color: "rgb(255, 255, 255)" }
+                //     : { color: "rgb(107, 114, 128)" }
+                // }
                 animate={
                   isDashboard
                     ? { color: "rgb(107, 114, 128)" }
@@ -80,9 +78,8 @@ function Navbar() {
                 }
                 transition={{ type: "spring", duration: 0.05 }}
                 id="collections-button"
-                className={`${
-                  isDashboard ? "text-gray-500" : "text-white"
-                } cursor-pointer font-semibold mr-10 flex items-center`}
+                className={`
+                 text-gray-500 cursor-pointer font-semibold mr-10 flex items-center`}
               >
                 <i className="bx bx-collection mr-3 text-3xl"></i>
                 <h4 className="text-base">Collections</h4>

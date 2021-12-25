@@ -10,7 +10,7 @@ export const SidebardContainer = styled.div`
     height: 100%;
     width: 110px;
     box-shadow: 8px 0px 12px rgba(0, 0, 0, 0.2);
-    transition: all 0.5s ease;
+    transition: all 0.4s ease;
     will-change: contents;
   }
   #sidebar.active {
@@ -28,18 +28,18 @@ export const SidebardContainer = styled.div`
     font-family: "Inter";
     font-weight: 500;
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     will-change: contents;
   }
   #sidebar.active h4 {
     opacity: 1;
     margin-top: 30px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
 
   .item:hover .links_name {
     /* color: #21212b; */
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
   .nav_list {
     display: flex;
@@ -50,12 +50,12 @@ export const SidebardContainer = styled.div`
     text-decoration: none;
     list-style: none;
     opacity: 1;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     will-change: contents;
   }
   #sidebar.active .nav_list {
     margin-top: 20px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
   .item + .item {
     margin-top: 5px;
@@ -76,7 +76,7 @@ export const SidebardContainer = styled.div`
   }
   #sidebar ul li:hover .icon-holder {
     /* background-color: #883c54; */
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
   .links_name {
     margin-left: 16px;
@@ -87,7 +87,7 @@ export const SidebardContainer = styled.div`
     opacity: 0;
     /* display: none; */
     /* text-align: center; */
-    transition: all 0.2s ease;
+    transition: all 0.06s ease;
   }
   .item .clickable {
     margin-left: 33px;
@@ -156,7 +156,7 @@ export const SidebardContainer = styled.div`
   .item:hover {
     background-color: #272732;
     border-radius: 10px;
-    transition: all 0.4s ease;
+    transition: all 0.2s ease;
   }
   @media only screen and (max-width: 750px) {
     #sidebar {

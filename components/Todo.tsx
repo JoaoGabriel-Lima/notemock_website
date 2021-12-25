@@ -1,5 +1,6 @@
 import React from "react";
 import classnames from "classnames";
+import { motion } from "framer-motion";
 
 /** This is a description of the foo function.
  * @param {string} props - This is a description of the foo parameter.
@@ -16,7 +17,7 @@ function ToDo(props: any) {
       id="todo"
       className="todonotation flex flex-col w-full todo-bg rounded-2xl"
     >
-      <details open>
+      <motion.details open>
         <summary>
           <div className="todo-header w-full todo-bg-header h-20 flex justify-between items-center rounded-2xl ">
             <div className="flex items-center ">
@@ -36,7 +37,12 @@ function ToDo(props: any) {
             </div>
           </div>
         </summary>
-        <div className="todo_content mt-6">
+
+        <motion.div
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          className="todo_content mt-6"
+        >
           <div className="todos_area ml-5 mr-5 flex-col items-center">
             {props.children}
           </div>
@@ -45,8 +51,8 @@ function ToDo(props: any) {
             <h2 className="text-white font-semibold ">Go to Collection</h2>
             <i className="bx bx-right-arrow-alt text-white text-2xl ml-2"></i>
           </button>
-        </div>
-      </details>
+        </motion.div>
+      </motion.details>
     </div>
   );
 }

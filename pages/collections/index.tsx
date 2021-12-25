@@ -2,11 +2,14 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
-import { HomeCointainer } from "../../styles/components/home";
+import { HomeCointainer } from "../../styles/components/home/home";
 import { getSession } from "next-auth/react";
 import Layout from "../../components/Layout";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { CollectionsGrid } from "../../styles/components/collections/grid";
+import "react-circular-progressbar/dist/styles.css";
+import Collection from "../../components/Collections/Collection";
 const Collections: NextPage = () => {
   //   const { data: session } = useSession();
   return (
@@ -54,7 +57,7 @@ const Collections: NextPage = () => {
                             active ? "bgmenucolor text-white" : "text-white"
                           } group flex rounded-xl items-center w-full py-3 text-sm `}
                         >
-                          <span className="ml-3">Change View Mode</span>
+                          <span className="ml-3">Add a new Collection</span>
                         </button>
                       )}
                     </Menu.Item>
@@ -63,6 +66,59 @@ const Collections: NextPage = () => {
               </Transition>
             </Menu>
           </div>
+          <div className="page_treatment flex w-full flex-col justify-start items-start">
+            <div className="page-filter-options w-full flex items-center justify-start">
+              <button
+                id="statistics"
+                className=" mr-4 pr-7 pl-7 h-11 border-[#414052] border-2 rounded-2xl font-medium cursor-pointer text-white text-base"
+              >
+                Favorites
+              </button>
+              <button
+                id="daily_overview"
+                className=" pr-7 pl-7 h-12 bg-[#414052] rounded-2xl font-medium text-white text-base cursor-pointer"
+              >
+                All Collections
+              </button>
+            </div>
+          </div>
+          <CollectionsGrid className="grid w-full justify-center mt-8 ease-in mb-8">
+            <Collection
+              groupnane="School"
+              groupicon="book"
+              groupprogress={4}
+              groupmax={6}
+              groupcolor="#e743a3"
+            />
+            <Collection
+              groupnane="Games"
+              groupicon="dizzy"
+              groupprogress={13}
+              groupmax={13}
+              groupcolor="#e7bb43"
+            />
+            <Collection
+              groupnane="Code"
+              groupicon="code-alt"
+              groupprogress={2}
+              groupmax={9}
+              groupcolor="#e64f4f"
+            />
+            <Collection
+              groupnane="Encomendas"
+              groupicon="package"
+              groupprogress={5}
+              groupmax={5}
+              groupcolor="#4f8cd1"
+            />
+            <Collection
+              groupnane="Travels"
+              groupicon="world"
+              groupprogress={3}
+              groupmax={6}
+              groupcolor="#44a15c"
+            />
+          </CollectionsGrid>
         </Layout>
       </HomeCointainer>
     </>

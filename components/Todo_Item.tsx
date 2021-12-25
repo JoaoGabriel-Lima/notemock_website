@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 import React from "react";
-import { CheckboxContainer } from "../styles/components/checkbox";
+import { CheckboxContainer } from "../styles/components/home/checkbox";
 import scss from "../styles/home.module.scss";
 /** This is a description of the foo function.
  * @param {string} props - This is a description of the foo parameter.

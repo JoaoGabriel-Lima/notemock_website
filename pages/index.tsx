@@ -2,7 +2,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
-import { HomeCointainer } from "../styles/components/home";
+import { HomeCointainer } from "../styles/components/home/home";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import ToDoItem from "../components/Todo_Item";
@@ -115,25 +115,25 @@ const Home: NextPage = () => {
                   />
                 </ToDo>
                 <ToDo
-                  groupcolor="#5a75e0"
-                  groupname="Shopping"
-                  iconname="shopping-bag"
+                  groupcolor="#9843e7"
+                  groupname="Coisas de Halloween"
+                  iconname="ghost"
                 >
                   <ToDoItem
-                    groupcolor="#5a75e0"
+                    groupcolor="#9843e7"
                     itemcontent="Ir para Minas Gerais"
                     itemtime="2022-04-02"
                     checked={false}
                   />
 
                   <ToDoItem
-                    groupcolor="#5a75e0"
+                    groupcolor="#9843e7"
                     itemcontent="Cabo Frio com o Nego e com o Bielll 🥳🪅🎉"
                     itemtime="2022-02-21"
                     checked={false}
                   />
                   <ToDoItem
-                    groupcolor="#5a75e0"
+                    groupcolor="#9843e7"
                     itemcontent="Assistir Homem Aranha com Julia, já tá na hora"
                     itemtime="2021-12-28"
                     checked={false}
