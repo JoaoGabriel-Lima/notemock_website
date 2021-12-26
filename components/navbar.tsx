@@ -19,18 +19,24 @@ function Navbar() {
   const router = useRouter();
   const url = router.pathname;
   let isDashboard;
+  let isToDo;
   if (url == "/") {
     isDashboard = true;
-  } else {
+  } else if (url === "/collections") {
     isDashboard = false;
+  } else {
+    isToDo = true;
   }
-  // console.log(router.pathname);
+  // console.log(router.pathname);455
   return (
     <Navbarlayout>
       {/* Make a creativa navbar */}
       <div id="nav-content" className="justify-between">
         <div id="nav-right-details" className="flex items-center">
-          <i id="btn" className="bx bx-menu text-gray-400 menuicon mr-10"></i>
+          <i
+            id="btn"
+            className="bx bx-menu text-gray-400 menuicon mr-4  md:mr-10"
+          ></i>
           <AnimatePresence>
             <Link href="/">
               <motion.div
@@ -42,19 +48,25 @@ function Navbar() {
                 animate={
                   isDashboard
                     ? { color: "rgb(255, 255, 255)" }
+                    : isToDo
+                    ? { color: "rgb(107, 114, 128)" }
                     : { color: "rgb(107, 114, 128)" }
                 }
                 exit={
                   isDashboard
                     ? { color: "rgb(107, 114, 128)" }
+                    : isToDo
+                    ? { color: "rgb(107, 114, 128)" }
                     : { color: "rgb(255, 255, 255)" }
                 }
                 transition={{ type: "spring", duration: 0.05 }}
                 id="dashboard-button"
-                className={`text-gray-500 cursor-pointer font-semibold mr-10 flex items-center`}
+                className={`text-gray-500 cursor-pointer font-semibold mr-5 md:mr-10 flex items-center justify-center`}
               >
-                <i className="bx bx-compass mr-3 text-3xl"></i>
-                <h4 className={`text-base`}>Dashboard</h4>
+                <i className="bx bx-compass mr-0 mt-[0.15rem] md:mr-3 text-3xl"></i>
+                <h4 className={`text-base mt-[0.15rem] hidden md:block`}>
+                  Dashboard
+                </h4>
               </motion.div>
             </Link>
           </AnimatePresence>
@@ -69,20 +81,24 @@ function Navbar() {
                 animate={
                   isDashboard
                     ? { color: "rgb(107, 114, 128)" }
+                    : isToDo
+                    ? { color: "rgb(107, 114, 128)" }
                     : { color: "rgb(255, 255, 255)" }
                 }
                 exit={
                   isDashboard
                     ? { color: "rgb(255, 255, 255)" }
+                    : isToDo
+                    ? { color: "rgb(107, 114, 128)" }
                     : { color: "rgb(107, 114, 128)" }
                 }
                 transition={{ type: "spring", duration: 0.05 }}
                 id="collections-button"
                 className={`
-                 text-gray-500 cursor-pointer font-semibold mr-10 flex items-center`}
+                 text-gray-500 cursor-pointer font-semibold mr-2c md:mr-10 flex items-center`}
               >
                 <i className="bx bx-collection mr-3 text-3xl"></i>
-                <h4 className="text-base">Collections</h4>
+                <h4 className="text-base hidden md:block">Collections</h4>
               </motion.div>
             </Link>
           </AnimatePresence>
@@ -159,7 +175,7 @@ function Navbar() {
                             } group flex rounded-md items-center w-full py-2 text-sm`}
                           >
                             {active ? (
-                              <i className="bx bx-cog text-pink-200 ml-3 text-xl  mr-2"></i>
+                              <i className="bx bx-cog text-white ml-3 text-xl  mr-2"></i>
                             ) : (
                               <i className="bx bx-cog textmenucolor ml-3 text-xl  mr-2"></i>
                             )}
@@ -175,7 +191,7 @@ function Navbar() {
                             } group flex rounded-md items-center w-full py-2 text-sm`}
                           >
                             {active ? (
-                              <i className="bx bx-support text-pink-200 ml-3 text-xl  mr-2"></i>
+                              <i className="bx bx-support text-white ml-3 text-xl  mr-2"></i>
                             ) : (
                               <i className="bx bx-support textmenucolor ml-3 text-xl  mr-2"></i>
                             )}
@@ -194,7 +210,7 @@ function Navbar() {
                             } group flex rounded-md items-center w-full py-3 text-sm`}
                           >
                             {active ? (
-                              <i className="bx bx-exit text-pink-200 ml-3 text-xl mr-2"></i>
+                              <i className="bx bx-exit text-white ml-3 text-xl mr-2"></i>
                             ) : (
                               <i className="bx bx-exit textmenucolor ml-3 text-xl  mr-2"></i>
                             )}

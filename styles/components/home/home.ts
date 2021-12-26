@@ -211,17 +211,16 @@ export const HomeCointainer = styled.div`
     min-width: 40.75px;
     height: 38px;
     width: 40.75px;
-    background-color: transparent;
     border-radius: 9px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   .textmenucolor {
-    color: #e95f5f;
+    color: #e64f4f;
   }
   .bgmenucolor {
-    background-color: #e95f5f;
+    background-color: #444458;
   }
   @media only screen and (max-width: 750px) {
     .body {
@@ -265,6 +264,11 @@ export const HomeCointainer = styled.div`
       margin: 0;
       padding-left: 10px;
       padding-right: 10px;
+    }
+  }
+  @media only screen and (max-width: 364px) {
+    .topmarginneed {
+      margin-top: 1rem;
     }
   }
 `;

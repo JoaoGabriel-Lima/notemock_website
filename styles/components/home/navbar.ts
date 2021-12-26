@@ -123,10 +123,10 @@ export const Navbarlayout = styled.nav`
   }
 
   .textmenucolor {
-    color: #e95f5f;
+    color: white;
   }
   .bgmenucolor {
-    background-color: #e95f5f;
+    background-color: #444458;
   }
   #btn {
     cursor: pointer;
@@ -142,16 +142,15 @@ export const Navbarlayout = styled.nav`
       opacity: 0;
       transition: all 0.2s ease;
     }
-    #dashboard-button,
-    #collections-button {
+    /* #collections-button {
       display: none;
-    }
+    } */
     .menuicon {
       margin-left: 20px;
     }
-    #btn {
+    /* #btn {
       margin-right: 20px;
-    }
+    } */
     #add_todo_btn {
       position: fixed;
       border-width: 2px;
@@ -165,6 +164,13 @@ export const Navbarlayout = styled.nav`
     }
     #add_todo_btn i {
       font-size: 2rem;
+    }
+    .bx-bell,
+    .bellmenu {
+      display: none;
+    }
+    .search-box {
+      margin-right: 1.1rem;
     }
   }
   @media only screen and (max-width: 370px) {
@@ -183,6 +189,11 @@ export const Navbarlayout = styled.nav`
       padding-right: 10px;
     }
     .search-box {
+      display: none;
+    }
+  }
+  @media only screen and (max-width: 402px) {
+    #collections-button {
       display: none;
     }
   }

@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/prop-types */
 /* eslint-disable require-jsdoc */
-
+import { motion } from "framer-motion";
 import { getProviders, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 export default function SignIn({ providers }) {
@@ -15,19 +15,22 @@ export default function SignIn({ providers }) {
         >
           <div className="flex flex-col items-center justify-center bg-[#21212b] p-7 rounded-lg">
             <h1 className="text-white font-bold mb-2 text-3xl">
-              Note<span className="text-[#E95F5F]">mock</span>
+              Note<span className="text-[#e64f4f]">mock</span>
             </h1>
             <h2 className="text-gray-300 font-normal mb-5 text-base">
               Sign In Methods
             </h2>
-            <button
-              className="bg-white p-4 px-16 rounded-lg shadow-lg font-medium "
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ duration: 0.1 }}
+              className="bg-[#444458] hover:bg-[#323241] text-white p-4 px-16 rounded-lg shadow-lg font-medium ease-in"
               onClick={() =>
                 signIn(provider.id, { callbackUrl: router.query.callbackUrl })
               }
             >
               Sign in with {provider.name}
-            </button>
+            </motion.button>
           </div>
         </div>
       ))}

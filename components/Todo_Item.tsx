@@ -18,11 +18,19 @@ function ToDoItem(props: any) {
     const today = new Date();
     const eventdate = new Date(props.itemtime);
     const timeremaining = eventdate.getTime() - today.getTime();
-    const daysremaining = Math.floor(timeremaining / (1000 * 60 * 60 * 24)) + 1;
-    // console.log((daysremaining * -1) / 30 >= 1);
-
-    return daysremaining;
+    const daysremainingfloat = timeremaining / (1000 * 60 * 60 * 24) + 1;
+    if (daysremainingfloat < 0) {
+      return Math.floor(daysremainingfloat);
+    } else {
+      const value = parseInt(daysremainingfloat.toString().split(".")[0], 10); // before
+      return value ? value : 0;
+    }
   }
+  // Create a function that get today's date and calculate the time remaining in days
+  // if the day has already gone, return a negative int number
+  // if the day has not yet gone, return a positive int number
+  // if the date is today, return int 0
+
   const yellow = "#E09E51";
   const gray = "#B2B2B6";
   const green = "#3FB970";
@@ -101,8 +109,7 @@ function ToDoItem(props: any) {
         type="checkbox"
         id={scss.todo_checkbox}
         className={`w-6 checkbox h-6 rounded-xl c_color_pink checked:bg-[${props.groupcolor}] border-[${props.groupcolor}] border-4`}
-        defaultChecked={props.checked}
-        onClick={() => setIsOpen(!isOpen)}
+        onChange={() => setIsOpen(!isOpen)}
         checked={isOpen}
         style={{
           borderColor: props.groupcolor,

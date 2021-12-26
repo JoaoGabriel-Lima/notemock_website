@@ -2,8 +2,10 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import { useRouter } from "next/router";
 
 export default function Collection(props: any) {
+  const router = useRouter();
   function hexToRgb(hex: string) {
     const bigint = parseInt(hex, 16);
     const r = (bigint >> 16) & 255;
@@ -12,6 +14,9 @@ export default function Collection(props: any) {
 
     return r + "," + g + "," + b;
   }
+  function goToCollection(id: string) {
+    router.push(`/collections/${id}`);
+  }
   const isComplete = props.groupprogress === props.groupmax;
   return (
     <motion.div
@@ -19,6 +24,7 @@ export default function Collection(props: any) {
       whileTap={{ scale: 0.9 }}
       transition={{ duration: 0.1 }}
       className="cursor-pointer bg-[#21212b] hover:bg-[#1d1d26] rounded-3xl flex flex-col justify-between p-6"
+      onClick={() => goToCollection(props.groupid)}
     >
       <div className="collectionTop">
         <div className="Icon flex">

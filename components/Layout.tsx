@@ -23,8 +23,10 @@ function Layout(props: any) {
           if (localStorage.getItem("opened") == "true") {
             content.classList.add("active");
             close.classList.add("active");
+            sidebar.classList.add("active");
             main.classList.add("active");
           } else {
+            sidebar.classList.remove("active");
             content.classList.remove("active");
             close.classList.remove("active");
             main.classList.remove("active");
@@ -79,7 +81,7 @@ function Layout(props: any) {
                 hidden: { opacity: 0, x: "-50px" },
                 visible: { opacity: 1, x: 0 },
               }}
-              transition={{ type: "spring", duration: 0.45 }}
+              transition={{ type: "spring", duration: 0.3 }}
               id="dashboard-page-content"
               className="w-full max-w-3xl flex items-start justify-start mt-10 overflow-y-auto"
             >

@@ -15,6 +15,10 @@ export const SidebardContainer = styled.div`
   }
   #sidebar.active {
     width: 280px;
+    overflow-y: auto !important;
+  }
+  #sidebar::-webkit-scrollbar {
+    width: 0 !important;
   }
   #sidebar.active .links_name {
     /* display: inline; */
@@ -64,7 +68,6 @@ export const SidebardContainer = styled.div`
     min-width: 40.75px;
     height: 38px;
     width: 40.75px;
-    background-color: transparent;
     border-radius: 9px;
     display: flex;
     justify-content: center;
@@ -116,7 +119,7 @@ export const SidebardContainer = styled.div`
     font-weight: 550;
     background: #21212b;
     color: white;
-    line-height: 35px;
+    /* line-height: 35px; */
     text-align: center;
     box-shadow: 0 3px 20px rgba(0, 0, 0, 0.1);
     transition: 0s;

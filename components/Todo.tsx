@@ -1,17 +1,22 @@
+/* eslint-disable require-jsdoc */
 import React from "react";
 import classnames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/router";
 
 /** This is a description of the foo function.
  * @param {string} props - This is a description of the foo parameter.
  * @return {string} This is a description of what the function returns.
  */
 function ToDo(props: any) {
+  const router = useRouter();
   const iconholder = classnames(
     "icon-holder mr-4 ml-5",
     `bg-${props.groupcolor}`
   );
-
+  function goToCollection(id: string) {
+    router.push(`/collections/${id}`);
+  }
   return (
     <motion.div
       id="todo"
@@ -48,7 +53,10 @@ function ToDo(props: any) {
               {props.children}
             </div>
 
-            <button className="flex w-full h-16 justify-center items-center border-t-2  rounded-b-2xl hover:bg-[#1C1C25] border-gray-700/[.25]">
+            <button
+              onClick={() => goToCollection(props.groupid)}
+              className="flex w-full h-16 justify-center items-center border-t-2  rounded-b-2xl hover:bg-[#1C1C25] border-gray-700/[.25]"
+            >
               <h2 className="text-white font-semibold ">Go to Collection</h2>
               <i className="bx bx-right-arrow-alt text-white text-2xl ml-2"></i>
             </button>
