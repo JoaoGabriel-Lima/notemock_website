@@ -4,6 +4,7 @@ import { SidebardContainer } from "../styles/components/home/sidebar";
 import Navbar from "./navbar";
 import Sidebar from "./sidebar";
 import { AnimatePresence, motion } from "framer-motion";
+import Head from "next/head";
 
 function Layout(props: any) {
   const canUseDOM = typeof window !== "undefined";
@@ -65,34 +66,69 @@ function Layout(props: any) {
   }, []);
 
   return (
-    <main>
-      <Navbar />
-      <section id="main-content">
-        <SidebardContainer>
-          <Sidebar />
-        </SidebardContainer>
-        <div id="closesidebar" className="android"></div>
-        <section id="notes_section" className="flex items-center flex-col ">
-          <AnimatePresence exitBeforeEnter>
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0, x: "-50px" },
-                visible: { opacity: 1, x: 0 },
-              }}
-              transition={{ type: "spring", duration: 0.3 }}
-              id="dashboard-page-content"
-              className="w-full max-w-3xl flex items-start justify-start mt-10 overflow-y-auto"
-            >
-              <div className="mr-7 ml-7 w-full dash-margins">
-                {props.children}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+    <>
+      <Head>
+        <link
+          rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+          integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+          crossOrigin="anonymous"
+        ></link>
+        <link
+          href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css"
+          rel="stylesheet"
+        ></link>
+        <title>Notemock</title>
+        <meta name="description" content="A A.I Powered ToDo App" />
+        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/manifest.json" />
+      </Head>
+      <main>
+        <Navbar />
+        <section id="main-content">
+          <SidebardContainer>
+            <Sidebar />
+          </SidebardContainer>
+          <div id="closesidebar" className="android"></div>
+          <section id="notes_section" className="flex items-center flex-col ">
+            <AnimatePresence exitBeforeEnter>
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0, x: "-50px" },
+                  visible: { opacity: 1, x: 0 },
+                }}
+                transition={{ type: "spring", duration: 0.3 }}
+                id="dashboard-page-content"
+                className="w-full max-w-3xl flex items-start justify-start mt-10 overflow-y-auto"
+              >
+                <div className="mr-7 ml-7 w-full dash-margins">
+                  {props.children}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </section>
         </section>
-      </section>
-    </main>
+      </main>
+    </>
   );
 }
 
