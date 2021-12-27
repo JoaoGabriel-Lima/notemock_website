@@ -38,6 +38,9 @@ export const HomeCointainer = styled.div`
   p {
     font-family: "Inter", sans-serif;
   }
+  .noscroll::-webkit-scrollbar {
+    width: 0 !important;
+  }
   #main-content {
     margin-top: 90px;
     width: 100%;
@@ -221,6 +224,10 @@ export const HomeCointainer = styled.div`
   }
   .bgmenucolor {
     background-color: #444458;
+  }
+
+  #add_ToDo {
+    background-color: transparent;
   }
   @media only screen and (max-width: 750px) {
     .body {

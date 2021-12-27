@@ -1,18 +1,23 @@
+/* eslint-disable require-jsdoc */
 import type { NextPage } from "next";
-import React from "react";
+import React, { useState } from "react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { HomeCointainer } from "../../styles/components/home/home";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Collection: NextPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+
+  // Create a fuction that will get the height of #content div and set it to the state
   return (
     <>
-      <HomeCointainer className="body">
-        <Layout>
-          <div className="page_overview flex w-full justify-between items-start h-24 mb-20">
+      <HomeCointainer className="body ">
+        <Layout className="">
+          <div className="page_overview flex w-full justify-between items-start mb-10">
             <div className="flex items-center justify-start ">
               <div
                 className="w-11 h-11 rounded-2xl bg-[#21212B] mr-4 flex items-center justify-center cursor-pointer"
@@ -67,6 +72,73 @@ const Collection: NextPage = () => {
                 </Menu.Items>
               </Transition>
             </Menu>
+          </div>
+          <motion.header className="mb-10" initial={false}>
+            <li
+              onClick={() => setIsOpen(!isOpen)}
+              className=" mb-5 cursor-pointer w-full rounded-3xl border-4 hover:border-[#23232c] border-[#1D1D25] h-14 flex justify-center items-center "
+            >
+              <div className="w-full h-11 flex justify-start items-center px-4">
+                <div
+                  id="add_button"
+                  className=" w-8 h-8 bg-red-500 min-w-[2rem] rounded-xl mr-4 flex items-center justify-center"
+                >
+                  <i className="bx bx-plus text-black text-xl"></i>
+                </div>
+                <input
+                  id="add_ToDo"
+                  className="text-gray-500 font-medium w-full h-full border-0 focus:border-0 placeholder:font-normal"
+                  placeholder="Add a task"
+                ></input>
+              </div>
+            </li>
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.section
+                  className=" overflow-hidden h-auto"
+                  key="content"
+                  initial="collapsed"
+                  animate="open"
+                  exit={{
+                    opacity: 0,
+                    transition: { duration: 0.2, ease: "easeOut" },
+                  }}
+                  variants={{
+                    open: {
+                      opacity: 1,
+                      transition: { duration: 0.3, ease: "easeIn" },
+                    },
+                    collapsed: { opacity: 0 },
+                  }}
+                  // transition={{
+                  //   duration: 0.5,
+                  //   ease: "easeIn",
+                  // }}
+                >
+                  <motion.div
+                    initial={{ scale: 0.5 }}
+                    exit={{
+                      scale: 0.5,
+                      transition: { duration: 0.2 },
+                    }}
+                    animate={{
+                      scale: 1,
+                      transition: { duration: 0.2 },
+                    }}
+                    // variants={{ collapsed: { scale: 0.8 }, open: { scale: 1 } }}
+                    // transition={{ duration: 0.2 }}
+                    className="myRef w-full h-[140px] bg-[#21212b] rounded-3xl origin-top"
+                    id="content"
+                  ></motion.div>
+                </motion.section>
+              )}
+            </AnimatePresence>
+          </motion.header>
+          <div
+            id="TasksToDo"
+            className="w-full flex flex-col items-start justify-start"
+          >
+            <h4 className="text-white font-normal tracking-wide ">Tasks - 8</h4>
           </div>
         </Layout>
       </HomeCointainer>
