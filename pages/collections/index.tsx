@@ -215,17 +215,15 @@ function CollectionsProgressFavorite() {
 
   return data.user.collections.map((collection: any) => {
     if (collection.favorite) {
-      return (
-        <Collection
-          key={collection.groupid}
-          groupnane={collection.groupname}
-          groupicon={collection.groupicon}
-          groupcolor={collection.groupcolor}
-          groupid={collection.groupid}
-          groupprogress={getChecked(collection.todos)}
-          groupmax={collection.todos.length}
-        ></Collection>
-      );
+      <Collection
+        key={collection.groupid}
+        groupnane={collection.groupname}
+        groupicon={collection.groupicon}
+        groupcolor={collection.groupcolor}
+        groupid={collection.groupid}
+        groupprogress={getChecked(collection.todos)}
+        groupmax={collection.todos.length}
+      ></Collection>;
     }
   });
 }
