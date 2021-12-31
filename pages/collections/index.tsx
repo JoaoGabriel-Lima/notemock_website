@@ -13,6 +13,10 @@ import { Tab } from "@headlessui/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 
+import axios from "axios";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+
+const queryClient = new QueryClient();
 const Collections: NextPage = () => {
   const router = useRouter();
   //   const { data: session } = useSession();
@@ -108,30 +112,9 @@ const Collections: NextPage = () => {
                         className="w-full"
                       >
                         <CollectionsGrid className="grid w-full justify-center mt-8 ease-in mb-8">
-                          <Collection
-                            groupnane="Games"
-                            groupicon="dizzy"
-                            groupprogress={13}
-                            groupmax={13}
-                            groupcolor="#e7bb43"
-                            groupid="7165"
-                          />
-                          <Collection
-                            groupnane="Encomendas"
-                            groupicon="package"
-                            groupprogress={5}
-                            groupmax={5}
-                            groupcolor="#4f8cd1"
-                            groupid="7167"
-                          />
-                          <Collection
-                            groupnane="Travels"
-                            groupicon="world"
-                            groupprogress={3}
-                            groupmax={6}
-                            groupcolor="#44a15c"
-                            groupid="7168"
-                          />
+                          <QueryClientProvider client={queryClient}>
+                            <CollectionsProgressFavorite />
+                          </QueryClientProvider>
                         </CollectionsGrid>
                       </motion.div>
                     </Tab.Panel>
@@ -144,54 +127,9 @@ const Collections: NextPage = () => {
                         className="w-full"
                       >
                         <CollectionsGrid className="grid w-full justify-center mt-8 ease-in mb-8">
-                          <Collection
-                            groupnane="School"
-                            groupicon="book"
-                            groupprogress={4}
-                            groupmax={6}
-                            groupcolor="#e743a3"
-                            groupid="7164"
-                          />
-                          <Collection
-                            groupnane="Games"
-                            groupicon="dizzy"
-                            groupprogress={13}
-                            groupmax={13}
-                            groupcolor="#e7bb43"
-                            groupid="7165"
-                          />
-                          <Collection
-                            groupnane="Code"
-                            groupicon="code-alt"
-                            groupprogress={2}
-                            groupmax={9}
-                            groupcolor="#e64f4f"
-                            groupid="7166"
-                          />
-                          <Collection
-                            groupnane="Encomendas"
-                            groupicon="package"
-                            groupprogress={5}
-                            groupmax={5}
-                            groupcolor="#4f8cd1"
-                            groupid="7167"
-                          />
-                          <Collection
-                            groupnane="Travels"
-                            groupicon="world"
-                            groupprogress={3}
-                            groupmax={6}
-                            groupcolor="#44a15c"
-                            groupid="7168"
-                          />
-                          <Collection
-                            groupnane="Payments"
-                            groupicon="qr"
-                            groupprogress={6}
-                            groupmax={6}
-                            groupcolor="#e9b138"
-                            groupid="7169"
-                          />
+                          <QueryClientProvider client={queryClient}>
+                            <CollectionsProgress />
+                          </QueryClientProvider>
                           <div className="w-full h-24 flex justify-center items-start cursor-pointer">
                             <div className="flex items-center w-full h-full justify-center border-[3px] border-[#21212B] hover:border-[#2A2A37] rounded-3xl">
                               <i className="bx bx-plus text-3xl text-[#8A8A8E]"></i>
@@ -233,3 +171,133 @@ const Collections: NextPage = () => {
 //   };
 // }
 export default Collections;
+
+function getChecked(array: any) {
+  let checked = 0;
+  array.forEach((element: any) => {
+    if (element.checked) checked++;
+  });
+  return checked;
+}
+function CollectionsProgressFavorite() {
+  const { data: session } = useSession();
+
+  const { isLoading, error, data } = useQuery("repoData", () =>
+    axios
+      .post("http://localhost:3000/api/user", { session: session })
+      .then((res) => res.data)
+  );
+
+  if (error)
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Error"
+        groupicon="x"
+        groupcolor="#f83d3d"
+        groupid="404"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  if (isLoading)
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Loading"
+        groupicon="message-square-dots"
+        groupcolor="#2c2c2c"
+        groupid="200"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  if (data.user === undefined || data.user === null) {
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Error"
+        groupicon="x"
+        groupcolor="#f83d3d"
+        groupid="404"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  } else {
+    return data.user.collections.map((collection: any) => {
+      if (collection.favorite) {
+        return (
+          <Collection
+            key={collection.groupid}
+            groupnane={collection.groupname}
+            groupicon={collection.groupicon}
+            groupcolor={collection.groupcolor}
+            groupid={collection.groupid}
+            groupprogress={getChecked(collection.todos)}
+            groupmax={collection.todos.length}
+          ></Collection>
+        );
+      }
+    });
+  }
+}
+function CollectionsProgress() {
+  const { data: session } = useSession();
+
+  const { isLoading, error, data } = useQuery("repoData", () =>
+    axios
+      .post("http://localhost:3000/api/user", { session: session })
+      .then((res) => res.data)
+  );
+
+  if (error)
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Error"
+        groupicon="x"
+        groupcolor="#f83d3d"
+        groupid="404"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  if (isLoading)
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Loading"
+        groupicon="message-square-dots"
+        groupcolor="#2c2c2c"
+        groupid="200"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  if (data.user === undefined || data.user === null) {
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Error"
+        groupicon="x"
+        groupcolor="#f83d3d"
+        groupid="404"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  } else {
+    return data.user.collections.map((collection: any) => (
+      <Collection
+        key={collection.groupid}
+        groupnane={collection.groupname}
+        groupicon={collection.groupicon}
+        groupcolor={collection.groupcolor}
+        groupid={collection.groupid}
+        groupprogress={getChecked(collection.todos)}
+        groupmax={collection.todos.length}
+      ></Collection>
+    ));
+  }
+}

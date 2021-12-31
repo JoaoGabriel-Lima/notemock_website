@@ -73,66 +73,52 @@ const Collection: NextPage = () => {
               </Transition>
             </Menu>
           </div>
-          <motion.header className="mb-10" initial={false}>
-            <li
-              onClick={() => setIsOpen(!isOpen)}
-              className=" mb-5 cursor-pointer w-full rounded-3xl border-4 hover:border-[#23232c] border-[#1D1D25] h-14 flex justify-center items-center "
-            >
+          <motion.header
+            className="mb-10 border-4 hover:border-[#23232c] border-[#1D1D25] rounded-3xl"
+            initial={false}
+          >
+            <motion.li className=" cursor-pointer w-full rounded-3xl  h-14 flex justify-between items-center ">
               <div className="w-full h-11 flex justify-start items-center px-4">
-                <div
+                {/* <div
                   id="add_button"
+                  onClick={() => setIsOpen(!isOpen)}
                   className=" w-8 h-8 bg-red-500 min-w-[2rem] rounded-xl mr-4 flex items-center justify-center"
                 >
                   <i className="bx bx-plus text-black text-xl"></i>
-                </div>
+                </div> */}
                 <input
                   id="add_ToDo"
+                  onClick={() => setIsOpen(true)}
                   className="text-gray-500 font-medium w-full h-full border-0 focus:border-0 placeholder:font-normal"
                   placeholder="Add a task"
                 ></input>
               </div>
-            </li>
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.section
-                  className=" overflow-hidden h-auto"
-                  key="content"
-                  initial="collapsed"
-                  animate="open"
-                  exit={{
-                    opacity: 0,
-                    transition: { duration: 0.2, ease: "easeOut" },
-                  }}
-                  variants={{
-                    open: {
-                      opacity: 1,
-                      transition: { duration: 0.3, ease: "easeIn" },
-                    },
-                    collapsed: { opacity: 0 },
-                  }}
-                  // transition={{
-                  //   duration: 0.5,
-                  //   ease: "easeIn",
-                  // }}
+              <div id="send" className="mr-4 flex ">
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.button
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.2 }}
+                      onClick={() => setIsOpen(true)}
+                      className="text-white bg-[#32323c] rounded-lg mr-2 min-w-max px-4 py-1 origin-right"
+                    >
+                      <i className="bx bx-calendar text-white text-xl"></i>
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+                <motion.button
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-white bg-red-500 rounded-lg min-w-max px-4 py-1 origin-right"
                 >
-                  <motion.div
-                    initial={{ scale: 0.5 }}
-                    exit={{
-                      scale: 0.5,
-                      transition: { duration: 0.2 },
-                    }}
-                    animate={{
-                      scale: 1,
-                      transition: { duration: 0.2 },
-                    }}
-                    // variants={{ collapsed: { scale: 0.8 }, open: { scale: 1 } }}
-                    // transition={{ duration: 0.2 }}
-                    className="myRef w-full h-[140px] bg-[#21212b] rounded-3xl origin-top"
-                    id="content"
-                  ></motion.div>
-                </motion.section>
-              )}
-            </AnimatePresence>
+                  <i className="bx bx-plus text-xl"></i>
+                </motion.button>
+              </div>
+            </motion.li>
           </motion.header>
           <div
             id="TasksToDo"

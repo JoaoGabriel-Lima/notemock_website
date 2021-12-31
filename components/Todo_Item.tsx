@@ -1,7 +1,9 @@
 /* eslint-disable require-jsdoc */
+import axios from "axios";
 import React, { useState } from "react";
 import { CheckboxContainer } from "../styles/components/home/checkbox";
 import scss from "../styles/home.module.scss";
+import { useSession } from "next-auth/react";
 /** This is a description of the foo function.
  * @param {string} props - This is a description of the foo parameter.
  * @return {string} This is a description of what the function returns.
@@ -97,8 +99,17 @@ function ToDoItem(props: any) {
       return blue;
     }
   }
-
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(props.checked);
+  function handleClick(id: any) {
+    setIsOpen(!isOpen);
+    axios.post("/api/check", {
+      id: id,
+      checked: !isOpen,
+      session: session,
+      collectionid: props.collectionid,
+    });
+  }
   return (
     <CheckboxContainer
       color={colorsoftodo()}
@@ -109,7 +120,7 @@ function ToDoItem(props: any) {
         type="checkbox"
         id={scss.todo_checkbox}
         className={`w-6 checkbox h-6 rounded-xl c_color_pink checked:bg-[${props.groupcolor}] border-[${props.groupcolor}] border-4`}
-        onChange={() => setIsOpen(!isOpen)}
+        onChange={() => handleClick(props.itemid)}
         checked={isOpen}
         style={{
           borderColor: props.groupcolor,
@@ -119,7 +130,7 @@ function ToDoItem(props: any) {
         className={scss.todo_label}
         htmlFor="todo_checkbox"
         data-content={props.itemcontent}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => handleClick(props.itemid)}
       >
         <div className="flex ml-4 flex-col justify-center items-start cursor-pointer">
           <h4

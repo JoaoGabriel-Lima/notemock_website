@@ -114,7 +114,9 @@ function Navbar() {
                   className="bg-gray-500 rounded-full w-10 h-10 mr-7 bg-cover"
                   style={{
                     backgroundImage: `url(${
-                      session ? session.user!.image : ""
+                      session
+                        ? session.user!.image
+                        : "https://upload.wikimedia.org/wikipedia/commons/8/89/HD_transparent_picture.png"
                     })`,
                   }}
                 ></div>

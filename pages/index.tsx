@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable require-jsdoc */
 import type { NextPage } from "next";
 import React from "react";
@@ -8,10 +9,20 @@ import ToDoItem from "../components/Todo_Item";
 import ToDo from "../components/Todo";
 import { useSession, signIn } from "next-auth/react";
 import Layout from "../components/Layout";
+import axios from "axios";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // refetchOnWindowFocus: true,
+      // refetchInterval: 5000,
+    },
+  },
+});
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
-  // greet depending on the time
   const greet = () => {
     const date = new Date();
     const hour = date.getHours();
@@ -25,6 +36,7 @@ const Home: NextPage = () => {
       return "Good Night";
     }
   };
+
   return (
     <>
       <HomeCointainer className="body">
@@ -87,107 +99,14 @@ const Home: NextPage = () => {
                   </button>
                 </div>
               </div>
-
+              {/* <div>{props.data.user.name}</div> */}
               <section
                 id="todos"
                 className="flex w-full flex-col items-center mt-10 mb-10"
               >
-                <ToDo
-                  groupcolor="#e7ae43"
-                  groupname="Games"
-                  iconname="dizzy"
-                  groupid="7165"
-                >
-                  <ToDoItem
-                    groupcolor="#e7ae43"
-                    itemcontent="Jogar Fortnite com o David"
-                    itemtime="2021-12-26"
-                    checked={false}
-                  />
-
-                  <ToDoItem
-                    groupcolor="#e7ae43"
-                    itemcontent="Jogar Valorant com o Camomilla"
-                    itemtime="2021-12-27"
-                    checked={false}
-                  />
-
-                  <ToDoItem
-                    groupcolor="#e7ae43"
-                    itemcontent="Noite do Just Dance"
-                    itemtime="2021-12-28"
-                    checked={false}
-                  />
-                </ToDo>
-                <ToDo
-                  groupcolor="#9843e7"
-                  groupname="Coisas de Halloween"
-                  iconname="ghost"
-                >
-                  <ToDoItem
-                    groupcolor="#9843e7"
-                    itemcontent="Ir para Minas Gerais"
-                    itemtime="2022-04-02"
-                    checked={false}
-                  />
-
-                  <ToDoItem
-                    groupcolor="#9843e7"
-                    itemcontent="Cabo Frio com o Nego e com o Bielll 🥳🪅🎉"
-                    itemtime="2022-02-21"
-                    checked={false}
-                  />
-                  <ToDoItem
-                    groupcolor="#9843e7"
-                    itemcontent="Assistir Homem Aranha com Julia, já tá na hora"
-                    itemtime="2021-12-28"
-                    checked={false}
-                  />
-                </ToDo>
-
-                <ToDo groupcolor="#ee8b61" groupname="Code" iconname="code-alt">
-                  <ToDoItem
-                    groupcolor="#ee8b61"
-                    itemcontent="Como fazer maconha com maizena e javascript 🍂"
-                    itemtime="2021-12-21"
-                    checked={false}
-                  />
-
-                  <ToDoItem
-                    groupcolor="#ee8b61"
-                    itemcontent="Procurar esse tal de java pra pedir umas dicas"
-                    itemtime="2021-10-21"
-                    checked={true}
-                  />
-                  <ToDoItem
-                    groupcolor="#ee8b61"
-                    itemcontent="Não tenho dinheiro para comprar açaí 😢"
-                    itemtime="2021-12-22"
-                    checked={false}
-                  />
-                </ToDo>
-
-                <ToDo groupcolor="#fc76a1" groupname="Games" iconname="game">
-                  <ToDoItem
-                    groupcolor="#fc76a1"
-                    itemcontent="Dormir até desmaiar"
-                    itemtime="2022-01-22"
-                    checked={false}
-                  />
-
-                  <ToDoItem
-                    groupcolor="#fc76a1"
-                    itemcontent="Matar o toriel de manhã se não programar nada 😳"
-                    itemtime="2021-11-21"
-                    checked={false}
-                  />
-                  <ToDoItem
-                    groupcolor="#fc76a1"
-                    itemcontent="Dormir até desmaiar"
-                    itemtime="2021-12-28"
-                    checked={false}
-                  />
-                </ToDo>
+                <QueryClientProvider client={queryClient}>
+                  <Collections />
+                </QueryClientProvider>
               </section>
             </>
           ) : (
@@ -258,4 +177,76 @@ const Home: NextPage = () => {
   );
 };
 
+// Home.getInitialProps = async (ctx: any) => {
+//   // console.log("one time");
+//   const session = await getSession(ctx);
+//   const response = await axios.post("http://localhost:3000/api/user", {
+//     session: session,
+//   });
+//   // console.log(response.data);
+//   return { status: response.data.status, data: response.data };
+// };
+
 export default Home;
+
+function Collections() {
+  const { data: session } = useSession();
+
+  const { isLoading, error, data } = useQuery("repoData", () =>
+    axios
+      .post("http://localhost:3000/api/user", { session: session })
+      .then((res) => res.data)
+  );
+
+  if (error)
+    return (
+      <div className="text-white bg-[#b32929] animate-pulse rounded-xl h-16 text-xl w-full flex justify-center items-center">
+        Error loading data
+      </div>
+    );
+  if (isLoading)
+    return (
+      <div className="text-white bg-[#414052] animate-pulse rounded-xl h-16 text-xl w-full flex justify-center items-center">
+        Loading...
+      </div>
+    );
+  if (data.user === undefined || data.user === null) {
+    return <div className="text-white text-2xl">No Todos</div>;
+  } else {
+    return data.user.collections.map((collection: any) => {
+      if (collection.todos.length === 0) {
+        return (
+          <ToDo
+            key={collection.groupid}
+            groupcolor={collection.groupcolor}
+            groupname={collection.groupname}
+            iconname={collection.groupicon}
+            groupid={collection.groupid}
+          ></ToDo>
+        );
+      } else {
+        return (
+          <ToDo
+            key={collection.groupid}
+            groupcolor={collection.groupcolor}
+            groupname={collection.groupname}
+            iconname={collection.groupicon}
+            groupid={collection.groupid}
+          >
+            {collection.todos.map((todo: any) => (
+              <ToDoItem
+                key={Math.random()}
+                itemcontent={todo.itemcontent}
+                itemtime={todo.itemtime}
+                checked={todo.checked}
+                groupcolor={collection.groupcolor}
+                itemid={todo.itemid}
+                collectionid={collection.groupid}
+              />
+            ))}
+          </ToDo>
+        );
+      }
+    });
+  }
+}

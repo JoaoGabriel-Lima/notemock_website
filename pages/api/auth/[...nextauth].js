@@ -1,8 +1,11 @@
 /* eslint-disable new-cap */
-import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import NextAuth from "next-auth";
+// import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+// import clientPromise from "lib/mongodb";
 
 export default NextAuth({
+  // adapter: MongoDBAdapter(clientPromise),
   providers: [
     // OAuth authentication providers...
     GoogleProvider({
@@ -29,7 +32,7 @@ export default NextAuth({
     jwt: true,
   },
   secret: process.env.JWT_SECRET,
-
+  useSecureCookies: process.env.NODE_ENV === "production",
   //   callbacks: {
   //     async jwt(token, account) {
   //       if (account?.accessToken) {
