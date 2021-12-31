@@ -184,7 +184,9 @@ function CollectionsProgressFavorite() {
 
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .post("http://localhost:3000/api/user", { session: session })
+      .post("https://notemock-website.vercel.app/api/user", {
+        session: session,
+      })
       .then((res) => res.data)
   );
 
@@ -212,9 +214,83 @@ function CollectionsProgressFavorite() {
         groupmax={6}
       ></Collection>
     );
+  if (data.user === undefined || data.user === null) {
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Error"
+        groupicon="x"
+        groupcolor="#f83d3d"
+        groupid="404"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  } else {
+    return data.user.collections.map((collection: any) => {
+      if (collection.favorite) {
+        <Collection
+          key={collection.groupid}
+          groupnane={collection.groupname}
+          groupicon={collection.groupicon}
+          groupcolor={collection.groupcolor}
+          groupid={collection.groupid}
+          groupprogress={getChecked(collection.todos)}
+          groupmax={collection.todos.length}
+        ></Collection>;
+      }
+    });
+  }
+}
+function CollectionsProgress() {
+  const { data: session } = useSession();
 
-  return data.user.collections.map((collection: any) => {
-    if (collection.favorite) {
+  const { isLoading, error, data } = useQuery("repoData", () =>
+    axios
+      .post("https://notemock-website.vercel.app/api/user", {
+        session: session,
+      })
+      .then((res) => res.data)
+  );
+
+  if (error)
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Error"
+        groupicon="x"
+        groupcolor="#f83d3d"
+        groupid="404"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  if (isLoading)
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Loading"
+        groupicon="message-square-dots"
+        groupcolor="#2c2c2c"
+        groupid="200"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  if (data.user === undefined || data.user === null) {
+    return (
+      <Collection
+        className="animate-pulse"
+        groupnane="Error"
+        groupicon="x"
+        groupcolor="#f83d3d"
+        groupid="404"
+        groupprogress={6}
+        groupmax={6}
+      ></Collection>
+    );
+  } else {
+    return data.user.collections.map((collection: any) => (
       <Collection
         key={collection.groupid}
         groupnane={collection.groupname}
@@ -223,53 +299,7 @@ function CollectionsProgressFavorite() {
         groupid={collection.groupid}
         groupprogress={getChecked(collection.todos)}
         groupmax={collection.todos.length}
-      ></Collection>;
-    }
-  });
-}
-function CollectionsProgress() {
-  const { data: session } = useSession();
-
-  const { isLoading, error, data } = useQuery("repoData", () =>
-    axios
-      .post("http://localhost:3000/api/user", { session: session })
-      .then((res) => res.data)
-  );
-
-  if (error)
-    return (
-      <Collection
-        className="animate-pulse"
-        groupnane="Error"
-        groupicon="x"
-        groupcolor="#f83d3d"
-        groupid="404"
-        groupprogress={6}
-        groupmax={6}
       ></Collection>
-    );
-  if (isLoading)
-    return (
-      <Collection
-        className="animate-pulse"
-        groupnane="Loading"
-        groupicon="message-square-dots"
-        groupcolor="#2c2c2c"
-        groupid="200"
-        groupprogress={6}
-        groupmax={6}
-      ></Collection>
-    );
-
-  return data.user.collections.map((collection: any) => (
-    <Collection
-      key={collection.groupid}
-      groupnane={collection.groupname}
-      groupicon={collection.groupicon}
-      groupcolor={collection.groupcolor}
-      groupid={collection.groupid}
-      groupprogress={getChecked(collection.todos)}
-      groupmax={collection.todos.length}
-    ></Collection>
-  ));
+    ));
+  }
 }

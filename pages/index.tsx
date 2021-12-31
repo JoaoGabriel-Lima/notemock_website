@@ -194,7 +194,9 @@ function Collections() {
 
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .post("http://localhost:3000/api/user", { session: session })
+      .post("https://notemock-website.vercel.app/api/user", {
+        session: session,
+      })
       .then((res) => res.data)
   );
 
