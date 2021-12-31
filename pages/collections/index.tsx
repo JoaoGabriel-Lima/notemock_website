@@ -212,35 +212,22 @@ function CollectionsProgressFavorite() {
         groupmax={6}
       ></Collection>
     );
-  if (data.user === undefined || data.user === null) {
-    return (
-      <Collection
-        className="animate-pulse"
-        groupnane="Error"
-        groupicon="x"
-        groupcolor="#f83d3d"
-        groupid="404"
-        groupprogress={6}
-        groupmax={6}
-      ></Collection>
-    );
-  } else {
-    return data.user.collections.map((collection: any) => {
-      if (collection.favorite) {
-        return (
-          <Collection
-            key={collection.groupid}
-            groupnane={collection.groupname}
-            groupicon={collection.groupicon}
-            groupcolor={collection.groupcolor}
-            groupid={collection.groupid}
-            groupprogress={getChecked(collection.todos)}
-            groupmax={collection.todos.length}
-          ></Collection>
-        );
-      }
-    });
-  }
+
+  return data.user.collections.map((collection: any) => {
+    if (collection.favorite) {
+      return (
+        <Collection
+          key={collection.groupid}
+          groupnane={collection.groupname}
+          groupicon={collection.groupicon}
+          groupcolor={collection.groupcolor}
+          groupid={collection.groupid}
+          groupprogress={getChecked(collection.todos)}
+          groupmax={collection.todos.length}
+        ></Collection>
+      );
+    }
+  });
 }
 function CollectionsProgress() {
   const { data: session } = useSession();
@@ -275,29 +262,16 @@ function CollectionsProgress() {
         groupmax={6}
       ></Collection>
     );
-  if (data.user === undefined || data.user === null) {
-    return (
-      <Collection
-        className="animate-pulse"
-        groupnane="Error"
-        groupicon="x"
-        groupcolor="#f83d3d"
-        groupid="404"
-        groupprogress={6}
-        groupmax={6}
-      ></Collection>
-    );
-  } else {
-    return data.user.collections.map((collection: any) => (
-      <Collection
-        key={collection.groupid}
-        groupnane={collection.groupname}
-        groupicon={collection.groupicon}
-        groupcolor={collection.groupcolor}
-        groupid={collection.groupid}
-        groupprogress={getChecked(collection.todos)}
-        groupmax={collection.todos.length}
-      ></Collection>
-    ));
-  }
+
+  return data.user.collections.map((collection: any) => (
+    <Collection
+      key={collection.groupid}
+      groupnane={collection.groupname}
+      groupicon={collection.groupicon}
+      groupcolor={collection.groupcolor}
+      groupid={collection.groupid}
+      groupprogress={getChecked(collection.todos)}
+      groupmax={collection.todos.length}
+    ></Collection>
+  ));
 }
