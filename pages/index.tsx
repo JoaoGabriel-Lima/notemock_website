@@ -12,6 +12,7 @@ import Layout from "../components/Layout";
 import axios from "axios";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 
+const url = `https://notemock-website.vercel.app/api/user`;
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -194,7 +195,7 @@ function Collections() {
 
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .post("https://notemock-website.vercel.app/api/user", {
+      .post(`${url}`, {
         session: session,
       })
       .then((res) => res.data)
@@ -202,7 +203,7 @@ function Collections() {
 
   if (error)
     return (
-      <div className="text-white bg-[#b32929] animate-pulse rounded-xl h-16 text-xl w-full flex justify-center items-center">
+      <div className="text-white bg-[#b32929] rounded-xl h-16 text-xl w-full flex justify-center items-center">
         Error loading data
       </div>
     );

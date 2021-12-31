@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 
 import axios from "axios";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-
+const url = `https://notemock-website.vercel.app/api/user`;
 const queryClient = new QueryClient();
 const Collections: NextPage = () => {
   const router = useRouter();
@@ -184,7 +184,7 @@ function CollectionsProgressFavorite() {
 
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .post("https://notemock-website.vercel.app/api/user", {
+      .post(`${url}`, {
         session: session,
       })
       .then((res) => res.data)
@@ -227,19 +227,25 @@ function CollectionsProgressFavorite() {
       ></Collection>
     );
   } else {
-    return data.user.collections.map((collection: any) => {
+    const mapthing = data.user.collections.map((collection: any) => {
       if (collection.favorite) {
-        <Collection
-          key={collection.groupid}
-          groupnane={collection.groupname}
-          groupicon={collection.groupicon}
-          groupcolor={collection.groupcolor}
-          groupid={collection.groupid}
-          groupprogress={getChecked(collection.todos)}
-          groupmax={collection.todos.length}
-        ></Collection>;
+        return (
+          <Collection
+            key={collection.groupid}
+            groupnane={collection.groupname}
+            groupicon={collection.groupicon}
+            groupcolor={collection.groupcolor}
+            groupid={collection.groupid}
+            groupprogress={getChecked(collection.todos)}
+            groupmax={collection.todos.length}
+          ></Collection>
+        );
+      } else {
+        return null;
       }
     });
+
+    return mapthing;
   }
 }
 function CollectionsProgress() {
@@ -247,7 +253,7 @@ function CollectionsProgress() {
 
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .post("https://notemock-website.vercel.app/api/user", {
+      .post(`${url}`, {
         session: session,
       })
       .then((res) => res.data)
