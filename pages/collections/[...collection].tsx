@@ -160,11 +160,14 @@ export async function getServerSideProps(context: any) {
   const collection2 = collection[0];
   const session = await getSession(context);
   // console.log(session);
-  const res = await axios.post(`/api/collections`, {
-    session: session,
-    token: process.env.NEXT_PUBLIC_DBTOKEN,
-    collectionid: collection2,
-  });
+  const res = await axios.post(
+    `https://notemock-website.vercel.app/api/collections`,
+    {
+      session: session,
+      token: process.env.NEXT_PUBLIC_DBTOKEN,
+      collectionid: collection2,
+    }
+  );
   // console.log(res.data);
   const data = res.data;
   if (data.collection === null) {
