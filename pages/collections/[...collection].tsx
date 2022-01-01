@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable require-jsdoc */
 import type { NextPage } from "next";
 import React, { useState } from "react";
@@ -7,11 +8,27 @@ import { HomeCointainer } from "../../styles/components/home/home";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
+import axios from "axios";
+import { getSession } from "next-auth/react";
 
-const Collection: NextPage = () => {
+const Collection: NextPage = ({ data }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
+  // function getChecked(array: any) {
+  //   let checked = 0;
+  //   array.forEach((element: any) => {
+  //     if (element.checked) checked++;
+  //   });
+  //   return checked;
+  // }
+  // function getnotChecked(array: any) {
+  //   let notchecked = 0;
+  //   array.forEach((element: any) => {
+  //     if (element.checked == false) notchecked++;
+  //   });
+  //   return notchecked;
+  // }
   // Create a fuction that will get the height of #content div and set it to the state
   return (
     <>
@@ -26,7 +43,7 @@ const Collection: NextPage = () => {
                 <i className="bx bx-chevron-left text-white text-3xl"></i>
               </div>
               <h4 className="text-white font-semibold tracking-wide text-2xl">
-                School
+                {data.collection.groupname}
               </h4>
             </div>
             <Menu as="div" className="relative inline-block">
@@ -113,7 +130,8 @@ const Collection: NextPage = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.2 }}
-                  className="text-white bg-red-500 rounded-lg min-w-max px-4 py-1 origin-right"
+                  className="text-white rounded-lg min-w-max px-4 py-1 origin-right"
+                  style={{ backgroundColor: data.collection.groupcolor }}
                 >
                   <i className="bx bx-plus text-xl"></i>
                 </motion.button>
@@ -124,11 +142,37 @@ const Collection: NextPage = () => {
             id="TasksToDo"
             className="w-full flex flex-col items-start justify-start"
           >
-            <h4 className="text-white font-normal tracking-wide ">Tasks - 8</h4>
+            <h4 className="text-white font-normal tracking-wide ">
+              Tasks - {data.collection.todos.length}
+            </h4>
           </div>
         </Layout>
       </HomeCointainer>
     </>
   );
 };
+
+export async function getServerSideProps(context: any) {
+  // const router = useRouter();
+  // const { collection } = router.query;
+
+  const { collection } = context.query;
+  const collection2 = collection[0];
+  const session = await getSession(context);
+  // console.log(session);
+  const res = await axios.post(`/api/collections`, {
+    session: session,
+    token: process.env.NEXT_PUBLIC_DBTOKEN,
+    collectionid: collection2,
+  });
+  // console.log(res.data);
+  const data = res.data;
+  if (data.collection === null) {
+    return {
+      notFound: true,
+    };
+  }
+  return { props: { data } };
+}
+
 export default Collection;

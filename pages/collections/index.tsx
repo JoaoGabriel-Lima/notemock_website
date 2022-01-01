@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 
 import axios from "axios";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-const url = `https://notemock-website.vercel.app/api/user`;
+// const url = `https://notemock-website.vercel.app/api/user`;
 const queryClient = new QueryClient();
 const Collections: NextPage = () => {
   const router = useRouter();
@@ -184,8 +184,9 @@ function CollectionsProgressFavorite() {
 
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .post(`${url}`, {
+      .post(`/api/user`, {
         session: session,
+        token: process.env.NEXT_PUBLIC_DBTOKEN,
       })
       .then((res) => res.data)
   );
@@ -253,8 +254,9 @@ function CollectionsProgress() {
 
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .post(`${url}`, {
+      .post(`/api/user`, {
         session: session,
+        token: process.env.NEXT_PUBLIC_DBTOKEN,
       })
       .then((res) => res.data)
   );

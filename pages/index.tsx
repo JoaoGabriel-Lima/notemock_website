@@ -12,7 +12,6 @@ import Layout from "../components/Layout";
 import axios from "axios";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 
-const url = `https://notemock-website.vercel.app/api/user`;
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -37,7 +36,7 @@ const Home: NextPage = () => {
       return "Good Night";
     }
   };
-
+  // console.log(session);
   return (
     <>
       <HomeCointainer className="body">
@@ -192,11 +191,11 @@ export default Home;
 
 function Collections() {
   const { data: session } = useSession();
-
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .post(`${url}`, {
+      .post(`/api/user`, {
         session: session,
+        token: process.env.NEXT_PUBLIC_DBTOKEN,
       })
       .then((res) => res.data)
   );

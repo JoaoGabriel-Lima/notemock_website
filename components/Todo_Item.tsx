@@ -107,6 +107,7 @@ function ToDoItem(props: any) {
       id: id,
       checked: !isOpen,
       session: session,
+      token: process.env.NEXT_PUBLIC_DBTOKEN,
       collectionid: props.collectionid,
     });
   }

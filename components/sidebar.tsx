@@ -48,6 +48,7 @@ function SidebarCollections() {
     axios
       .post(`/api/user`, {
         session: session,
+        token: process.env.NEXT_PUBLIC_DBTOKEN,
       })
       .then((res) => res.data)
   );

@@ -4,8 +4,18 @@ import { connectToDatabase } from "../../lib/dbConnect";
 export default async function handler(req, res) {
   const { db } = await connectToDatabase();
   const session = req.body.session;
+  const token = req.body.token;
+  // console.log(token);
+  const rt = process.env.NEXT_PUBLIC_DBTOKEN;
   // const session = await getSession({ req });
   // console.log(`Session Info: ${session}`);
+
+  if (token != rt) {
+    return res.status(200).send({
+      status: "Unauthorized",
+      user: null,
+    });
+  }
   if (!session) {
     return res.status(200).send({
       status: "Unauthorized",

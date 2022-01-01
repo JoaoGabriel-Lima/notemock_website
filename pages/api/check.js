@@ -7,8 +7,17 @@ export default async function handler(req, res) {
   const todoid = req.body.id;
   const checked = req.body.checked;
   const collectionid = req.body.collectionid;
+  const rt = process.env.NEXT_PUBLIC_DBTOKEN;
+  const token = req.body.token;
   // const session = await getSession({ req });
   // console.log(`Session Info: ${session}`);
+  if (token != rt) {
+    return res.status(200).send({
+      status: "Unauthorized",
+      user: null,
+    });
+  }
+
   if (!session) {
     return res.status(200).send({
       status: "Unauthorized",
