@@ -206,7 +206,14 @@ function Navbar() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
-                            onClick={session ? () => signOut() : () => none()}
+                            onClick={
+                              session
+                                ? () =>
+                                    signOut({
+                                      callbackUrl: `/`,
+                                    })
+                                : () => none()
+                            }
                             className={`${
                               active ? "bgmenucolor text-white" : "text-white"
                             } group flex rounded-md items-center w-full py-3 text-sm`}
