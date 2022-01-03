@@ -208,8 +208,8 @@ function Collections() {
     );
   if (isLoading)
     return (
-      <div className="text-white bg-[#414052] animate-pulse rounded-xl h-16 text-xl w-full flex justify-center items-center">
-        Loading...
+      <div className="text-white bg-transparent animate-pulse rounded-xl h-16 text-xl w-full flex justify-center items-center">
+        <i className="animate-spin bx bx-loader-alt text-[#414052] text-4xl"></i>
       </div>
     );
   if (data.user === undefined || data.user === null) {

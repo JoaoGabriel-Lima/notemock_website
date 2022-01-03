@@ -7,7 +7,6 @@ import React from "react";
 // import { useSession, signIn } from "next-auth/react";
 import Router from "next/router";
 // import { AppProps } from "next/app";
-
 import { AppProps } from "next/app";
 import { HomeCointainer } from "../styles/components/home/home";
 import Layout from "../components/Layout";
@@ -36,17 +35,17 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <>
       {loading ? (
-        <SessionProvider session={session}>
+        <SessionProvider session={pageProps.session}>
           <HomeCointainer className="body ">
-            <Layout>
-              <div className="w-full h-60 flex justify-center items-center">
-                <i className="animate-spin bx bx-loader-alt text-white/60 text-4xl"></i>
+            <Layout loading={true}>
+              <div className="w-full h-20 flex justify-center items-center">
+                <i className="animate-spin bx bx-loader-alt text-[#414052] text-4xl"></i>
               </div>
             </Layout>
           </HomeCointainer>
         </SessionProvider>
       ) : (
-        <SessionProvider session={session}>
+        <SessionProvider session={pageProps.session}>
           <Component {...pageProps} />
         </SessionProvider>
       )}

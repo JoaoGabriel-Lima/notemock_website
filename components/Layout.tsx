@@ -64,7 +64,6 @@ function Layout(props: any) {
       };
     }
   }, []);
-
   return (
     <>
       <Head>
@@ -110,8 +109,12 @@ function Layout(props: any) {
           <section id="notes_section" className="flex items-center flex-col ">
             <AnimatePresence exitBeforeEnter>
               <motion.div
-                initial="hidden"
-                animate="visible"
+                {...(props.loading
+                  ? { initial: "", animate: "" }
+                  : { initial: "hidden", animate: "visible" })}
+                // {props.loading
+                //   ? { initial: "", animate: "" }
+                //   : { initial: "hidden", animate: "visible" }}
                 variants={{
                   hidden: { opacity: 0, x: "-50px" },
                   visible: { opacity: 1, x: 0 },
@@ -131,5 +134,9 @@ function Layout(props: any) {
     </>
   );
 }
+
+Layout.defaultProps = {
+  loading: false,
+};
 
 export default Layout;

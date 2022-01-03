@@ -9,11 +9,35 @@ import Layout from "../../components/Layout";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import ToDoCollectionItem from "../../components/Collections/Todo_Collection_Item";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import SubToDoItem from "../../components/Collections/SubToDo_Collection";
 
-const Collection: NextPage = ({ data }: any) => {
+const Collection: NextPage = ({ content }: any) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // initialData: content,
+        refetchOnWindowFocus: true,
+      },
+    },
+  });
+  const { data: session, status } = useSession();
+
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  if (status === "loading") {
+    return (
+      <HomeCointainer className="body">
+        <Layout></Layout>
+      </HomeCointainer>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    router.push("/");
+  }
 
   // function getChecked(array: any) {
   //   let checked = 0;
@@ -43,7 +67,7 @@ const Collection: NextPage = ({ data }: any) => {
                 <i className="bx bx-chevron-left text-white text-3xl"></i>
               </div>
               <h4 className="text-white font-semibold tracking-wide text-2xl">
-                {data.collection.groupname}
+                {content.collection.groupname}
               </h4>
             </div>
             <Menu as="div" className="relative inline-block">
@@ -131,7 +155,7 @@ const Collection: NextPage = ({ data }: any) => {
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.2 }}
                   className="text-white rounded-lg min-w-max px-4 py-1 origin-right"
-                  style={{ backgroundColor: data.collection.groupcolor }}
+                  style={{ backgroundColor: content.collection.groupcolor }}
                 >
                   <i className="bx bx-plus text-xl"></i>
                 </motion.button>
@@ -140,11 +164,14 @@ const Collection: NextPage = ({ data }: any) => {
           </motion.header>
           <div
             id="TasksToDo"
-            className="w-full flex flex-col items-start justify-start"
+            className="w-full flex flex-col items-start justify-start mb-[140px]"
           >
             <h4 className="text-white font-normal tracking-wide ">
-              Tasks - {data.collection.todos.length}
+              Tasks - {content.collection.todos.length}
             </h4>
+            <QueryClientProvider client={queryClient}>
+              <Todo content={content} session={session} />
+            </QueryClientProvider>
           </div>
         </Layout>
       </HomeCointainer>
@@ -169,13 +196,169 @@ export async function getServerSideProps(context: any) {
     }
   );
   // console.log(res.data);
-  const data = res.data;
-  if (data.collection === null) {
+  const content = res.data;
+  // console.log(content);
+  if (content.collection === null) {
     return {
       notFound: true,
     };
   }
-  return { props: { data } };
+  return { props: { content } };
 }
 
 export default Collection;
+
+function Todo(props: any) {
+  const { content } = props;
+  const { data: session } = useSession();
+  const { isLoading, error, data } = useQuery(
+    "repoData",
+    () =>
+      axios
+        .post(`https://notemock-website.vercel.app/api/collections`, {
+          session: session,
+          token: process.env.NEXT_PUBLIC_DBTOKEN,
+          collectionid: props.content.collection.groupid,
+        })
+        .then((res) => res.data),
+    {
+      initialData: content,
+    }
+  );
+  // console.log(data);
+  if (error)
+    return (
+      <ToDoCollectionItem
+        key={Math.random()}
+        itemcontent="Error"
+        itemtime="1997-06-30"
+        checked={false}
+        groupcolor="#f83d3d"
+        itemid="404"
+        collectionid="404"
+        subtodo={[]}
+      ></ToDoCollectionItem>
+    );
+  if (isLoading) return <></>;
+  if (data.collection === null) {
+    return (
+      <ToDoCollectionItem
+        key={Math.random()}
+        itemcontent="Error"
+        itemtime="1997-06-30"
+        checked={false}
+        groupcolor="#3d59f8"
+        itemid="404"
+        collectionid="404"
+        subtodo={[]}
+      ></ToDoCollectionItem>
+    );
+  } else {
+    if (data.collection.todos.length > 0 && data.collection.todos[0] != "") {
+      return data.collection.todos.map((todo: any) => (
+        <ToDoCollectionItem
+          key={Math.random()}
+          itemcontent={todo.itemcontent}
+          itemtime={todo.itemtime}
+          checked={todo.checked}
+          groupcolor={props.content.collection.groupcolor}
+          itemid={todo.itemid}
+          collectionid={props.content.collection.groupid}
+          subtodo={todo.subtodo}
+        >
+          {todo.subtodo.length > 0 &&
+            todo.subtodo[0] != "" &&
+            todo.subtodo.map((subtodo: any) => (
+              <SubToDoItem
+                key={Math.random()}
+                itemcontent={subtodo.itemcontent}
+                checked={subtodo.checked}
+                groupcolor={props.content.collection.groupcolor}
+                subtodoid={subtodo.subtodoid}
+                collectionid={props.content.collection.groupid}
+                itemid={todo.itemid}
+              ></SubToDoItem>
+            ))}
+
+          <div className="flex flex-row mt-4 items-start justify-center w-full ">
+            <div className=" text-sm  w-full border-[3px] rounded-3xl flex justify-center font-medium text-center text-[#8e8e9b] items-center border-[#21212b] h-[45px] mr-3">
+              Add a SubToDo
+            </div>
+            <div className="text-sm w-full border-[3px] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]">
+              Edit Collection
+            </div>
+          </div>
+        </ToDoCollectionItem>
+      ));
+    } else {
+      return <></>;
+    }
+  }
+}
+
+// function SubTodo(props: any) {
+//   const { data: session } = useSession();
+
+//   console.log(props.itemid);
+//   const { isLoading, error, data } = useQuery("repoData", () =>
+//     axios
+//       .post(`http://localhost:3000/api/subtodo`, {
+//         session: session,
+//         token: process.env.NEXT_PUBLIC_DBTOKEN,
+//         collectionid: props.collectionid,
+//         todoid: props.itemid,
+//       })
+//       .then((res) => res.data)
+//   );
+
+//   if (error)
+//     return (
+//       <SubToDoItem
+//         key={Math.random()}
+//         itemcontent="Error"
+//         checked={false}
+//         groupcolor="#f83d3d"
+//         subitemid="404"
+//         collectionid="404"
+//       ></SubToDoItem>
+//     );
+//   if (isLoading)
+//     return (
+//       <SubToDoItem
+//         className="animate-pulse"
+//         key={Math.random()}
+//         itemcontent="Loading"
+//         checked={false}
+//         groupcolor="#2c2c2c"
+//         subitemid="404"
+//         collectionid="404"
+//       ></SubToDoItem>
+//     );
+//   if (data.todo === undefined || data.todo === null) {
+//     return (
+//       <SubToDoItem
+//         key={Math.random()}
+//         itemcontent="Error"
+//         checked={false}
+//         groupcolor="#3df846"
+//         subitemid="404"
+//         collectionid="404"
+//       ></SubToDoItem>
+//     );
+//   } else {
+//     console.log(data.todo.subtodo);
+//     if (data.todo.subtodo.length > 0 && data.todo.subtodo[0] != "") {
+//       return data.todo.subtodo.map((subtodo: any) => (
+//         <SubToDoItem
+//           key={Math.random()}
+//           itemcontent={subtodo.itemcontent}
+//           checked={subtodo.checked}
+//           groupcolor={props.groupcolor}
+//           subtodoid={subtodo.subtodoid}
+//         ></SubToDoItem>
+//       ));
+//     } else {
+//       return <></>;
+//     }
+//   }
+// }

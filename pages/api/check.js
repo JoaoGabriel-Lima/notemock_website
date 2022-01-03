@@ -9,6 +9,7 @@ export default async function handler(req, res) {
   const collectionid = req.body.collectionid;
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
   const token = req.body.token;
+  const subtodoid = req.body.subtodoid;
   // const session = await getSession({ req });
   // console.log(`Session Info: ${session}`);
   if (token != rt) {
@@ -28,7 +29,7 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const user = await db
       .collection("users")
-      .findOne({ email: session.user.email }, { itemid: todoid });
+      .findOne({ email: session.user.email });
     if (user) {
       function findCollection(collection) {
         return collection.groupid === collectionid;
@@ -38,19 +39,53 @@ export default async function handler(req, res) {
       const findItem = user.collections[collection].todos.findIndex(
         (todos) => todos.itemid === todoid
       );
-
-      await db.collection("users").updateOne(
-        { email: session.user.email },
-        {
-          $set: {
-            [`collections.${collection}.todos.${findItem}.checked`]: checked,
-          },
+      if (findItem <= -1) {
+        console.log("Item not found");
+        return res.status(200).send({
+          status: "Todo not found",
+          user: null,
+        });
+      }
+      if (subtodoid != null || subtodoid != undefined) {
+        const findSubItem = user.collections[collection].todos[
+          findItem
+        ].subtodo.findIndex((subtodo) => subtodo.subtodoid === subtodoid);
+        if (findSubItem <= -1) {
+          console.log("Subtodo not found");
+          return res.status(200).send({
+            status: "Subtodo not found",
+            user: null,
+          });
         }
-      );
-      return res.status(201).send({
-        status: "Updated",
-        user: user.collections[collection].todos[findItem],
-      });
+        await db.collection("users").updateOne(
+          { email: session.user.email },
+          {
+            $set: {
+              [`collections.${collection}.todos.${findItem}.subtodo.${findSubItem}.checked`]:
+                checked,
+            },
+          }
+        );
+        return res.status(201).send({
+          status: "Updated",
+          user: user.collections[collection].todos[findItem].subtodo[
+            findSubItem
+          ],
+        });
+      } else {
+        await db.collection("users").updateOne(
+          { email: session.user.email },
+          {
+            $set: {
+              [`collections.${collection}.todos.${findItem}.checked`]: checked,
+            },
+          }
+        );
+        return res.status(201).send({
+          status: "Updated",
+          user: user.collections[collection].todos[findItem],
+        });
+      }
     }
   } else {
     console.log("user not found");
