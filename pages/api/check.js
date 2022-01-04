@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
   const token = req.body.token;
   const subtodoid = req.body.subtodoid;
+
   // const session = await getSession({ req });
   // console.log(`Session Info: ${session}`);
   if (token != rt) {

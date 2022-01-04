@@ -101,6 +101,7 @@ function SubToDoItem(props: any) {
   }
   const { data: session } = useSession();
   const [isOpenS, setIsOpenS] = useState(props.checked);
+
   function handleClick(id: any, subtodoid: any) {
     setIsOpenS(!isOpenS);
     axios.post("/api/check", {

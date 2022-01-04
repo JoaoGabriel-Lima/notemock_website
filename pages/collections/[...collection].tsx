@@ -15,17 +15,12 @@ import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import SubToDoItem from "../../components/Collections/SubToDo_Collection";
 
 const Collection: NextPage = ({ content }: any) => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        // initialData: content,
-        refetchOnWindowFocus: true,
-      },
-    },
-  });
+  const [queryClient] = React.useState(() => new QueryClient());
   const { data: session, status } = useSession();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [inputvalue, setInputvalue] = useState("");
   const router = useRouter();
   if (status === "loading") {
     return (
@@ -53,7 +48,27 @@ const Collection: NextPage = ({ content }: any) => {
   //   });
   //   return notchecked;
   // }
-  // Create a fuction that will get the height of #content div and set it to the state
+
+  // const mutation = useMutation((newTodo) => {
+  //   return axios.post("/api/addtodo", newTodo);
+  // });
+
+  async function addTodo(nw: any) {
+    if (nw.itemcontent.trim()) {
+      console.log(nw);
+      setIsOpen(true);
+      setInputvalue("");
+      setIsLoading(true);
+      await axios
+        .post("https://notemock-website.vercel.app/api/addtodo", nw)
+        .then((res) => {
+          setIsLoading(false);
+          doRefetch();
+        });
+    }
+    // mutation.mutate(nw);
+  }
+
   return (
     <>
       <HomeCointainer className="body ">
@@ -127,11 +142,23 @@ const Collection: NextPage = ({ content }: any) => {
                 >
                   <i className="bx bx-plus text-black text-xl"></i>
                 </div> */}
+
                 <input
                   id="add_ToDo"
                   onClick={() => setIsOpen(true)}
-                  className="text-gray-500 font-medium w-full h-full border-0 focus:border-0 placeholder:font-normal"
+                  onSubmit={() =>
+                    addTodo({
+                      itemcontent: inputvalue,
+                      collectionid: content.collection.groupid,
+                      session: session,
+                      token: process.env.NEXT_PUBLIC_DBTOKEN,
+                      itemtime: "2022-01-03",
+                    })
+                  }
+                  onChange={(e) => setInputvalue(e.target.value)}
+                  className="placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium w-full h-full border-0 focus:border-0"
                   placeholder="Add a task"
+                  value={inputvalue}
                 ></input>
               </div>
               <div id="send" className="mr-4 flex ">
@@ -152,6 +179,15 @@ const Collection: NextPage = ({ content }: any) => {
                 <motion.button
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
+                  onClick={() =>
+                    addTodo({
+                      itemcontent: inputvalue,
+                      collectionid: content.collection.groupid,
+                      session: session,
+                      token: process.env.NEXT_PUBLIC_DBTOKEN,
+                      itemtime: "2022-01-03",
+                    })
+                  }
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.2 }}
                   className="text-white rounded-lg min-w-max px-4 py-1 origin-right"
@@ -169,6 +205,11 @@ const Collection: NextPage = ({ content }: any) => {
             <h4 className="text-white font-normal tracking-wide ">
               Tasks - {content.collection.todos.length}
             </h4>
+            {isLoading && (
+              <div className="w-full h-auto flex justify-center mt-5 mb-5">
+                <i className="animate-spin bx bx-loader-alt text-[#414052] text-4xl"></i>
+              </div>
+            )}
             <QueryClientProvider client={queryClient}>
               <Todo content={content} session={session} />
             </QueryClientProvider>
@@ -207,11 +248,11 @@ export async function getServerSideProps(context: any) {
 }
 
 export default Collection;
-
+let doRefetch: any;
 function Todo(props: any) {
   const { content } = props;
   const { data: session } = useSession();
-  const { isLoading, error, data } = useQuery(
+  const { isLoading, error, data, refetch } = useQuery(
     "repoData",
     () =>
       axios
@@ -225,6 +266,9 @@ function Todo(props: any) {
       initialData: content,
     }
   );
+  doRefetch = () => {
+    refetch();
+  };
   // console.log(data);
   if (error)
     return (
@@ -255,41 +299,50 @@ function Todo(props: any) {
     );
   } else {
     if (data.collection.todos.length > 0 && data.collection.todos[0] != "") {
-      return data.collection.todos.map((todo: any) => (
-        <ToDoCollectionItem
-          key={Math.random()}
-          itemcontent={todo.itemcontent}
-          itemtime={todo.itemtime}
-          checked={todo.checked}
-          groupcolor={props.content.collection.groupcolor}
-          itemid={todo.itemid}
-          collectionid={props.content.collection.groupid}
-          subtodo={todo.subtodo}
-        >
-          {todo.subtodo.length > 0 &&
-            todo.subtodo[0] != "" &&
-            todo.subtodo.map((subtodo: any) => (
-              <SubToDoItem
-                key={Math.random()}
-                itemcontent={subtodo.itemcontent}
-                checked={subtodo.checked}
-                groupcolor={props.content.collection.groupcolor}
-                subtodoid={subtodo.subtodoid}
-                collectionid={props.content.collection.groupid}
-                itemid={todo.itemid}
-              ></SubToDoItem>
-            ))}
+      return data.collection.todos
+        .slice()
+        .reverse()
+        .map((todo: any) => (
+          <ToDoCollectionItem
+            key={Math.random()}
+            itemcontent={todo.itemcontent}
+            itemtime={todo.itemtime}
+            checked={todo.checked}
+            groupcolor={props.content.collection.groupcolor}
+            itemid={todo.itemid}
+            collectionid={props.content.collection.groupid}
+            subtodo={todo.subtodo}
+          >
+            {todo.subtodo.length > 0 &&
+              todo.subtodo[0] != "" &&
+              todo.subtodo.map((subtodo: any) => (
+                <SubToDoItem
+                  key={Math.random()}
+                  itemcontent={subtodo.itemcontent}
+                  checked={subtodo.checked}
+                  groupcolor={props.content.collection.groupcolor}
+                  subtodoid={subtodo.subtodoid}
+                  collectionid={props.content.collection.groupid}
+                  itemid={todo.itemid}
+                ></SubToDoItem>
+              ))}
 
-          <div className="flex flex-row mt-4 items-start justify-center w-full ">
-            <div className=" text-sm  w-full border-[3px] rounded-3xl flex justify-center font-medium text-center text-[#8e8e9b] items-center border-[#21212b] h-[45px] mr-3">
-              Add a SubToDo
+            <div className="flex flex-row mt-4 items-start justify-center w-full ">
+              <div className=" text-sm  w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center font-medium text-center text-[#8e8e9b] items-center border-[#21212b] h-[45px] mr-3">
+                Add a SubToDo
+              </div>
+              {todo.checked ? (
+                <div className="text-sm w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]">
+                  Delete Todo
+                </div>
+              ) : (
+                <div className="text-sm w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]">
+                  Edit Todo
+                </div>
+              )}
             </div>
-            <div className="text-sm w-full border-[3px] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]">
-              Edit Collection
-            </div>
-          </div>
-        </ToDoCollectionItem>
-      ));
+          </ToDoCollectionItem>
+        ));
     } else {
       return <></>;
     }

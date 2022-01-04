@@ -46,6 +46,12 @@ export default async function handler(req, res) {
           todo: null,
         });
       }
+      if (todo === undefined) {
+        return res.status(200).send({
+          status: "Todo not found",
+          todo: null,
+        });
+      }
       return res.status(201).send({
         status: "Todo found",
         todo: todo,
