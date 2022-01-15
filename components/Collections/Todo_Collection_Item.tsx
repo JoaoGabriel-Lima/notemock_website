@@ -155,19 +155,19 @@ function ToDoCollectionItem(props: any) {
   }
 
   // create a function that will find the checked todo inside a array of objects and return the number of checked todos in the array
-  function getChecked(array: any) {
-    let checked = 0;
-    array.forEach((element: any) => {
-      if (element.checked) checked++;
-    });
-    return checked;
-  }
+  // function getChecked(array: any) {
+  //   let checked = 0;
+  //   array.forEach((element: any) => {
+  //     if (element.checked) checked++;
+  //   });
+  //   return checked;
+  // }
 
   function refetchSubtodo() {
     props.refetch();
   }
 
-  const [checked] = useState(getChecked(props.subtodo));
+  // const [checked] = useState(getChecked(props.subtodo));
   // const counter = (c: any) => {
   //   if (c == true) {
   //     setChecked(checked + 1);

@@ -1,8 +1,17 @@
 # Notemock
 
-![Preview-Screens](https://github.com/JoaoGabriel-Lima/notemock_website/blob/main/dashboard.jpg)
+<p align="center">
+  <img src="https://github.com/JoaoGabriel-Lima/notemock_website/blob/main/dashboard.jpg" alt="Preview-Screens">
+</p>
+<p align="center">
+  If you want to take a look on all screens of the App, they are <a href="https://drive.google.com/drive/folders/175RmjnyOH-J2R4tSrEWI8W_R4w8CnLcM?usp=sharing">here</a>
+</p>
 
-If you want to take a look on all screens of the App, they are [here](https://drive.google.com/drive/folders/175RmjnyOH-J2R4tSrEWI8W_R4w8CnLcM?usp=sharing).
+<p align="center">
+  <img src="https://img.shields.io/github/checks-status/JoaoGabriel-Lima/notemock_website/main">
+  <img src="https://img.shields.io/badge/-unfinished-orange">
+  <img src="https://img.shields.io/github/languages/top/JoaoGabriel-Lima/notemock_website">
+</p>
 
 ## About this Project
 
