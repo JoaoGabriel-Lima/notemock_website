@@ -126,8 +126,8 @@ export const HomeCointainer = styled.div`
   summary {
     list-style: none;
   }
-  input {
-    border-radius: 30px;
+  .input-search {
+    /* border-radius: 30px; */
     background-color: #21212b;
     /* display: none; */
   }
@@ -168,6 +168,82 @@ export const HomeCointainer = styled.div`
   }
   details[close] summary ~ * {
     animation: sweepclose 0.5s ease-in-out;
+  }
+  .react-datepicker__header {
+    text-align: center;
+    background-color: #21212b;
+    border-bottom: 0px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    position: relative;
+    color: white;
+    /* border: 0; */
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+  }
+  .react-datepicker {
+    background-color: #1d1d27;
+    color: white;
+    border-radius: 1.5rem;
+    border: solid #2a2a36 2px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+  }
+  .react-datepicker__navigation {
+    margin-top: 12px;
+  }
+  .react-datepicker__day--selected {
+    border-radius: 999px;
+    background-color: ${(props) =>
+      props.color ? props.color : "black"} !important;
+    color: white !important;
+  }
+  .react-datepicker__day {
+    margin: 0.2rem;
+    padding: 0.1rem;
+    color: lightgray;
+    font-family: "Inter", sans-serif;
+  }
+  .react-datepicker__day:hover {
+    /* filter: brightness(150%); */
+    border-radius: 999px;
+    background-color: ${(props) =>
+      props.color ? `${props.color}55` : "black"};
+  }
+  .react-datepicker__month-container {
+    border-radius: 1.5rem;
+    border: 0;
+  }
+
+  .react-datepicker__day-name {
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    padding-right: 0.1rem;
+    padding-left: 0.1rem;
+    /* display: none; */
+    padding-top: 6px;
+    color: ${(props) => (props.color ? props.color : "white")};
+    font-family: "Inter", sans-serif;
+  }
+  .react-datepicker__day--outside-month {
+    color: lightgray;
+    filter: brightness(40%);
+  }
+  .react-datepicker__current-month {
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+  }
+  .react-datepicker__day--today {
+    color: WHITE;
+    background-color: #292935;
+    border-radius: 999px;
+    font-weight: normal;
+  }
+  .react-datepicker__day--keyboard-selected {
+    color: black;
+    background-color: lightgray;
   }
   @keyframes sweepclose {
     100% {

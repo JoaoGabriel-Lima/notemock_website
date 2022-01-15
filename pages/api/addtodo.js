@@ -11,6 +11,7 @@ export default async function handler(req, res) {
   const itemcontent = req.body.itemcontent;
   const itemtime = req.body.itemtime;
 
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   // console.log(token);
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
   // const session = await getSession({ req });
@@ -35,7 +36,7 @@ export default async function handler(req, res) {
   async function checkitemid(itemid2) {
     // console.log(itemid2);
     await axios
-      .post("https://notemock-website.vercel.app/api/subtodo", {
+      .post("http://localhost:3000/api/subtodo", {
         session: session,
         token: token,
         collectionid: collectiongroupid,
@@ -57,6 +58,7 @@ export default async function handler(req, res) {
 
   let itemid = getRandomNumberBetween(10000, 99999);
   checkitemid(itemid);
+  await delay(100);
 
   if (req.method === "POST") {
     const user = await db.collection("users").findOne({

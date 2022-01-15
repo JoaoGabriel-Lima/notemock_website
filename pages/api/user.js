@@ -10,6 +10,8 @@ export default async function handler(req, res) {
   // const session = await getSession({ req });
   // console.log(`Session Info: ${session}`);
 
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
   if (token != rt) {
     return res.status(200).send({
       status: "Unauthorized",
@@ -24,6 +26,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
+    await delay(100);
     const user = await db
       .collection("users")
       .findOne({ email: session.user.email });

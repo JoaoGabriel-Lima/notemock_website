@@ -103,6 +103,8 @@ function SubToDoItem(props: any) {
   const [isOpenS, setIsOpenS] = useState(props.checked);
 
   function handleClick(id: any, subtodoid: any) {
+    // props.refetch();
+    props.sendcheck(!isOpenS);
     setIsOpenS(!isOpenS);
     axios.post("/api/check", {
       id: id,
@@ -113,6 +115,7 @@ function SubToDoItem(props: any) {
       collectionid: props.collectionid,
     });
   }
+
   return (
     <div className="bg-[#21212b] w-full mt-3 flex py-3 rounded-3xl justify-between items-center">
       <CheckboxContainer

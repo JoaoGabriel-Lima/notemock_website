@@ -123,7 +123,7 @@ function Layout(props: any) {
                 id="dashboard-page-content"
                 className="w-full max-w-3xl flex items-start justify-start mt-10 overflow-y-auto"
               >
-                <div className="mr-7 ml-7 w-full dash-margins">
+                <div className="mr-7 ml-7 w-full dash-margins mb-44">
                   {props.children}
                 </div>
               </motion.div>

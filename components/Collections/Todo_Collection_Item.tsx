@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable require-jsdoc */
 import axios from "axios";
 import React, { useState } from "react";
@@ -5,6 +6,7 @@ import { CheckboxContainer } from "../../styles/components/home/checkbox";
 import scss from "../../styles/home.module.scss";
 import { useSession } from "next-auth/react";
 import { AnimatePresence, motion } from "framer-motion";
+import SubToDoItem from "./SubToDo_Collection";
 
 /** This is a description of the foo function.
  * @param {string} props - This is a description of the foo parameter.
@@ -105,7 +107,7 @@ function ToDoCollectionItem(props: any) {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(props.checked);
 
-  const [isft, setIsft] = useState(false);
+  // const [isft, setIsft] = useState(false);
 
   function getopenstatus() {
     const localdata = `${props.collectionid}.${props.itemid}`;
@@ -128,13 +130,28 @@ function ToDoCollectionItem(props: any) {
     const localdata = `${props.collectionid}.${props.itemid}`;
     if (isOpenCollection) {
       setIsOpenCollection(false);
-      setIsft(true);
+      refetchSubtodo();
+
       localStorage.setItem(localdata, "false");
     } else {
       setIsOpenCollection(true);
-      setIsft(true);
+
       localStorage.setItem(localdata, "true");
     }
+  }
+
+  async function deleteitem() {
+    await axios
+      .post(`/api/deletetodo`, {
+        collectionid: props.collectionid,
+        id: props.itemid,
+        session: session,
+        token: process.env.NEXT_PUBLIC_DBTOKEN,
+      })
+      .then((res) => {
+        // props.rerender();
+        props.refetch();
+      });
   }
 
   // create a function that will find the checked todo inside a array of objects and return the number of checked todos in the array
@@ -146,6 +163,10 @@ function ToDoCollectionItem(props: any) {
     return checked;
   }
 
+  function refetchSubtodo() {
+    props.refetch();
+  }
+
   const [checked] = useState(getChecked(props.subtodo));
   // const counter = (c: any) => {
   //   if (c == true) {
@@ -155,6 +176,11 @@ function ToDoCollectionItem(props: any) {
   //   }
   // };
 
+  function sendcheck(c: any) {
+    console.log(c);
+  }
+
+  console.log(props.subtodo);
   const [isOpenCollection, setIsOpenCollection] = useState(getopenstatus());
   function handleClick(id: any) {
     setIsOpen(!isOpen);
@@ -206,7 +232,7 @@ function ToDoCollectionItem(props: any) {
                       style={{ color: "#a8a7a7" }}
                     ></i>
                     <h5 className="text-sm ml-1" style={{ color: "#a8a7a7" }}>
-                      {checked}/{props.subtodo.length}
+                      {props.subtodo.length}
                     </h5>
                   </div>
                 ) : (
@@ -237,18 +263,52 @@ function ToDoCollectionItem(props: any) {
           </button>
         </div>
       </div>
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
+        {/* {isOpenCollection && refetchSubtodo()} */}
         {isOpenCollection && (
           <motion.div
-            initial={isft && { opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
-            className="ml-8 flex flex-col items-start justify-start"
+            className={`ml-8 flex flex-col items-start justify-start`}
           >
-            {props.children}
+            {props.subtodo.length > 0 &&
+              props.subtodo[0] != "" &&
+              props.subtodo.map((subtodo: any) => (
+                <SubToDoItem
+                  key={Math.random()}
+                  itemcontent={subtodo.itemcontent}
+                  checked={subtodo.checked}
+                  groupcolor={props.groupcolor}
+                  subtodoid={subtodo.subtodoid}
+                  collectionid={props.collectionid}
+                  itemid={props.itemid}
+                  refetch={props.refetch}
+                  sendcheck={sendcheck}
+                ></SubToDoItem>
+              ))}
+
+            <div className="flex flex-row mt-4 items-start justify-center w-full ">
+              <div className="cursor-pointer text-sm  w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center font-medium text-center text-[#8e8e9b] items-center border-[#21212b] h-[45px] mr-3">
+                Add a SubToDo
+              </div>
+              {isOpen ? (
+                <div
+                  onClick={() => deleteitem()}
+                  className="cursor-pointer text-sm w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]"
+                >
+                  Delete Todo
+                </div>
+              ) : (
+                <div className="cursor-pointer text-sm w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]">
+                  Edit Todo
+                </div>
+              )}
+            </div>
           </motion.div>
         )}
+        {/* {isOpenCollection && props.refetch()} */}
       </AnimatePresence>
     </div>
   );

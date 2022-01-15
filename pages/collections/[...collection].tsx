@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable require-jsdoc */
 import type { NextPage } from "next";
@@ -12,7 +13,10 @@ import axios from "axios";
 import { getSession, useSession } from "next-auth/react";
 import ToDoCollectionItem from "../../components/Collections/Todo_Collection_Item";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import SubToDoItem from "../../components/Collections/SubToDo_Collection";
+// import SubToDoItem from "../../components/Collections/SubToDo_Collection";
+import DatePicker from "react-datepicker";
+// import "../../styles/calendar.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Collection: NextPage = ({ content }: any) => {
   const [queryClient] = React.useState(() => new QueryClient());
@@ -22,6 +26,31 @@ const Collection: NextPage = ({ content }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputvalue, setInputvalue] = useState("");
   const router = useRouter();
+
+  const getDate = (date: any) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
+
+  const startdate = getDate(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [sendDate, setSendDate] = useState(startdate);
+  const [isOpenDate, setIsOpenDate] = useState(false);
+  // const [date, setDate] = useState("");5555555555555
+
+  const handleChange = (e: any) => {
+    setIsOpenDate(!isOpenDate);
+    setStartDate(e);
+    setSendDate(getDate(e));
+  };
+  const handleClick = (e: any) => {
+    e.preventDefault();
+    setIsOpenDate(!isOpenDate);
+  };
+  // Create a function that get a date and return a string with the format yyyy-mm-dd
+
   if (status === "loading") {
     return (
       <HomeCointainer className="body">
@@ -59,24 +88,22 @@ const Collection: NextPage = ({ content }: any) => {
       setIsOpen(true);
       setInputvalue("");
       setIsLoading(true);
-      await axios
-        .post("https://notemock-website.vercel.app/api/addtodo", nw)
-        .then((res) => {
-          setIsLoading(false);
-          doRefetch();
-        });
+      await axios.post("http://localhost:3000/api/addtodo", nw).then((res) => {
+        doRefetch();
+        setIsLoading(false);
+      });
     }
     // mutation.mutate(nw);
   }
 
   return (
     <>
-      <HomeCointainer className="body ">
+      <HomeCointainer color={content.collection.groupcolor} className="body ">
         <Layout className="">
           <div className="page_overview flex w-full justify-between items-start mb-10">
             <div className="flex items-center justify-start ">
               <div
-                className="w-11 h-11 rounded-2xl bg-[#21212B] mr-4 flex items-center justify-center cursor-pointer"
+                className="w-11 h-11 rounded-2xl bg-[#21212b] mr-4 flex items-center justify-center cursor-pointer"
                 onClick={() => router.back()}
               >
                 <i className="bx bx-chevron-left text-white text-3xl"></i>
@@ -135,15 +162,8 @@ const Collection: NextPage = ({ content }: any) => {
           >
             <motion.li className=" cursor-pointer w-full rounded-3xl  h-14 flex justify-between items-center ">
               <div className="w-full h-11 flex justify-start items-center px-4">
-                {/* <div
-                  id="add_button"
-                  onClick={() => setIsOpen(!isOpen)}
-                  className=" w-8 h-8 bg-red-500 min-w-[2rem] rounded-xl mr-4 flex items-center justify-center"
-                >
-                  <i className="bx bx-plus text-black text-xl"></i>
-                </div> */}
-
                 <input
+                  maxLength={50}
                   id="add_ToDo"
                   onClick={() => setIsOpen(true)}
                   onSubmit={() =>
@@ -152,16 +172,16 @@ const Collection: NextPage = ({ content }: any) => {
                       collectionid: content.collection.groupid,
                       session: session,
                       token: process.env.NEXT_PUBLIC_DBTOKEN,
-                      itemtime: "2022-01-03",
+                      itemtime: sendDate,
                     })
                   }
                   onChange={(e) => setInputvalue(e.target.value)}
-                  className="placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium w-full h-full border-0 focus:border-0"
+                  className="placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium w-full h-full border-0 focus:border-0 rounded-md autofill:bg-transparent "
                   placeholder="Add a task"
                   value={inputvalue}
                 ></input>
               </div>
-              <div id="send" className="mr-4 flex ">
+              <div id="send" className="mr-4 flex relative ">
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.button
@@ -169,11 +189,33 @@ const Collection: NextPage = ({ content }: any) => {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.2 }}
-                      onClick={() => setIsOpen(true)}
-                      className="text-white bg-[#32323c] rounded-lg mr-2 min-w-max px-4 py-1 origin-right"
+                      onClick={(e) => handleClick(e)}
+                      className="text-white bg-[#32323c] hover:bg-[#25252c] rounded-lg mr-2 min-w-max px-4 py-1 origin-right"
                     >
                       <i className="bx bx-calendar text-white text-xl"></i>
                     </motion.button>
+                  )}
+                </AnimatePresence>
+                <AnimatePresence initial={false}>
+                  {isOpenDate && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      style={{ originY: 0 }}
+                      transition={{ duration: 0.1 }}
+                      className="z-[6] absolute top-[40px] left-[-135px]"
+                    >
+                      <DatePicker
+                        dateFormat="yyyy/MM/dd"
+                        disabledKeyboardNavigation
+                        formatWeekDay={(nameOfDay) => nameOfDay.substr(0, 1)}
+                        wrapperClassName="datePicker"
+                        selected={startDate}
+                        onChange={handleChange}
+                        inline
+                      />
+                    </motion.div>
                   )}
                 </AnimatePresence>
                 <motion.button
@@ -185,7 +227,7 @@ const Collection: NextPage = ({ content }: any) => {
                       collectionid: content.collection.groupid,
                       session: session,
                       token: process.env.NEXT_PUBLIC_DBTOKEN,
-                      itemtime: "2022-01-03",
+                      itemtime: sendDate,
                     })
                   }
                   exit={{ opacity: 0, x: 20 }}
@@ -228,14 +270,11 @@ export async function getServerSideProps(context: any) {
   const collection2 = collection[0];
   const session = await getSession(context);
   // console.log(session);
-  const res = await axios.post(
-    `https://notemock-website.vercel.app/api/collections`,
-    {
-      session: session,
-      token: process.env.NEXT_PUBLIC_DBTOKEN,
-      collectionid: collection2,
-    }
-  );
+  const res = await axios.post(`http://localhost:3000/api/collections`, {
+    session: session,
+    token: process.env.NEXT_PUBLIC_DBTOKEN,
+    collectionid: collection2,
+  });
   // console.log(res.data);
   const content = res.data;
   // console.log(content);
@@ -256,7 +295,7 @@ function Todo(props: any) {
     "repoData",
     () =>
       axios
-        .post(`https://notemock-website.vercel.app/api/collections`, {
+        .post(`http://localhost:3000/api/collections`, {
           session: session,
           token: process.env.NEXT_PUBLIC_DBTOKEN,
           collectionid: props.content.collection.groupid,
@@ -266,8 +305,8 @@ function Todo(props: any) {
       initialData: content,
     }
   );
-  doRefetch = () => {
-    refetch();
+  doRefetch = async () => {
+    await refetch();
   };
   // console.log(data);
   if (error)
@@ -312,36 +351,8 @@ function Todo(props: any) {
             itemid={todo.itemid}
             collectionid={props.content.collection.groupid}
             subtodo={todo.subtodo}
-          >
-            {todo.subtodo.length > 0 &&
-              todo.subtodo[0] != "" &&
-              todo.subtodo.map((subtodo: any) => (
-                <SubToDoItem
-                  key={Math.random()}
-                  itemcontent={subtodo.itemcontent}
-                  checked={subtodo.checked}
-                  groupcolor={props.content.collection.groupcolor}
-                  subtodoid={subtodo.subtodoid}
-                  collectionid={props.content.collection.groupid}
-                  itemid={todo.itemid}
-                ></SubToDoItem>
-              ))}
-
-            <div className="flex flex-row mt-4 items-start justify-center w-full ">
-              <div className=" text-sm  w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center font-medium text-center text-[#8e8e9b] items-center border-[#21212b] h-[45px] mr-3">
-                Add a SubToDo
-              </div>
-              {todo.checked ? (
-                <div className="text-sm w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]">
-                  Delete Todo
-                </div>
-              ) : (
-                <div className="text-sm w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]">
-                  Edit Todo
-                </div>
-              )}
-            </div>
-          </ToDoCollectionItem>
+            refetch={sendmsg}
+          ></ToDoCollectionItem>
         ));
     } else {
       return <></>;
@@ -349,69 +360,6 @@ function Todo(props: any) {
   }
 }
 
-// function SubTodo(props: any) {
-//   const { data: session } = useSession();
-
-//   console.log(props.itemid);
-//   const { isLoading, error, data } = useQuery("repoData", () =>
-//     axios
-//       .post(`http://localhost:3000/api/subtodo`, {
-//         session: session,
-//         token: process.env.NEXT_PUBLIC_DBTOKEN,
-//         collectionid: props.collectionid,
-//         todoid: props.itemid,
-//       })
-//       .then((res) => res.data)
-//   );
-
-//   if (error)
-//     return (
-//       <SubToDoItem
-//         key={Math.random()}
-//         itemcontent="Error"
-//         checked={false}
-//         groupcolor="#f83d3d"
-//         subitemid="404"
-//         collectionid="404"
-//       ></SubToDoItem>
-//     );
-//   if (isLoading)
-//     return (
-//       <SubToDoItem
-//         className="animate-pulse"
-//         key={Math.random()}
-//         itemcontent="Loading"
-//         checked={false}
-//         groupcolor="#2c2c2c"
-//         subitemid="404"
-//         collectionid="404"
-//       ></SubToDoItem>
-//     );
-//   if (data.todo === undefined || data.todo === null) {
-//     return (
-//       <SubToDoItem
-//         key={Math.random()}
-//         itemcontent="Error"
-//         checked={false}
-//         groupcolor="#3df846"
-//         subitemid="404"
-//         collectionid="404"
-//       ></SubToDoItem>
-//     );
-//   } else {
-//     console.log(data.todo.subtodo);
-//     if (data.todo.subtodo.length > 0 && data.todo.subtodo[0] != "") {
-//       return data.todo.subtodo.map((subtodo: any) => (
-//         <SubToDoItem
-//           key={Math.random()}
-//           itemcontent={subtodo.itemcontent}
-//           checked={subtodo.checked}
-//           groupcolor={props.groupcolor}
-//           subtodoid={subtodo.subtodoid}
-//         ></SubToDoItem>
-//       ));
-//     } else {
-//       return <></>;
-//     }
-//   }
-// }
+function sendmsg() {
+  doRefetch();
+}
