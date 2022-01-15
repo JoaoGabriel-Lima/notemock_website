@@ -1,16 +1,15 @@
 # Notemock
 
 <p align="center">
-  <img src="https://github.com/JoaoGabriel-Lima/notemock_website/blob/main/dashboard.jpg" alt="Preview-Screens">
+<img src="https://github.com/JoaoGabriel-Lima/notemock_website/blob/main/dashboard.jpg" alt="Preview-Screens">
 </p>
-<p align="center">
-  If you want to take a look on all screens of the App, they are <a href="https://drive.google.com/drive/folders/175RmjnyOH-J2R4tSrEWI8W_R4w8CnLcM?usp=sharing">here</a>
+<p align="center">If you want to take a look on all screens of the App, they are <a href="https://drive.google.com/drive/folders/175RmjnyOH-J2R4tSrEWI8W_R4w8CnLcM?usp=sharing">here</a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/checks-status/JoaoGabriel-Lima/notemock_website/main">
-  <img src="https://img.shields.io/badge/-unfinished-orange">
-  <img src="https://img.shields.io/github/languages/top/JoaoGabriel-Lima/notemock_website">
+<img src="https://img.shields.io/github/checks-status/JoaoGabriel-Lima/notemock_website/main">
+<img src="https://img.shields.io/badge/-unfinished-orange">
+<img src="https://img.shields.io/github/languages/top/JoaoGabriel-Lima/notemock_website">
 </p>
 
 ## About this Project
@@ -27,7 +26,7 @@ This project is part of my personal portfolio, so, I'll be happy if you could pr
 
 Email-me: jg.limamarinho202@gmail.com
 
-Connect with me at [Twitter](https://twitter.com/juaozin__).
+Contact me at [Twitter](https://twitter.com/juaozin__).
 
 Also, you can use this Project as you wish, be for study, be for make improvements or earn money with it!
 
@@ -172,11 +171,11 @@ The website will start on the default port 3000
 
 ## Contributing
 
-You can send how many PR's do you want, I'll be glad to analyse and accept them! And if you have any question about the project...
+You can send me as many PR's as you want, I would be glad to analyse and accept them! And if you have any question about the project...
 
 Email-me: jg.limamarinho202@gmail.com
 
-Connect with me at [Twitter](https://twitter.com/juaozin__).
+Contact me at [Twitter](https://twitter.com/juaozin__).
 
 Thank you!
 
