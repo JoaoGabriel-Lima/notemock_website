@@ -36,7 +36,7 @@ export default async function handler(req, res) {
   async function checkitemid(itemid2) {
     // console.log(itemid2);
     await axios
-      .post("http://localhost:3000/api/subtodo", {
+      .post("https://notemock-website.vercel.app/api/subtodo", {
         session: session,
         token: token,
         collectionid: collectiongroupid,
