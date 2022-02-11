@@ -53,7 +53,7 @@ export default async function handler(req, res) {
               itemid: "4239",
               itemtime: "2022-02-15",
               checked: false,
-              subtudo: [],
+              subtodo: [],
             },
           ],
         },
