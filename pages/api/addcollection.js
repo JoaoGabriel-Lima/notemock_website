@@ -35,7 +35,7 @@ export default async function handler(req, res) {
   async function checkcol(collectioniditem) {
     // console.log(itemid2);
     await axios
-      .post("http://localhost:3000/api/collections", {
+      .post("https://notemock-website.vercel.app/api/collections", {
         session: session,
         token: token,
         collectionid: collectioniditem,
