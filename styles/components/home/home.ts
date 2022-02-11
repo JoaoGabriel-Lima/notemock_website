@@ -15,6 +15,9 @@ export const HomeCointainer = styled.div`
     outline: none;
     -webkit-tap-highlight-color: transparent;
   }
+  .box-box {
+    box-sizing: border-box !important;
+  }
   main {
     /* overflow-y: hidden; */
     /* overflow-y: scroll !important; */
@@ -180,15 +183,15 @@ export const HomeCointainer = styled.div`
     position: relative;
     color: white;
     /* border: 0; */
-    border-top-left-radius: 1.5rem;
-    border-top-right-radius: 1.5rem;
+    border-top-left-radius: 0.8rem;
+    border-top-right-radius: 0.8rem;
   }
   .react-datepicker {
     background-color: #1d1d27;
     color: white;
-    border-radius: 1.5rem;
-    border: solid #2a2a36 2px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 0.8rem;
+    border: 0;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   }
   .react-datepicker__navigation {
     margin-top: 12px;

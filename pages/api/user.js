@@ -40,7 +40,24 @@ export default async function handler(req, res) {
       name: session.user.name,
       email: session.user.email,
       image: session.user.image,
-      collections: [],
+      collections: [
+        {
+          groupname: "Test Collection",
+          groupicon: "world",
+          groupcolor: "#5ac45a",
+          groupid: "4239",
+          favorite: true,
+          todos: [
+            {
+              itemcontent: "This is a test todo",
+              itemid: "4239",
+              itemtime: "2022-02-15",
+              checked: false,
+              subtudo: [],
+            },
+          ],
+        },
+      ],
       friends: [],
       createdAt: new Date(),
     };

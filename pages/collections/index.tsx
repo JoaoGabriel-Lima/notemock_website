@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 
 import axios from "axios";
+import Link from "next/link";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 // const url = `https://notemock-website.vercel.app/api/user`;
 const queryClient = new QueryClient();
@@ -131,9 +132,11 @@ const Collections: NextPage = () => {
                             <CollectionsProgress />
                           </QueryClientProvider>
                           <div className="w-full h-24 flex justify-center items-start cursor-pointer">
-                            <div className="flex items-center w-full h-full justify-center border-[3px] border-[#21212B] hover:border-[#2A2A37] rounded-3xl">
-                              <i className="bx bx-plus text-3xl text-[#8A8A8E]"></i>
-                            </div>
+                            <Link href="/collections/add">
+                              <div className="flex items-center w-full h-full justify-center border-[3px] border-[#21212B] hover:border-[#2A2A37] rounded-3xl">
+                                <i className="bx bx-plus text-3xl text-[#8A8A8E]"></i>
+                              </div>
+                            </Link>
                           </div>
                         </CollectionsGrid>
                       </motion.div>
