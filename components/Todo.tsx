@@ -1,13 +1,8 @@
-/* eslint-disable require-jsdoc */
 import React from "react";
 import classnames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 
-/** This is a description of the foo function.
- * @param {string} props - This is a description of the foo parameter.
- * @return {string} This is a description of what the function returns.
- */
 function ToDo(props: any) {
   const router = useRouter();
   const iconholder = classnames(

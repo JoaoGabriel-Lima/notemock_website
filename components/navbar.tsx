@@ -6,14 +6,7 @@ import { Navbarlayout } from "../styles/components/home/navbar";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-/** This is a description of the foo function.
- * @param {string} - This is a description of the foo parameter.
- * @return {string} This is a description of what the function returns.
- */
 function Navbar() {
-  /** This is a description of the none function
-   * @param {string} - This is a description of the none parameter.
-   */
   function none() {}
   const { data: session } = useSession();
   const router = useRouter();
@@ -27,10 +20,8 @@ function Navbar() {
   } else {
     isToDo = true;
   }
-  // console.log(router.pathname);455
   return (
     <Navbarlayout>
-      {/* Make a creativa navbar */}
       <div id="nav-content" className="justify-between">
         <div id="nav-right-details" className="flex items-center">
           <i
@@ -73,11 +64,6 @@ function Navbar() {
           <AnimatePresence>
             <Link href="/collections">
               <motion.div
-                // initial={
-                //   isDashboard
-                //     ? { color: "rgb(255, 255, 255)" }
-                //     : { color: "rgb(107, 114, 128)" }
-                // }
                 animate={
                   isDashboard
                     ? { color: "rgb(107, 114, 128)" }
@@ -257,7 +243,7 @@ function Navbar() {
                       <button
                         className={`${
                           active ? "cursor-default text-white" : "text-white"
-                        } group flex rounded-xl items-center w-full py-3 text-sm flex justify-between`}
+                        } group flex rounded-xl items-center w-full py-3 text-sm justify-between`}
                       >
                         <span className="ml-3 font-semibold">
                           Notifications
