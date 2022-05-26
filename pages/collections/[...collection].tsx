@@ -69,16 +69,18 @@ const Collection: NextPage = ({ content }: any) => {
       setIsOpen(true);
       setInputvalue("");
       setIsLoading(true);
-      await axios.post("http://localhost:3000/api/addtodo", nw).then((res) => {
-        doRefetch().then(setIsLoading(false));
-      });
+      await axios
+        .post("https://notemock-website.vercel.app/api/addtodo", nw)
+        .then((res) => {
+          doRefetch().then(setIsLoading(false));
+        });
     }
     // mutation.mutate(nw);
   }
 
   async function favoriteCollection(favorite: boolean) {
     await axios
-      .post(`http://localhost:3000/api/favoritecollection`, {
+      .post(`https://notemock-website.vercel.app/api/favoritecollection`, {
         session: session,
         token: process.env.NEXT_PUBLIC_DBTOKEN,
         collectionid: content.collection.groupid,
@@ -273,11 +275,14 @@ export async function getServerSideProps(context: any) {
   const collection2 = collection[0];
   const session = await getSession(context);
   // console.log(session);
-  const res = await axios.post(`http://localhost:3000/api/collections`, {
-    session: session,
-    token: process.env.NEXT_PUBLIC_DBTOKEN,
-    collectionid: collection2,
-  });
+  const res = await axios.post(
+    `https://notemock-website.vercel.app/api/collections`,
+    {
+      session: session,
+      token: process.env.NEXT_PUBLIC_DBTOKEN,
+      collectionid: collection2,
+    }
+  );
   // console.log(res.data);
   const content = res.data;
   // console.log(content);
@@ -298,7 +303,7 @@ function Todo(props: any) {
     "repoData",
     () =>
       axios
-        .post(`http://localhost:3000/api/collections`, {
+        .post(`https://notemock-website.vercel.app/api/collections`, {
           session: session,
           token: process.env.NEXT_PUBLIC_DBTOKEN,
           collectionid: props.content.collection.groupid,
