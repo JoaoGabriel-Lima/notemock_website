@@ -153,14 +153,9 @@ const Home: NextPage = () => {
                   You are not logged in.
                 </h1>
                 <h4 className="text-gray-300 font-normal text-base text-justify mb-5">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum.
+                  A to-do list website made with Next.js focused on students and
+                  developers, offering better organization and customization
+                  options.
                 </h4>
                 <button
                   onClick={() => signIn()}
@@ -215,17 +210,62 @@ function Collections() {
   if (data.user === undefined || data.user === null) {
     return <div className="text-white text-2xl">No Todos</div>;
   } else {
-    return data.user.collections.map((collection: any) => {
-      if (collection.todos.length === 0) {
-        return (
-          <ToDo
-            key={collection.groupid}
-            groupcolor={collection.groupcolor}
-            groupname={collection.groupname}
-            iconname={collection.groupicon}
-            groupid={collection.groupid}
-          ></ToDo>
-        );
+    // check the first todo of each collection and reorder the todo list by the item_time
+    function getadateandcalculatetimeremaingindays(time: string) {
+      const today = new Date();
+      const eventdate = new Date(time);
+      const timeremaining = eventdate.getTime() - today.getTime();
+      const daysremainingfloat = timeremaining / (1000 * 60 * 60 * 24) + 1;
+      if (daysremainingfloat < 0) {
+        return Math.floor(daysremainingfloat);
+      } else {
+        const value = parseInt(daysremainingfloat.toString().split(".")[0], 10); // before
+        return value ? value : 0;
+      }
+    }
+
+    // add a todo to each collection
+    const newCollections: any = [];
+    data.user.collections.map((collection: any) => {
+      const todos = collection.todos.sort((a: any, b: any) => {
+        const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
+        const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
+
+        // order witch one is next to 0
+        return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+      });
+
+      newCollections.push({
+        ...collection,
+        todos: todos,
+      });
+    });
+
+    const collectionsSorted = newCollections.sort((a: any, b: any) => {
+      if (a.todos.length === 0 || b.todos.length === 0) {
+        return -1;
+      }
+      const aTime: any = getadateandcalculatetimeremaingindays(
+        a.todos[0].itemtime
+      );
+      const bTime: any = getadateandcalculatetimeremaingindays(
+        b.todos[0].itemtime
+      );
+
+      return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+    });
+
+    return collectionsSorted.map((collection: any) => {
+      const todos = collection.todos.sort((a: any, b: any) => {
+        const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
+        const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
+
+        // order witch one is next to 0
+        return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+      });
+
+      if (todos.length === 0) {
+        return;
       } else {
         return (
           <ToDo
@@ -235,9 +275,9 @@ function Collections() {
             iconname={collection.groupicon}
             groupid={collection.groupid}
           >
-            {collection.todos.map((todo: any) => (
+            {todos.slice(0, 4).map((todo: any) => (
               <ToDoItem
-                key={Math.random()}
+                key={todo.itemid}
                 itemcontent={todo.itemcontent}
                 itemtime={todo.itemtime}
                 checked={todo.checked}
@@ -246,6 +286,11 @@ function Collections() {
                 collectionid={collection.groupid}
               />
             ))}
+            {/* {collection.todos.length > 4 && (
+              <div className="text-white/80 mb-2 mt-[-15px] py-2 rounded-md flex w-full justify-center">
+                And {collection.todos.length - 4} more...
+              </div>
+            )} */}
           </ToDo>
         );
       }

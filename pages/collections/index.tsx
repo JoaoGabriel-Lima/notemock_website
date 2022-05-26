@@ -38,6 +38,7 @@ const Collections: NextPage = () => {
   if (status === "unauthenticated") {
     router.push("/");
   }
+
   if (status === "authenticated") {
     return (
       <>
@@ -65,6 +66,7 @@ const Collections: NextPage = () => {
                       <Menu.Item>
                         {({ active }) => (
                           <button
+                            onClick={() => router.push("/collections/add")}
                             className={`${
                               active ? "bgmenucolor text-white" : "text-white"
                             } group flex rounded-xl items-center w-full py-3 text-sm `}

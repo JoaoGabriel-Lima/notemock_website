@@ -21,6 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const Collection: NextPage = ({ content }: any) => {
   const [queryClient] = React.useState(() => new QueryClient());
   const { data: session, status } = useSession();
+  const [isFavorite, setIsFavorite] = useState(content.collection.favorite);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -63,39 +64,30 @@ const Collection: NextPage = ({ content }: any) => {
     router.push("/");
   }
 
-  // function getChecked(array: any) {
-  //   let checked = 0;
-  //   array.forEach((element: any) => {
-  //     if (element.checked) checked++;
-  //   });
-  //   return checked;
-  // }
-  // function getnotChecked(array: any) {
-  //   let notchecked = 0;
-  //   array.forEach((element: any) => {
-  //     if (element.checked == false) notchecked++;
-  //   });
-  //   return notchecked;
-  // }
-
-  // const mutation = useMutation((newTodo) => {
-  //   return axios.post("/api/addtodo", newTodo);
-  // });
-
   async function addTodo(nw: any) {
     if (nw.itemcontent.trim()) {
-      console.log(nw);
       setIsOpen(true);
       setInputvalue("");
       setIsLoading(true);
-      await axios
-        .post("https://notemock-website.vercel.app/api/addtodo", nw)
-        .then((res) => {
-          doRefetch();
-          setIsLoading(false);
-        });
+      await axios.post("http://localhost:3000/api/addtodo", nw).then((res) => {
+        doRefetch().then(setIsLoading(false));
+      });
     }
     // mutation.mutate(nw);
+  }
+
+  async function favoriteCollection(favorite: boolean) {
+    await axios
+      .post(`http://localhost:3000/api/favoritecollection`, {
+        session: session,
+        token: process.env.NEXT_PUBLIC_DBTOKEN,
+        collectionid: content.collection.groupid,
+        favorite: favorite,
+      })
+      .then((res) => {
+        console.log(res.status);
+        setIsFavorite(!isFavorite);
+      });
   }
 
   return (
@@ -129,16 +121,21 @@ const Collection: NextPage = ({ content }: any) => {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute right-0  w-56 origin-top-right todo-bg-header divide-y divide-blue-300/[.10] ring-1 rounded-xl shadow-lg ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="z-[5] absolute right-0  w-56 origin-top-right todo-bg-header divide-y divide-blue-300/[.10] ring-1 rounded-xl shadow-lg ring-black ring-opacity-5 focus:outline-none">
                   <div className="px-1 py-1">
                     <Menu.Item>
                       {({ active }) => (
                         <button
+                          onClick={() => favoriteCollection(!isFavorite)}
                           className={`${
                             active ? "bgmenucolor text-white" : "text-white"
                           } group flex rounded-xl items-center w-full py-3 text-sm `}
                         >
-                          <span className="ml-3">Favorite the collection</span>
+                          <span className="ml-3">
+                            {isFavorite
+                              ? "Unfavorite this collection"
+                              : "Favorite this collection"}
+                          </span>
                         </button>
                       )}
                     </Menu.Item>
@@ -162,85 +159,89 @@ const Collection: NextPage = ({ content }: any) => {
             className="mb-10 border-4 hover:border-[#23232c] border-[#1D1D25] rounded-3xl"
             initial={false}
           >
-            <motion.li className=" cursor-pointer w-full rounded-3xl  h-14 flex justify-between items-center ">
-              <div className="w-full h-11 flex justify-start items-center px-4">
-                <input
-                  maxLength={50}
-                  id="add_ToDo"
-                  onClick={() => setIsOpen(true)}
-                  onSubmit={() =>
-                    addTodo({
-                      itemcontent: inputvalue,
-                      collectionid: content.collection.groupid,
-                      session: session,
-                      token: process.env.NEXT_PUBLIC_DBTOKEN,
-                      itemtime: sendDate,
-                    })
-                  }
-                  onChange={(e) => setInputvalue(e.target.value)}
-                  className="placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium w-full h-full border-0 focus:border-0 rounded-md autofill:bg-transparent "
-                  placeholder="Add a task"
-                  value={inputvalue}
-                ></input>
-              </div>
-              <div id="send" className="mr-4 flex relative ">
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.button
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.2 }}
-                      onClick={(e) => handleClick(e)}
-                      className="text-white bg-[#32323c] hover:bg-[#25252c] rounded-lg mr-2 min-w-max px-4 py-1 origin-right"
-                    >
-                      <i className="bx bx-calendar text-white text-xl"></i>
-                    </motion.button>
-                  )}
-                </AnimatePresence>
-                <AnimatePresence initial={false}>
-                  {isOpenDate && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      style={{ originY: 0 }}
-                      transition={{ duration: 0.1 }}
-                      className="z-[6] absolute top-[40px] left-[-135px]"
-                    >
-                      <DatePicker
-                        dateFormat="yyyy/MM/dd"
-                        disabledKeyboardNavigation
-                        formatWeekDay={(nameOfDay) => nameOfDay.substr(0, 1)}
-                        wrapperClassName="datePicker"
-                        selected={startDate}
-                        onChange={handleChange}
-                        inline
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                <motion.button
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  onClick={() =>
-                    addTodo({
-                      itemcontent: inputvalue,
-                      collectionid: content.collection.groupid,
-                      session: session,
-                      token: process.env.NEXT_PUBLIC_DBTOKEN,
-                      itemtime: sendDate,
-                    })
-                  }
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-white rounded-lg min-w-max px-4 py-1 origin-right"
-                  style={{ backgroundColor: content.collection.groupcolor }}
-                >
-                  <i className="bx bx-plus text-xl"></i>
-                </motion.button>
-              </div>
-            </motion.li>
+            <form>
+              <motion.li className=" cursor-pointer w-full rounded-3xl  h-14 flex justify-between items-center ">
+                <div className="w-full h-11 flex justify-start items-center px-4">
+                  <input
+                    maxLength={50}
+                    id="add_ToDo"
+                    onClick={() => setIsOpen(true)}
+                    onSubmit={() =>
+                      addTodo({
+                        itemcontent: inputvalue,
+                        collectionid: content.collection.groupid,
+                        session: session,
+                        token: process.env.NEXT_PUBLIC_DBTOKEN,
+                        itemtime: sendDate,
+                      })
+                    }
+                    onChange={(e) => setInputvalue(e.target.value)}
+                    className="placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium w-full h-full border-0 focus:border-0 rounded-md autofill:bg-transparent "
+                    placeholder="Add a task"
+                    value={inputvalue}
+                  ></input>
+                </div>
+                <div id="send" className="mr-4 flex relative ">
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ duration: 0.2 }}
+                        onClick={(e) => handleClick(e)}
+                        className="text-white bg-[#32323c] hover:bg-[#25252c] rounded-lg mr-2 min-w-max px-4 py-1 origin-right"
+                      >
+                        <i className="bx bx-calendar text-white text-xl"></i>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <AnimatePresence initial={false}>
+                    {isOpenDate && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        style={{ originY: 0 }}
+                        transition={{ duration: 0.1 }}
+                        className="z-[6] absolute top-[40px] left-[-135px]"
+                      >
+                        <DatePicker
+                          dateFormat="yyyy/MM/dd"
+                          disabledKeyboardNavigation
+                          formatWeekDay={(nameOfDay) => nameOfDay.substr(0, 1)}
+                          wrapperClassName="datePicker"
+                          selected={startDate}
+                          onChange={handleChange}
+                          inline
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <motion.button
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    type="submit"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      addTodo({
+                        itemcontent: inputvalue,
+                        collectionid: content.collection.groupid,
+                        session: session,
+                        token: process.env.NEXT_PUBLIC_DBTOKEN,
+                        itemtime: sendDate,
+                      });
+                    }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-white rounded-lg min-w-max px-4 py-1 origin-right"
+                    style={{ backgroundColor: content.collection.groupcolor }}
+                  >
+                    <i className="bx bx-plus text-xl"></i>
+                  </motion.button>
+                </div>
+              </motion.li>
+            </form>
           </motion.header>
           <div
             id="TasksToDo"
@@ -272,14 +273,11 @@ export async function getServerSideProps(context: any) {
   const collection2 = collection[0];
   const session = await getSession(context);
   // console.log(session);
-  const res = await axios.post(
-    `https://notemock-website.vercel.app/api/collections`,
-    {
-      session: session,
-      token: process.env.NEXT_PUBLIC_DBTOKEN,
-      collectionid: collection2,
-    }
-  );
+  const res = await axios.post(`http://localhost:3000/api/collections`, {
+    session: session,
+    token: process.env.NEXT_PUBLIC_DBTOKEN,
+    collectionid: collection2,
+  });
   // console.log(res.data);
   const content = res.data;
   // console.log(content);
@@ -300,7 +298,7 @@ function Todo(props: any) {
     "repoData",
     () =>
       axios
-        .post(`https://notemock-website.vercel.app/api/collections`, {
+        .post(`http://localhost:3000/api/collections`, {
           session: session,
           token: process.env.NEXT_PUBLIC_DBTOKEN,
           collectionid: props.content.collection.groupid,
@@ -312,6 +310,7 @@ function Todo(props: any) {
   );
   doRefetch = async () => {
     await refetch();
+    return true;
   };
   // console.log(data);
   if (error)
@@ -343,22 +342,26 @@ function Todo(props: any) {
     );
   } else {
     if (data.collection.todos.length > 0 && data.collection.todos[0] != "") {
-      return data.collection.todos
-        .slice()
-        .reverse()
-        .map((todo: any) => (
-          <ToDoCollectionItem
-            key={Math.random()}
-            itemcontent={todo.itemcontent}
-            itemtime={todo.itemtime}
-            checked={todo.checked}
-            groupcolor={props.content.collection.groupcolor}
-            itemid={todo.itemid}
-            collectionid={props.content.collection.groupid}
-            subtodo={todo.subtodo}
-            refetch={sendmsg}
-          ></ToDoCollectionItem>
-        ));
+      return (
+        <AnimatePresence>
+          {data.collection.todos
+            .slice()
+            .reverse()
+            .map((todo: any) => (
+              <ToDoCollectionItem
+                key={todo.itemid}
+                itemcontent={todo.itemcontent}
+                itemtime={todo.itemtime}
+                checked={todo.checked}
+                groupcolor={props.content.collection.groupcolor}
+                itemid={todo.itemid}
+                collectionid={props.content.collection.groupid}
+                subtodo={todo.subtodo}
+                refetch={sendmsg}
+              ></ToDoCollectionItem>
+            ))}
+        </AnimatePresence>
+      );
     } else {
       return <></>;
     }

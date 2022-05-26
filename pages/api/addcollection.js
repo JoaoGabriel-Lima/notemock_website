@@ -78,9 +78,9 @@ export default async function handler(req, res) {
           },
         }
       );
-      console.log("Todo added");
+      console.log("Collection added");
       return res.status(201).send({
-        status: "Todo added",
+        status: "Collection Added",
         collection: {
           groupname: groupname,
           groupicon: groupicon,

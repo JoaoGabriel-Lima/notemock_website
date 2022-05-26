@@ -176,11 +176,7 @@ function ToDoCollectionItem(props: any) {
   //   }
   // };
 
-  function sendcheck(c: any) {
-    console.log(c);
-  }
-
-  console.log(props.subtodo);
+  function sendcheck(c: any) {}
   const [isOpenCollection, setIsOpenCollection] = useState(getopenstatus());
   function handleClick(id: any) {
     setIsOpen(!isOpen);
@@ -193,7 +189,12 @@ function ToDoCollectionItem(props: any) {
     });
   }
   return (
-    <div className="w-full h-auto">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="w-full h-auto"
+    >
       <div className="w-full mt-5 py-4 bg-[#21212b] rounded-3xl flex justify-between items-center">
         <CheckboxContainer
           color={colorsoftodo()}
@@ -310,7 +311,7 @@ function ToDoCollectionItem(props: any) {
         )}
         {/* {isOpenCollection && props.refetch()} */}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 // TodoItem.defaultProps = {

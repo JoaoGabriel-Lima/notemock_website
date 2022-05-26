@@ -5,9 +5,59 @@ import Layout from "../../../components/Layout";
 import React, { useState } from "react";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 const AddCollection: NextPage = ({ content }: any) => {
   const router = useRouter();
+  const [color, setColor] = useState("");
+  const [name, setName] = useState("");
+  const [icon, setIcon] = useState("");
+  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const selectoption = (option: number, value: string) => {
+    switch (option) {
+      case 1:
+        setColor(value);
+        break;
+      case 2:
+        setName(value);
+        break;
+      case 3:
+        setIcon(value);
+        break;
+    }
+  };
+
+  const addCollection = async () => {
+    setError(false);
+    setIsLoading(true);
+    if (!color || !name || !icon) {
+      setError(true);
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const data = await axios.post("/api/addcollection", {
+        session: session,
+        groupname: name,
+        groupcolor: color,
+        groupicon: icon,
+        token: process.env.NEXT_PUBLIC_DBTOKEN,
+      });
+
+      setIsLoading(false);
+      console.log(data.data);
+      if (data.data.status == "Collection Added") {
+        console.log(data.data.collection.groupid);
+        router.push(`/collections/${data.data.collection.groupid}`);
+      }
+    } catch (error) {
+      setError(true);
+      setIsLoading(false);
+    }
+  };
+
   const { data: session, status } = useSession();
   if (status === "loading") {
     return (
@@ -37,12 +87,21 @@ const AddCollection: NextPage = ({ content }: any) => {
               </h4>
             </div>
           </div>
+          {error && (
+            <div className=" w-full bg-red-500/80 py-3 rounded-lg">
+              <h5 className="text-white ml-5">Please fill out all fields</h5>
+            </div>
+          )}
           <div className="mt-4 flex flex-col justify-start w-full h-auto items-start divide-y  divide-slate-700/[.4]">
             <section
               id="colorsSection"
               className="flex flex-col justify-start items-start h-auto w-full mb-7"
             >
-              <h4 className="text-gray-100/[.5] font-medium text-sm tracking-wide mb-5">
+              <h4
+                className={`${
+                  error ? "text-red-500/60" : "text-gray-100/[.5]"
+                }  font-medium text-sm tracking-wide mb-5`}
+              >
                 Collection Color
               </h4>
               <div
@@ -50,61 +109,45 @@ const AddCollection: NextPage = ({ content }: any) => {
                 className="w-full flex justify-between items-center"
               >
                 <div className="w-full flex justify-start items-center h-6 overflow-hidden flex-wrap space-x-4 overflow-x-auto">
-                  <input
-                    type="radio"
-                    id="color"
-                    name="age"
-                    value="30"
-                    className="appearance-none checked:border-white border-2 min-w-[1.25rem] border-transparent bg-[#fbe114] w-5 h-5 rounded-full cursor-pointer"
+                  <CollectionColor
+                    colorvalue="#fbe114"
+                    selectedcolor={color}
+                    selectoption={selectoption}
                   />
-                  <input
-                    type="radio"
-                    id="color"
-                    name="age"
-                    value="30"
-                    className="appearance-none checked:border-white border-2 min-w-[1.25rem] border-transparent bg-[#4ceece] w-5 h-5 rounded-full cursor-pointer"
+                  <CollectionColor
+                    colorvalue="#4ceece"
+                    selectedcolor={color}
+                    selectoption={selectoption}
                   />
-                  <input
-                    type="radio"
-                    id="color"
-                    name="age"
-                    value="30"
-                    className="appearance-none checked:border-white border-2  min-w-[1.25rem] border-transparent bg-[#13d3fb] w-5 h-5 rounded-full cursor-pointer"
+                  <CollectionColor
+                    colorvalue="#13d3fb"
+                    selectedcolor={color}
+                    selectoption={selectoption}
                   />
-                  <input
-                    type="radio"
-                    id="color"
-                    name="age"
-                    value="30"
-                    className="appearance-none checked:border-white border-2 min-w-[1.25rem] border-transparent bg-[#b6adff] w-5 h-5 rounded-full cursor-pointer"
+                  <CollectionColor
+                    colorvalue="#b6adff"
+                    selectedcolor={color}
+                    selectoption={selectoption}
                   />
-                  <input
-                    type="radio"
-                    id="color"
-                    name="age"
-                    value="30"
-                    className="appearance-none checked:border-white border-2 min-w-[1.25rem] border-transparent bg-[#fc1467] w-5 h-5 rounded-full cursor-pointer"
+                  <CollectionColor
+                    colorvalue="#fc1467"
+                    selectedcolor={color}
+                    selectoption={selectoption}
                   />
-                  <input
-                    type="radio"
-                    id="color"
-                    name="age"
-                    value="30"
-                    className="appearance-none checked:border-white border-2 min-w-[1.25rem] border-transparent bg-[#f4815e] w-5 h-5 rounded-full cursor-pointer"
+                  <CollectionColor
+                    colorvalue="#f4815e"
+                    selectedcolor={color}
+                    selectoption={selectoption}
                   />
-                  <input
-                    type="radio"
-                    id="color"
-                    name="age"
-                    value="30"
-                    className="appearance-none checked:border-white border-2 min-w-[1.25rem] border-transparent bg-[#158cf9] w-5 h-5 rounded-full cursor-pointer"
+                  <CollectionColor
+                    colorvalue="#158cf9"
+                    selectedcolor={color}
+                    selectoption={selectoption}
                   />
-                  <input
-                    type="radio"
-                    id="color"
-                    name="age"
-                    value="30"
-                    className="appearance-none checked:border-white border-2 min-w-[1.25rem] border-transparent bg-[#a948bf] w-5 h-5 rounded-full cursor-pointer"
+                  <CollectionColor
+                    colorvalue="#a948bf"
+                    selectedcolor={color}
+                    selectoption={selectoption}
                   />
                 </div>
                 <button
@@ -119,59 +162,92 @@ const AddCollection: NextPage = ({ content }: any) => {
               id="NameSection"
               className="flex flex-col justify-start items-start h-auto w-full pt-5 mb-5"
             >
-              <h4 className="text-gray-100/[.5] font-normal text-sm tracking-wide">
+              <h4
+                className={`${
+                  error ? "text-red-500/60" : "text-gray-100/[.5]"
+                }  font-normal text-sm tracking-wide`}
+              >
                 Collection Name
               </h4>
               <input
+                maxLength={33}
                 type="text"
+                disabled={isLoading}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Ex: Compras da semana"
-                className="mt-5 w-full h-[3.45rem] bg-transparent rounded-2xl border-[3px] border-[#21212b] pl-3 box-box placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium"
+                className={`mt-5 w-full h-[3.45rem] bg-transparent rounded-2xl border-[3px] ${
+                  error ? "border-red-500/70" : "border-[#21212b]"
+                } pl-3 box-box placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium`}
               ></input>
               <div
                 id="IconSection"
                 className="flex flex-col justify-start items-start h-auto w-full pt-5"
               >
-                <h4 className="text-gray-100/[.5] font-normal text-sm tracking-wide mb-5">
+                <h4
+                  className={`${
+                    error ? "text-red-500/60" : "text-gray-100/[.5]"
+                  }  font-normal text-sm tracking-wide mb-5`}
+                >
                   Collection icon
                 </h4>
-                <div className="flex justify-start items-start w-full box-box h-24 space-x-8 overflow-x-auto">
-                  <div className="flex flex-col justify-center items-center">
-                    <button className="flex justify-center items-center box-box px-6 py-3 rounded-lg bg-[#21212b] ">
-                      <i className="bx bx-briefcase-alt text-white text-2xl"></i>
-                    </button>
-                    <h4 className="text-white/80 text-xs mt-2">Work Icon</h4>
-                  </div>
-                  <div className="flex flex-col justify-center items-center">
-                    <button className="flex justify-center items-center box-box px-6 py-3 rounded-lg bg-[#21212b] ">
-                      <i className="bx bx-briefcase-alt text-white text-2xl"></i>
-                    </button>
-                    <h4 className="text-white/80 text-xs mt-2">Travel Icon</h4>
-                  </div>
-                  <div className="flex flex-col justify-center items-center">
-                    <button className="flex justify-center items-center box-box px-6 py-3 rounded-lg bg-[#21212b] ">
-                      <i className="bx bx-group text-white text-2xl"></i>
-                    </button>
-                    <h4 className="text-white/80 text-xs mt-2">Project Icon</h4>
-                  </div>
-                  <div className="flex flex-col justify-center items-center">
-                    <button className="flex justify-center items-center box-box px-6 py-3 rounded-lg bg-[#21212b] ">
-                      <i className="bx bx-briefcase-alt text-white text-2xl"></i>
-                    </button>
-                    <h4 className="text-white/80 text-xs mt-2">Food Icon</h4>
-                  </div>
-                  <div className="flex flex-col justify-center items-center">
-                    <button className="flex justify-center items-center box-box px-6 py-3 rounded-lg bg-[#21212b] ">
-                      <i className="bx bx-world text-white text-2xl"></i>
-                    </button>
-                    <h4 className="text-white/80 text-xs mt-2">General Icon</h4>
-                  </div>
+                <div className="flex justify-start items-start w-full box-box min-h-24 pb-2 space-x-8 overflow-x-auto">
+                  <CollectionIcon
+                    iconname="shopping-bag"
+                    icontitle="Shopping Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="paper-plane"
+                    icontitle="Travel Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="bowl-hot"
+                    icontitle="Food Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="group"
+                    icontitle="Group Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="world"
+                    icontitle="General Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="heart"
+                    icontitle="Love Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="code-alt"
+                    icontitle="Code Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
                 </div>
               </div>
             </section>
           </div>
           <div className="w-full flex items-center justify-center mt-10">
-            <button className="text-white w-full flex justify-center items-center h-14 rounded-3xl bg-[#2c2c3a]">
-              Add Collection
+            <button
+              onClick={() => addCollection()}
+              className="text-white w-full flex justify-center items-center h-14 rounded-3xl bg-[#2c2c3a]"
+            >
+              {isLoading ? (
+                <i className="bx bx-loader-alt text-white text-2xl animate-spin"></i>
+              ) : (
+                <span>Add Collection</span>
+              )}
             </button>
           </div>
         </Layout>
@@ -181,3 +257,55 @@ const AddCollection: NextPage = ({ content }: any) => {
 };
 
 export default AddCollection;
+
+interface CollectionIconProps {
+  iconname: string;
+  icontitle: string;
+  selectedicon: string;
+  selectoption: (option: number, icon: string) => void;
+}
+
+const CollectionIcon = ({
+  iconname,
+  icontitle,
+  selectedicon,
+  selectoption,
+}: CollectionIconProps) => {
+  return (
+    <div className="flex flex-col justify-center items-center">
+      <button
+        onClick={() => selectoption(3, iconname)}
+        className={`flex justify-center items-center box-box px-6 py-3 rounded-lg bg-[#21212b] ${
+          selectedicon == iconname && "border-white border-2 "
+        }`}
+      >
+        <i className={`bx bx-${iconname} text-white text-2xl`}></i>
+      </button>
+      <h4 className="text-white/80 text-xs mt-2 text-center">{icontitle}</h4>
+    </div>
+  );
+};
+
+interface CollectionColorProps {
+  colorvalue: string;
+  selectedcolor: string;
+  selectoption: (option: number, color: string) => void;
+}
+
+const CollectionColor = ({
+  colorvalue,
+  selectedcolor,
+  selectoption,
+}: CollectionColorProps) => {
+  return (
+    <input
+      type="radio"
+      id={colorvalue}
+      readOnly
+      checked={selectedcolor === colorvalue}
+      onClick={() => selectoption(1, colorvalue)}
+      className="appearance-none checked:border-white border-2 min-w-[1.25rem] border-transparent w-5 h-5 rounded-full cursor-pointer"
+      style={{ backgroundColor: colorvalue }}
+    />
+  );
+};

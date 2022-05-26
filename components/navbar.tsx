@@ -285,7 +285,13 @@ function Navbar() {
             />
           </div>
           {session ? (
-            <Link href="/collections">
+            <Link
+              href={
+                router.pathname == "/collections"
+                  ? "/collections/add"
+                  : "/collections"
+              }
+            >
               <div
                 id="add_todo_btn"
                 className="cursor-pointer bg-gradient-to-tr from-pink-600 border-2 border-white/[.4] to-orange-300 w-9 h-9 rounded-xl flex justify-center items-center"
