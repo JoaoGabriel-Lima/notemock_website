@@ -10,7 +10,7 @@ const queryClient = new QueryClient();
  * @param {string} - This is a description of the foo parameter.
  * @return {string} This is a description of what the function returns.
  */
-function Sidebar() {
+function Sidebar({ isLoadingBool }: any) {
   const { data: session } = useSession();
   if (session) {
     return (
@@ -21,7 +21,7 @@ function Sidebar() {
         <h4>Collections</h4>
         <ul className="nav_list mb-24">
           <QueryClientProvider client={queryClient}>
-            <SidebarCollections />
+            <SidebarCollections isLoadingBool={isLoadingBool} />
           </QueryClientProvider>
         </ul>
       </section>
@@ -41,7 +41,7 @@ function Sidebar() {
 
 export default Sidebar;
 
-function SidebarCollections() {
+function SidebarCollections({ isLoadingBool }: any) {
   const { data: session } = useSession();
 
   const { isLoading, error, data } = useQuery("repoData", () =>
@@ -84,6 +84,7 @@ function SidebarCollections() {
   } else {
     return data.user.collections.map((collection: any) => (
       <CollectionItem
+        loadingbool={isLoadingBool}
         key={collection.groupid}
         groupname={collection.groupname}
         icon={collection.groupicon}

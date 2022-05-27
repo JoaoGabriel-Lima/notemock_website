@@ -11,6 +11,7 @@ import { useSession, signIn } from "next-auth/react";
 import Layout from "../components/Layout";
 import axios from "axios";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -93,7 +94,7 @@ const Home: NextPage = () => {
                   </button>
                   <button
                     id="statistics"
-                    className=" pr-7 pl-7 h-11 border-[#414052] border-2 rounded-2xl font-medium text-white text-base"
+                    className="cursor-default pr-7 pl-7 h-11 border-[#414052] border-2 rounded-2xl font-medium text-slate-300/50 text-base"
                   >
                     Statistic
                   </button>
@@ -149,20 +150,86 @@ const Home: NextPage = () => {
                 </Menu>
               </div>
               <div className="flex flex-col mt-14 h-min">
-                <h1 className="text-white font-bold text-4xl mb-5">
-                  You are not logged in.
-                </h1>
-                <h4 className="text-gray-300 font-normal text-base text-justify mb-5">
-                  A to-do list website made with Next.js focused on students and
-                  developers, offering better organization and customization
-                  options.
-                </h4>
-                <button
-                  onClick={() => signIn()}
-                  className="border-0 h-12 bg-[#414052] hover:bg-[#2c2b35] rounded-xl w-56 font-medium text-white text-base"
-                >
-                  Sign In
-                </button>
+                <section className="flex flex-col">
+                  <h1 className="text-white font-bold text-4xl mb-5">
+                    You are not logged in.
+                  </h1>
+                  <h4 className="text-gray-300 font-normal text-base text-justify mb-5">
+                    A to-do list website made with Next.js focused on students
+                    and developers, offering better organization and
+                    customization options.
+                  </h4>
+                  <button
+                    onClick={() => signIn()}
+                    className="border-0 h-12 bg-[#414052] hover:bg-[#2c2b35] rounded-xl w-56 font-medium text-white text-base"
+                  >
+                    Sign In
+                  </button>
+                </section>
+                <section className="flex flex-col mt-10 mb-10 box-border bg-[#414052]/20 py-5 px-6 rounded-lg">
+                  <h2 className=" flex items-center">
+                    <span className="text-lg text-white font-medium">
+                      Notemock
+                    </span>
+                    <div>
+                      <span className="ml-3 uppercase font-semibold rounded-[2px] tracking-wider  bg-[#9ae6b4]/[.16] px-1 py-[1px] text-green-200 text-[.75rem]">
+                        Stable 0.8
+                      </span>
+                    </div>
+                  </h2>
+                  <section className="mt-3">
+                    <h3 className="text-white/80 font-normal text-sm">
+                      Added:
+                    </h3>
+                    <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
+                      <li className="text-white/50 font-light text-sm">
+                        - Custom accent color for collections
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Collection Icon color matches with collection accent
+                        color
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Remove and add collection functionality
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Remove and add task scale animation
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Welcome instructions for new users
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Version logs
+                      </li>
+                    </ul>
+                  </section>
+                  <section className="mt-3 mb-2">
+                    <h3 className="text-white/80 font-normal text-sm">
+                      Fixed:
+                    </h3>
+                    <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
+                      <li className="text-white/50 font-light text-sm">
+                        - Calendar text matching accent color
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - PWA accent color
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Sidebar tooltip double animation bug on desktop
+                        viewport
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Remove and add collection functionality
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Disable buttons for features not yet available
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Better arrangement of collections on the Dashboard
+                      </li>
+                    </ul>
+                  </section>
+                </section>
               </div>
             </>
           )}
@@ -172,19 +239,10 @@ const Home: NextPage = () => {
   );
 };
 
-// Home.getInitialProps = async (ctx: any) => {
-//   // console.log("one time");
-//   const session = await getSession(ctx);
-//   const response = await axios.post("http://localhost:3000/api/user", {
-//     session: session,
-//   });
-//   // console.log(response.data);
-//   return { status: response.data.status, data: response.data };
-// };
-
 export default Home;
 
 function Collections() {
+  const router = useRouter();
   const { data: session } = useSession();
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
@@ -227,18 +285,25 @@ function Collections() {
     // add a todo to each collection
     const newCollections: any = [];
     data.user.collections.map((collection: any) => {
-      const todos = collection.todos.sort((a: any, b: any) => {
-        const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
-        const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
+      if (collection.todos.length > 0) {
+        const todos = collection.todos.sort((a: any, b: any) => {
+          const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
+          const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
 
-        // order witch one is next to 0
-        return Math.abs(0 - aTime) - Math.abs(0 - bTime);
-      });
+          // order witch one is next to 0
 
-      newCollections.push({
-        ...collection,
-        todos: todos,
-      });
+          if (Math.abs(0 - aTime) == Math.abs(0 - bTime)) {
+            return a.checked > b.checked;
+          } else {
+            return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+          }
+        });
+
+        newCollections.push({
+          ...collection,
+          todos: todos,
+        });
+      }
     });
 
     const collectionsSorted = newCollections.sort((a: any, b: any) => {
@@ -255,13 +320,56 @@ function Collections() {
       return Math.abs(0 - aTime) - Math.abs(0 - bTime);
     });
 
+    const collectionsWithTodos = collectionsSorted.filter((collection: any) => {
+      return collection.todos.length > 0;
+    });
+
+    if (collectionsSorted.length === 0) {
+      return (
+        <div className="text-white w-full h-auto py-7 rounded-xl bg-[#21212b] flex justify-start items-center flex-col">
+          <h2 className="text-white text-xl mb-1 text-center px-5">
+            You don't have a collection yet!
+          </h2>
+          <h4 className="text-white/60 mb-7 text-center px-5">
+            To enjoy all the features of Notemock you need a collection
+          </h4>
+          <button
+            onClick={() => {
+              router.push("http://localhost:3000/collections/add");
+            }}
+            className="bg-[#414052] px-7 py-3 rounded-lg font-medium text-center"
+          >
+            Add my first collection
+          </button>
+        </div>
+      );
+    } else if (collectionsWithTodos.length === 0) {
+      return (
+        <div className="text-white w-full h-auto py-7 rounded-xl bg-[#21212b] flex justify-start items-center flex-col">
+          <h2 className="text-white text-xl mb-1 px-5 text-center">
+            Your collections doesn't have any task
+          </h2>
+          <h4 className="text-white/60 text-center px-5">
+            Add a task and it will appear in your daily overview
+          </h4>
+        </div>
+      );
+    }
+
     return collectionsSorted.map((collection: any) => {
       const todos = collection.todos.sort((a: any, b: any) => {
         const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
         const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
 
         // order witch one is next to 0
-        return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+        if (
+          Math.abs(0 - aTime) == Math.abs(0 - bTime) &&
+          a.checked < b.checked
+        ) {
+          return -1;
+        } else {
+          return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+        }
       });
 
       if (todos.length === 0) {

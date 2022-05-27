@@ -2,6 +2,18 @@
 import React from "react";
 import { useRouter } from "next/router";
 
+function pickTextColorBasedOnBgColorSimple(
+  bgColor: string,
+  lightColor: string,
+  darkColor: string
+) {
+  const color = bgColor.charAt(0) === "#" ? bgColor.substring(1, 7) : bgColor;
+  const r = parseInt(color.substring(0, 2), 16); // hexToR
+  const g = parseInt(color.substring(2, 4), 16); // hexToG
+  const b = parseInt(color.substring(4, 6), 16); // hexToB
+  return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? darkColor : lightColor;
+}
+
 function CollectionItem(props: any) {
   const router = useRouter();
   const { collection } = router.query;
@@ -26,6 +38,7 @@ function CollectionItem(props: any) {
   function goToCollection(id: string) {
     router.push(`/collections/${id}`);
   }
+  const isloading = props.loadingbool;
   return (
     <li
       className="item"
@@ -37,11 +50,20 @@ function CollectionItem(props: any) {
           className="icon-holder"
           style={{ backgroundColor: props.groupcolor }}
         >
-          <i className={`bx bx-${props.icon} menu-icon sidebaricon`}></i>
+          <i
+            className={`bx bx-${props.icon} menu-icon sidebaricon`}
+            style={{
+              color: pickTextColorBasedOnBgColorSimple(
+                props.groupcolor,
+                "white",
+                "black"
+              ),
+            }}
+          ></i>
         </div>
         <span className="links_name">{groupname}</span>
       </div>
-      <span className="tooltip">{groupname}</span>
+      {isloading ? "" : <span className="tooltip">{groupname}</span>}
     </li>
   );
 }

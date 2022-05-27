@@ -2,7 +2,17 @@ import React from "react";
 import classnames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
-
+function pickTextColorBasedOnBgColorSimple(
+  bgColor: string,
+  lightColor: string,
+  darkColor: string
+) {
+  const color = bgColor.charAt(0) === "#" ? bgColor.substring(1, 7) : bgColor;
+  const r = parseInt(color.substring(0, 2), 16); // hexToR
+  const g = parseInt(color.substring(2, 4), 16); // hexToG
+  const b = parseInt(color.substring(4, 6), 16); // hexToB
+  return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? darkColor : lightColor;
+}
 function ToDo(props: any) {
   const router = useRouter();
   const iconholder = classnames(
@@ -26,7 +36,16 @@ function ToDo(props: any) {
                   className={iconholder}
                   style={{ backgroundColor: props.groupcolor }}
                 >
-                  <i className={`bx bx-${props.iconname} menu-icon `}></i>
+                  <i
+                    className={`bx bx-${props.iconname} menu-icon `}
+                    style={{
+                      color: pickTextColorBasedOnBgColorSimple(
+                        props.groupcolor,
+                        "white",
+                        "black"
+                      ),
+                    }}
+                  ></i>
                 </div>
                 <h4 className="text-white font-medium text-lg">
                   {props.groupname}

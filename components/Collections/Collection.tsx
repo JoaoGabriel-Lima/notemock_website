@@ -4,6 +4,18 @@ import React from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { useRouter } from "next/router";
 
+function pickTextColorBasedOnBgColorSimple(
+  bgColor: string,
+  lightColor: string,
+  darkColor: string
+) {
+  const color = bgColor.charAt(0) === "#" ? bgColor.substring(1, 7) : bgColor;
+  const r = parseInt(color.substring(0, 2), 16); // hexToR
+  const g = parseInt(color.substring(2, 4), 16); // hexToG
+  const b = parseInt(color.substring(4, 6), 16); // hexToB
+  return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? darkColor : lightColor;
+}
+
 export default function Collection(props: any) {
   const router = useRouter();
   function hexToRgb(hex: string) {
@@ -34,6 +46,13 @@ export default function Collection(props: any) {
           >
             <i
               className={`bx bx-${props.groupicon} text-white text-[28px]`}
+              style={{
+                color: pickTextColorBasedOnBgColorSimple(
+                  props.groupcolor,
+                  "white",
+                  "black"
+                ),
+              }}
             ></i>
           </div>
         </div>
@@ -56,7 +75,16 @@ export default function Collection(props: any) {
                     )}, 0.5)`,
                   }}
                 >
-                  <i className="bx bx-check text-white"></i>
+                  <i
+                    className="bx bx-check"
+                    style={{
+                      color: pickTextColorBasedOnBgColorSimple(
+                        props.groupcolor,
+                        "white",
+                        "black"
+                      ),
+                    }}
+                  ></i>
                 </div>
               </div>
             </>

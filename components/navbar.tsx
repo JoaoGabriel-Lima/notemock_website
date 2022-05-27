@@ -159,13 +159,15 @@ function Navbar() {
                         {({ active }) => (
                           <button
                             className={`${
-                              active ? "bgmenucolor text-white" : "text-white"
+                              active
+                                ? " cursor-default text-white/60"
+                                : "text-white/60"
                             } group flex rounded-md items-center w-full py-2 text-sm`}
                           >
                             {active ? (
-                              <i className="bx bx-cog text-white ml-3 text-xl  mr-2"></i>
+                              <i className="bx bx-cog text-white/60 ml-3 text-xl  mr-2"></i>
                             ) : (
-                              <i className="bx bx-cog textmenucolor ml-3 text-xl  mr-2"></i>
+                              <i className="bx bx-cog  text-white/60 ml-3 text-xl  mr-2"></i>
                             )}
                             Account settings
                           </button>
@@ -175,13 +177,15 @@ function Navbar() {
                         {({ active }) => (
                           <button
                             className={`${
-                              active ? "bgmenucolor text-white" : "text-white"
+                              active
+                                ? "cursor-default text-white/60"
+                                : "text-white/60"
                             } group flex rounded-md items-center w-full py-2 text-sm`}
                           >
                             {active ? (
-                              <i className="bx bx-support text-white ml-3 text-xl  mr-2"></i>
+                              <i className="bx bx-support text-white/60 ml-3 text-xl  mr-2"></i>
                             ) : (
-                              <i className="bx bx-support textmenucolor ml-3 text-xl  mr-2"></i>
+                              <i className="bx bx-support text-white/60 ml-3 text-xl  mr-2"></i>
                             )}
                             Support
                           </button>

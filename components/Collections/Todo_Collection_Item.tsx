@@ -104,6 +104,18 @@ function ToDoCollectionItem(props: any) {
     }
   }
 
+  function pickTextColorBasedOnBgColorSimple(
+    bgColor: string,
+    lightColor: string,
+    darkColor: string
+  ) {
+    const color = bgColor.charAt(0) === "#" ? bgColor.substring(1, 7) : bgColor;
+    const r = parseInt(color.substring(0, 2), 16); // hexToR
+    const g = parseInt(color.substring(2, 4), 16); // hexToG
+    const b = parseInt(color.substring(4, 6), 16); // hexToB
+    return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? darkColor : lightColor;
+  }
+
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(props.checked);
 
@@ -190,9 +202,11 @@ function ToDoCollectionItem(props: any) {
   }
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      key={props.itemid}
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.6, opacity: 0 }}
+      transition={{ duration: 0.2 }}
       className="w-full h-auto"
     >
       <div className="w-full mt-5 py-4 bg-[#21212b] rounded-3xl flex justify-between items-center">
@@ -204,15 +218,33 @@ function ToDoCollectionItem(props: any) {
           <input
             type="checkbox"
             id={scss.todo_checkbox}
-            className={`w-6 checkbox h-6 rounded-xl c_color_pink checked:bg-[${props.groupcolor}] border-[${props.groupcolor}] border-4`}
+            className={`w-6 checkbox h-6 rounded-xl c_color_pink checked:bg-[${
+              props.groupcolor
+            }] ${pickTextColorBasedOnBgColorSimple(
+              props.groupcolor,
+              "before:border-white",
+              "before:border-black"
+            )} border-[${props.groupcolor}] border-4`}
             onChange={() => handleClick(props.itemid)}
             checked={isOpen}
             style={{
               borderColor: props.groupcolor,
+              color: pickTextColorBasedOnBgColorSimple(
+                props.groupcolor,
+                "white",
+                "black"
+              ),
             }}
           ></input>
           <label
             className={scss.todo_label}
+            style={{
+              color: pickTextColorBasedOnBgColorSimple(
+                props.groupcolor,
+                "white",
+                "black"
+              ),
+            }}
             htmlFor="todo_checkbox"
             data-content={props.itemcontent}
             onClick={() => handleClick(props.itemid)}
@@ -278,7 +310,7 @@ function ToDoCollectionItem(props: any) {
               props.subtodo[0] != "" &&
               props.subtodo.map((subtodo: any) => (
                 <SubToDoItem
-                  key={Math.random()}
+                  key={subtodo.subtodoid}
                   itemcontent={subtodo.itemcontent}
                   checked={subtodo.checked}
                   groupcolor={props.groupcolor}

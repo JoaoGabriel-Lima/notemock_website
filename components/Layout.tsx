@@ -64,6 +64,7 @@ function Layout(props: any) {
       };
     }
   }, []);
+  const isLoading = props.loading;
   return (
     <>
       <Head>
@@ -73,7 +74,7 @@ function Layout(props: any) {
         <Navbar />
         <section id="main-content">
           <SidebardContainer>
-            <Sidebar />
+            <Sidebar isLoadingBool={isLoading || false} />
           </SidebardContainer>
           <div id="closesidebar" className="android"></div>
           <section id="notes_section" className="flex items-center flex-col ">

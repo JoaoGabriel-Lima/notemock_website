@@ -4,18 +4,19 @@ import React, { useState } from "react";
 import { CheckboxContainer } from "../styles/components/home/checkbox";
 import scss from "../styles/home.module.scss";
 import { useSession } from "next-auth/react";
-/** This is a description of the foo function.
- * @param {string} props - This is a description of the foo parameter.
- * @return {string} This is a description of what the function returns.
- */
+
+function pickTextColorBasedOnBgColorSimple(
+  bgColor: string,
+  lightColor: string,
+  darkColor: string
+) {
+  const color = bgColor.charAt(0) === "#" ? bgColor.substring(1, 7) : bgColor;
+  const r = parseInt(color.substring(0, 2), 16); // hexToR
+  const g = parseInt(color.substring(2, 4), 16); // hexToG
+  const b = parseInt(color.substring(4, 6), 16); // hexToB
+  return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? darkColor : lightColor;
+}
 function ToDoItem(props: any) {
-  /** This is a description of the foo function.
-  //  * @return {boolean} This is a description of what the function returns.
-   * @param {string} e - This is a description of the foo parameter.
-   */
-  // if the day has already gone, return a negative number
-  // if the day has not yet gone, return a positive number
-  // if the date is today, return 0
   function getadateandcalculatetimeremaingindays() {
     const today = new Date();
     const eventdate = new Date(props.itemtime);
@@ -120,7 +121,13 @@ function ToDoItem(props: any) {
       <input
         type="checkbox"
         id={scss.todo_checkbox}
-        className={`w-6 checkbox h-6 rounded-xl c_color_pink checked:bg-[${props.groupcolor}] border-[${props.groupcolor}] border-4`}
+        className={`w-6 checkbox h-6 rounded-xl c_color_pink ${pickTextColorBasedOnBgColorSimple(
+          props.groupcolor,
+          "before:border-white",
+          "before:border-black"
+        )} checked:bg-[${props.groupcolor}] border-[${
+          props.groupcolor
+        }] border-4`}
         onChange={() => handleClick(props.itemid)}
         checked={isOpen}
         style={{

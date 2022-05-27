@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const HomeCointainer = styled.div`
+export const HomeCointainer = styled.div<{ textColor?: string }>`
   @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 
   * {
@@ -200,7 +200,8 @@ export const HomeCointainer = styled.div`
     border-radius: 999px;
     background-color: ${(props) =>
       props.color ? props.color : "black"} !important;
-    color: white !important;
+    color: ${(props) =>
+      props.textColor ? props.textColor : "black"} !important;
   }
   .react-datepicker__day {
     margin: 0.2rem;
@@ -308,6 +309,17 @@ export const HomeCointainer = styled.div`
   #add_ToDo {
     background-color: transparent;
   }
+  @media only screen and (min-width: 758px) {
+    .custom_scrollbar::-webkit-scrollbar {
+      background-color: transparent;
+      height: 0.5rem;
+    }
+    .custom_scrollbar::-webkit-scrollbar-thumb {
+      background-color: #414052;
+      border-radius: 0.3rem;
+    }
+  }
+
   @media only screen and (max-width: 750px) {
     .body {
       /* overflow-y: auto; */

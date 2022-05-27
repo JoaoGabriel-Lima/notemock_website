@@ -40,24 +40,7 @@ export default async function handler(req, res) {
       name: session.user.name,
       email: session.user.email,
       image: session.user.image,
-      collections: [
-        {
-          groupname: "Test Collection",
-          groupicon: "world",
-          groupcolor: "#5ac45a",
-          groupid: "4239",
-          favorite: true,
-          todos: [
-            {
-              itemcontent: "This is a test todo",
-              itemid: "4239",
-              itemtime: "2022-02-15",
-              checked: false,
-              subtodo: [],
-            },
-          ],
-        },
-      ],
+      collections: [],
       friends: [],
       createdAt: new Date(),
     };
@@ -66,5 +49,7 @@ export default async function handler(req, res) {
       status: "Created",
       user: newUser,
     });
+  } else {
+    return res.status(500);
   }
 }

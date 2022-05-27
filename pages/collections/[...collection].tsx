@@ -18,6 +18,17 @@ import DatePicker from "react-datepicker";
 // import "../../styles/calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
 
+function pickTextColorBasedOnBgColorSimple(
+  bgColor: string,
+  lightColor: string,
+  darkColor: string
+) {
+  const color = bgColor.charAt(0) === "#" ? bgColor.substring(1, 7) : bgColor;
+  const r = parseInt(color.substring(0, 2), 16); // hexToR
+  const g = parseInt(color.substring(2, 4), 16); // hexToG
+  const b = parseInt(color.substring(4, 6), 16); // hexToB
+  return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? darkColor : lightColor;
+}
 const Collection: NextPage = ({ content }: any) => {
   const [queryClient] = React.useState(() => new QueryClient());
   const { data: session, status } = useSession();
@@ -70,7 +81,7 @@ const Collection: NextPage = ({ content }: any) => {
       setInputvalue("");
       setIsLoading(true);
       await axios
-        .post("https://notemock-website.vercel.app/api/addtodo", nw)
+        .post(`${process.env.NEXT_PUBLIC_URL}/api/addtodo`, nw)
         .then((res) => {
           doRefetch().then(setIsLoading(false));
         });
@@ -80,21 +91,28 @@ const Collection: NextPage = ({ content }: any) => {
 
   async function favoriteCollection(favorite: boolean) {
     await axios
-      .post(`https://notemock-website.vercel.app/api/favoritecollection`, {
+      .post(`${process.env.NEXT_PUBLIC_URL}/api/favoritecollection`, {
         session: session,
         token: process.env.NEXT_PUBLIC_DBTOKEN,
         collectionid: content.collection.groupid,
         favorite: favorite,
       })
       .then((res) => {
-        console.log(res.status);
         setIsFavorite(!isFavorite);
       });
   }
 
   return (
     <>
-      <HomeCointainer color={content.collection.groupcolor} className="body ">
+      <HomeCointainer
+        color={content.collection.groupcolor}
+        textColor={pickTextColorBasedOnBgColorSimple(
+          content.collection.groupcolor,
+          "white",
+          "black"
+        )}
+        className="body "
+      >
         <Layout className="">
           <div className="page_overview flex w-full justify-between items-start mb-10">
             <div className="flex items-center justify-start ">
@@ -239,7 +257,16 @@ const Collection: NextPage = ({ content }: any) => {
                     className="text-white rounded-lg min-w-max px-4 py-1 origin-right"
                     style={{ backgroundColor: content.collection.groupcolor }}
                   >
-                    <i className="bx bx-plus text-xl"></i>
+                    <i
+                      className="bx bx-plus text-xl"
+                      style={{
+                        color: pickTextColorBasedOnBgColorSimple(
+                          content.collection.groupcolor,
+                          "white",
+                          "black"
+                        ),
+                      }}
+                    ></i>
                   </motion.button>
                 </div>
               </motion.li>
@@ -249,14 +276,16 @@ const Collection: NextPage = ({ content }: any) => {
             id="TasksToDo"
             className="w-full flex flex-col items-start justify-start mb-[140px]"
           >
-            <h4 className="text-white font-normal tracking-wide ">
-              Tasks - {content.collection.todos.length}
-            </h4>
-            {isLoading && (
-              <div className="w-full h-auto flex justify-center mt-5 mb-5">
-                <i className="animate-spin bx bx-loader-alt text-[#414052] text-4xl"></i>
-              </div>
-            )}
+            <div className="flex w-full justify-between items-center">
+              <h4 className="text-white font-normal tracking-wide">
+                Tasks - {content.collection.todos.length}
+              </h4>
+              {isLoading && (
+                <div className="h-auto flex justify-center">
+                  <i className="animate-spin bx bx-loader-alt text-[#ffffff]/80 text-xl"></i>
+                </div>
+              )}
+            </div>
             <QueryClientProvider client={queryClient}>
               <Todo content={content} session={session} />
             </QueryClientProvider>
@@ -268,24 +297,18 @@ const Collection: NextPage = ({ content }: any) => {
 };
 
 export async function getServerSideProps(context: any) {
-  // const router = useRouter();
-  // const { collection } = router.query;
-
   const { collection } = context.query;
   const collection2 = collection[0];
   const session = await getSession(context);
-  // console.log(session);
   const res = await axios.post(
-    `https://notemock-website.vercel.app/api/collections`,
+    `${process.env.NEXT_PUBLIC_URL}/api/collections`,
     {
       session: session,
       token: process.env.NEXT_PUBLIC_DBTOKEN,
       collectionid: collection2,
     }
   );
-  // console.log(res.data);
   const content = res.data;
-  // console.log(content);
   if (content.collection === null) {
     return {
       notFound: true,
@@ -303,7 +326,7 @@ function Todo(props: any) {
     "repoData",
     () =>
       axios
-        .post(`https://notemock-website.vercel.app/api/collections`, {
+        .post(`${process.env.NEXT_PUBLIC_URL}/api/collections`, {
           session: session,
           token: process.env.NEXT_PUBLIC_DBTOKEN,
           collectionid: props.content.collection.groupid,
@@ -317,7 +340,6 @@ function Todo(props: any) {
     await refetch();
     return true;
   };
-  // console.log(data);
   if (error)
     return (
       <ToDoCollectionItem
@@ -368,7 +390,7 @@ function Todo(props: any) {
         </AnimatePresence>
       );
     } else {
-      return <></>;
+      return <AnimatePresence></AnimatePresence>;
     }
   }
 }

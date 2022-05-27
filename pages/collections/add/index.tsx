@@ -2,18 +2,40 @@
 import type { NextPage } from "next";
 import { HomeCointainer } from "../../../styles/components/home/home";
 import Layout from "../../../components/Layout";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { HexColorPicker } from "react-colorful";
+import { AnimatePresence, motion } from "framer-motion";
 
 const AddCollection: NextPage = ({ content }: any) => {
   const router = useRouter();
   const [color, setColor] = useState("");
+  const [customcolor, setCustomColor] = useState("#ffffff");
+  const [toggleCustom, setToggleCustom] = useState(false);
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("");
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
+
+  function useOutsideAlerter(ref: any) {
+    useEffect(() => {
+      function handleClickOutside(event: any) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setToggleCustom(false);
+        }
+      }
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
 
   const selectoption = (option: number, value: string) => {
     switch (option) {
@@ -70,6 +92,7 @@ const AddCollection: NextPage = ({ content }: any) => {
   if (status === "unauthenticated") {
     router.push("/");
   }
+
   return (
     <>
       <HomeCointainer className="body ">
@@ -95,7 +118,7 @@ const AddCollection: NextPage = ({ content }: any) => {
           <div className="mt-4 flex flex-col justify-start w-full h-auto items-start divide-y  divide-slate-700/[.4]">
             <section
               id="colorsSection"
-              className="flex flex-col justify-start items-start h-auto w-full mb-7"
+              className="flex flex-col justify-start items-start h-auto w-full mb-4"
             >
               <h4
                 className={`${
@@ -106,26 +129,26 @@ const AddCollection: NextPage = ({ content }: any) => {
               </h4>
               <div
                 id="colors"
-                className="w-full flex justify-between items-center"
+                className="w-full flex justify-between items-start"
               >
-                <div className="w-full flex justify-start items-center h-6 overflow-hidden flex-wrap space-x-4 overflow-x-auto">
+                <div className="w-full flex pb-4 justify-start items-center h-6 overflow-x-auto gap-x-4">
                   <CollectionColor
-                    colorvalue="#fbe114"
+                    colorvalue="#e7bb43"
                     selectedcolor={color}
                     selectoption={selectoption}
                   />
                   <CollectionColor
-                    colorvalue="#4ceece"
+                    colorvalue="#28a3a1"
                     selectedcolor={color}
                     selectoption={selectoption}
                   />
                   <CollectionColor
-                    colorvalue="#13d3fb"
+                    colorvalue="#14abc9"
                     selectedcolor={color}
                     selectoption={selectoption}
                   />
                   <CollectionColor
-                    colorvalue="#b6adff"
+                    colorvalue="#a8a0e7"
                     selectedcolor={color}
                     selectoption={selectoption}
                   />
@@ -145,17 +168,56 @@ const AddCollection: NextPage = ({ content }: any) => {
                     selectoption={selectoption}
                   />
                   <CollectionColor
-                    colorvalue="#a948bf"
+                    colorvalue="#9b62b5"
                     selectedcolor={color}
                     selectoption={selectoption}
                   />
                 </div>
-                <button
-                  id="addcolor"
-                  className="ml-4 bg-[#3e3e51] w-[23px] h-[23px] min-w-[23px] flex items-center justify-center rounded-full cursor-pointer"
-                >
-                  <i className="ml-[1px] mt-[1px] bx bx-plus text-sm text-white"></i>
-                </button>
+                <div className="relative">
+                  <AnimatePresence>
+                    {toggleCustom && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.15 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        style={{ originX: 1, originY: 0 }}
+                        ref={wrapperRef}
+                        className="absolute right-[0px] top-8"
+                      >
+                        <HexColorPicker
+                          color={customcolor}
+                          onChange={(e) => {
+                            setColor(e.toString());
+                            setCustomColor(e.toString());
+                          }}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <button
+                    id="addcolor"
+                    className="ml-4 checked:border-white border-2 min-w-[1.25rem] border-transparent w-5 h-5 flex items-center justify-center rounded-full cursor-pointer"
+                    onClick={() => setToggleCustom(!toggleCustom)}
+                    style={{
+                      backgroundColor:
+                        customcolor != "" && customcolor == color
+                          ? customcolor
+                          : "#3e3e51",
+                      borderColor:
+                        customcolor == color ? "white" : "transparent",
+                    }}
+                  >
+                    {customcolor == "" ||
+                      (customcolor != color && (
+                        <img
+                          src="/rainbow.gif"
+                          className="w-full h-full rounded-full opacity-40"
+                        ></img>
+                      ))}
+                    <i className="absolute ml-[1px] mt-[1px] bx bx-plus text-md text-white "></i>
+                  </button>
+                </div>
               </div>
             </section>
             <section
@@ -191,7 +253,7 @@ const AddCollection: NextPage = ({ content }: any) => {
                 >
                   Collection icon
                 </h4>
-                <div className="flex justify-start items-start w-full box-box min-h-24 pb-2 space-x-8 overflow-x-auto">
+                <div className="custom_scrollbar flex justify-start items-start w-full box-box min-h-24 pb-2 space-x-7 overflow-x-auto">
                   <CollectionIcon
                     iconname="shopping-bag"
                     icontitle="Shopping Icon"
@@ -200,7 +262,7 @@ const AddCollection: NextPage = ({ content }: any) => {
                   />
                   <CollectionIcon
                     iconname="paper-plane"
-                    icontitle="Travel Icon"
+                    icontitle="Plane Icon"
                     selectedicon={icon}
                     selectoption={selectoption}
                   />
@@ -218,7 +280,7 @@ const AddCollection: NextPage = ({ content }: any) => {
                   />
                   <CollectionIcon
                     iconname="world"
-                    icontitle="General Icon"
+                    icontitle="World Icon"
                     selectedicon={icon}
                     selectoption={selectoption}
                   />
@@ -231,6 +293,36 @@ const AddCollection: NextPage = ({ content }: any) => {
                   <CollectionIcon
                     iconname="code-alt"
                     icontitle="Code Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="leaf"
+                    icontitle="Leaf Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="party"
+                    icontitle="Party Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="run"
+                    icontitle="Running Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="cycling"
+                    icontitle="Cycling Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="bookmarks"
+                    icontitle="Bookmarks Icon"
                     selectedicon={icon}
                     selectoption={selectoption}
                   />
@@ -303,7 +395,9 @@ const CollectionColor = ({
       id={colorvalue}
       readOnly
       checked={selectedcolor === colorvalue}
-      onClick={() => selectoption(1, colorvalue)}
+      onClick={() => {
+        selectoption(1, colorvalue);
+      }}
       className="appearance-none checked:border-white border-2 min-w-[1.25rem] border-transparent w-5 h-5 rounded-full cursor-pointer"
       style={{ backgroundColor: colorvalue }}
     />
