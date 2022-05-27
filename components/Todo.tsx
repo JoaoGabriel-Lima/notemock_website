@@ -31,7 +31,7 @@ function ToDo(props: any) {
         <motion.details open>
           <summary>
             <div className="todo-header w-full todo-bg-header h-20 flex justify-between items-center rounded-2xl ">
-              <div className="flex items-center ">
+              <div className="overflow-hidden flex items-center w-full">
                 <div
                   className={iconholder}
                   style={{ backgroundColor: props.groupcolor }}
@@ -47,11 +47,11 @@ function ToDo(props: any) {
                     }}
                   ></i>
                 </div>
-                <h4 className="text-white font-medium text-lg">
+                <h4 className="text-white font-medium text-lg nametodoh4 text-ellipsis overflow-hidden  w-full">
                   {props.groupname}
                 </h4>
               </div>
-              <div className="flex mr-5">
+              <div className="flex mx-5">
                 <i className="bx bx-chevron-down text-gray-400 text-2xl"></i>
                 <i className="bx bx-chevron-up text-gray-400 text-2xl"></i>
               </div>

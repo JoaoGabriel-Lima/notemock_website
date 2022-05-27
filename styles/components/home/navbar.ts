@@ -193,8 +193,8 @@ export const Navbarlayout = styled.nav`
     }
   }
   @media only screen and (max-width: 402px) {
-    #collections-button {
+    /* #collections-button {
       display: none;
-    }
+    } */
   }
 `;

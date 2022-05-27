@@ -254,7 +254,11 @@ function ToDoCollectionItem(props: any) {
               <h4
                 className={`${
                   isOpen ? "text-gray-400" : "text-[#e0e0e0]"
-                } font-normal text-[15px] `}
+                } font-normal text-[15px] whitespace-pre-wrap`}
+                style={{
+                  wordBreak: "break-word",
+                  overflowWrap: "anywhere",
+                }}
               >
                 {props.itemcontent}
               </h4>

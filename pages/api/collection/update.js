@@ -1,14 +1,17 @@
 /* eslint-disable require-jsdoc */
 
-import { connectToDatabase } from "../../lib/dbConnect";
+import { connectToDatabase } from "../../../lib/dbConnect";
 // import { getSession } from "next-auth/react";
 export default async function handler(req, res) {
   const { db } = await connectToDatabase();
   const session = req.body.session;
   const token = req.body.token;
-  const favorite = req.body.favorite;
+  const groupname = req.body.groupname;
+  const groupcolor = req.body.groupcolor;
+  const groupicon = req.body.groupicon;
   const collectionid = req.body.collectionid;
 
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
 
   if (token != rt) {
@@ -24,30 +27,44 @@ export default async function handler(req, res) {
     });
   }
 
+  await delay(100);
+
   if (req.method === "POST") {
     const user = await db.collection("users").findOne({
       email: session.user.email,
     });
     if (user) {
-      // console.log(user);
       function findCollection(collection) {
         return collection.groupid === collectionid;
       }
       const collection = user.collections.findIndex(findCollection);
-      await db.collection("users").updateOne(
+      const collectiondata = user.collections[collection];
+
+      if (collection <= -1) {
+        return res.status(200).send({
+          status: "Collection not found",
+          user: null,
+        });
+      }
+
+      const finalcollection = await db.collection("users").updateOne(
         { email: session.user.email },
         {
           $set: {
-            [`collections.${collection}.favorite`]: favorite,
+            [`collections.${collection}`]: {
+              groupname: groupname,
+              groupicon: groupicon,
+              groupcolor: groupcolor,
+              groupid: collectiondata.groupid,
+              todos: collectiondata.todos,
+              favorite: collectiondata.favorite,
+            },
           },
         }
       );
       return res.status(201).send({
-        status: "Collection Favorited",
-        collection: {
-          favorite: favorite,
-          groupid: collectionid,
-        },
+        status: "Collection Updated",
+        collection: finalcollection,
       });
     } else {
       return res.status(200).send({

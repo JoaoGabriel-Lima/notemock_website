@@ -134,6 +134,12 @@ export const HomeCointainer = styled.div<{ textColor?: string }>`
     background-color: #21212b;
     /* display: none; */
   }
+  .nametodoh4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
   input.checkbox {
     z-index: 5;
     width: 1.3em;

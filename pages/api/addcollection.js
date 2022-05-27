@@ -41,15 +41,10 @@ export default async function handler(req, res) {
         collectionid: collectioniditem,
       })
       .then(function (response) {
-        console.log(response.data);
         if (response.data.collection != null) {
-          console.log("Creating new ItemId for this new ToDo in production");
           collectionid = getRandomNumberBetween(10000, 99999);
           checkcol(collectionid);
         } else {
-          console.log(
-            "Ok, we don't need a new ItemId for this new ToDo in production"
-          );
         }
       });
   }
@@ -78,7 +73,6 @@ export default async function handler(req, res) {
           },
         }
       );
-      console.log("Collection added");
       return res.status(201).send({
         status: "Collection Added",
         collection: {

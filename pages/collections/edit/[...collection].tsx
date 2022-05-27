@@ -9,15 +9,17 @@ import axios from "axios";
 import { HexColorPicker } from "react-colorful";
 import { AnimatePresence, motion } from "framer-motion";
 
-const AddCollection: NextPage = ({ content }: any) => {
+const EditCollection: NextPage = ({ content }: any) => {
   const router = useRouter();
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState(content.collection.groupcolor);
   const customvalue =
     typeof window !== "undefined" ? localStorage.getItem("customcolor") : null;
-  const [customcolor, setCustomColor] = useState(customvalue || "#ffffff");
+  const [customcolor, setCustomColor] = useState(
+    content.collection.groupcolor || "#ffffff"
+  );
   const [toggleCustom, setToggleCustom] = useState(false);
-  const [name, setName] = useState("");
-  const [icon, setIcon] = useState("");
+  const [name, setName] = useState(content.collection.groupname);
+  const [icon, setIcon] = useState(content.collection.groupicon);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const wrapperRef = useRef(null);
@@ -53,7 +55,7 @@ const AddCollection: NextPage = ({ content }: any) => {
     }
   };
 
-  const addCollection = async () => {
+  const updateCollection = async () => {
     setError(false);
     setIsLoading(true);
     if (!color || !name || !icon) {
@@ -62,19 +64,20 @@ const AddCollection: NextPage = ({ content }: any) => {
       return;
     }
     try {
-      const data = await axios.post("/api/addcollection", {
+      const data = await axios.post("/api/collection/update", {
         session: session,
         groupname: name,
         groupcolor: color,
         groupicon: icon,
+        collectionid: content.collection.groupid,
         token: process.env.NEXT_PUBLIC_DBTOKEN,
       });
 
       setIsLoading(false);
       console.log(data.data);
-      if (data.data.status == "Collection Added") {
-        console.log(data.data.collection.groupid);
-        router.push(`/collections/${data.data.collection.groupid}`);
+      if (data.data.status == "Collection Updated") {
+        console.log(content.collection.groupid);
+        router.push(`/collections/${content.collection.groupid}`);
       }
     } catch (error) {
       setError(true);
@@ -99,16 +102,16 @@ const AddCollection: NextPage = ({ content }: any) => {
     <>
       <HomeCointainer className="body ">
         <Layout>
-          <div className="page_overview flex w-full justify-between items-start mb-10">
-            <div className="flex items-center justify-start ">
+          <div className=" page_overview flex w-full justify-between items-start mb-10">
+            <div className="flex items-center justify-start w-full">
               <div
-                className="w-11 h-11 rounded-2xl bg-[#21212b] mr-4 flex items-center justify-center cursor-pointer"
+                className="w-11 min-w-[2.75rem] h-11 rounded-2xl bg-[#21212b] mr-4 flex items-center justify-center cursor-pointer"
                 onClick={() => router.back()}
               >
                 <i className="bx bx-chevron-left text-white text-3xl"></i>
               </div>
-              <h4 className="text-white font-semibold tracking-wide text-xl">
-                Add a collection
+              <h4 className="text-white text-ellipsis font-semibold overflow-hidden tracking-wide text-xl">
+                Edit "{content.collection.groupname}"
               </h4>
             </div>
           </div>
@@ -364,15 +367,23 @@ const AddCollection: NextPage = ({ content }: any) => {
               </div>
             </section>
           </div>
-          <div className="w-full flex items-center justify-center mt-10">
+          <div className="w-full flex items-center justify-center mt-10 gap-x-5">
             <button
-              onClick={() => addCollection()}
+              onClick={() =>
+                router.push(`/collections/remove/${content.collection.groupid}`)
+              }
+              className="text-white w-full flex justify-center items-center h-14 rounded-3xl bg-red-600/80"
+            >
+              <span>Remove Collection</span>
+            </button>
+            <button
+              onClick={() => updateCollection()}
               className="text-white w-full flex justify-center items-center h-14 rounded-3xl bg-[#2c2c3a]"
             >
               {isLoading ? (
                 <i className="bx bx-loader-alt text-white text-2xl animate-spin"></i>
               ) : (
-                <span>Add Collection</span>
+                <span>Update Collection</span>
               )}
             </button>
           </div>
@@ -382,7 +393,7 @@ const AddCollection: NextPage = ({ content }: any) => {
   );
 };
 
-export default AddCollection;
+export default EditCollection;
 
 interface CollectionIconProps {
   iconname: string;
@@ -437,3 +448,24 @@ const CollectionColor = ({
     />
   );
 };
+
+export async function getServerSideProps(context: any) {
+  const { collection } = context.query;
+  const collection2 = collection[0];
+  const session = await getSession(context);
+  const res = await axios.post(
+    `${process.env.NEXT_PUBLIC_URL}/api/collections`,
+    {
+      session: session,
+      token: process.env.NEXT_PUBLIC_DBTOKEN,
+      collectionid: collection2,
+    }
+  );
+  const content = res.data;
+  if (content.collection === null) {
+    return {
+      notFound: true,
+    };
+  }
+  return { props: { content } };
+}

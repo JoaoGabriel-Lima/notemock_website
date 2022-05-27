@@ -142,7 +142,13 @@ function ToDoItem(props: any) {
       >
         <div className="flex ml-4 flex-col justify-center items-start cursor-pointer">
           <h4
-            className={`${isOpen ? "text-gray-400" : "text-white"} font-normal`}
+            className={`${
+              isOpen ? "text-gray-400" : "text-white"
+            } font-normal whitespace-pre-wrap`}
+            style={{
+              wordBreak: "break-word",
+              overflowWrap: "anywhere",
+            }}
           >
             {props.itemcontent}
           </h4>

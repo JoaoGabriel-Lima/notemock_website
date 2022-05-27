@@ -20,7 +20,10 @@ import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 const queryClient = new QueryClient();
 const Collections: NextPage = () => {
   const router = useRouter();
-  //   const { data: session } = useSession();
+  const customvalue =
+    typeof window !== "undefined" ? localStorage.getItem("savedtab") : null;
+  const select = customvalue || "1";
+  const [selectedTab, setSelectedTab] = React.useState(parseInt(select));
   const { data: session, status } = useSession();
   function none(session: any) {
     return "";
@@ -82,9 +85,13 @@ const Collections: NextPage = () => {
             </div>
             <div className="page_treatment flex w-full flex-col justify-start items-start">
               <div className="page-filter-options w-full flex flex-col items-start justify-center">
-                <Tab.Group vertical={true} defaultIndex={1}>
+                <Tab.Group vertical={true} defaultIndex={selectedTab}>
                   <Tab.List>
                     <Tab
+                      onClick={() => {
+                        localStorage.setItem("savedtab", "0");
+                        setSelectedTab(0);
+                      }}
                       className={({ selected }) =>
                         (selected
                           ? "h-12 bg-[#414052]"
@@ -95,6 +102,10 @@ const Collections: NextPage = () => {
                       Favorites
                     </Tab>
                     <Tab
+                      onClick={() => {
+                        localStorage.setItem("savedtab", "1");
+                        setSelectedTab(0);
+                      }}
                       className={({ selected }) =>
                         (selected
                           ? "h-12 bg-[#414052]"
@@ -159,22 +170,6 @@ const Collections: NextPage = () => {
   );
 };
 
-// export async function getServerSideProps(context: any) {
-//   const session = await getSession(context);
-
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return {
-//     props: { session },
-//   };
-// }
 export default Collections;
 
 function getChecked(array: any) {

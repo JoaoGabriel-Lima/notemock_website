@@ -63,7 +63,13 @@ function CollectionItem(props: any) {
         </div>
         <span className="links_name">{groupname}</span>
       </div>
-      {isloading ? "" : <span className="tooltip">{groupname}</span>}
+      {isloading ? (
+        ""
+      ) : (
+        <span className="tooltip">
+          <p className="px-2 text-ellipsis overflow-hidden">{groupname}</p>
+        </span>
+      )}
     </li>
   );
 }

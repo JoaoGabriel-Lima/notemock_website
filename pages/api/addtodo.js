@@ -43,15 +43,10 @@ export default async function handler(req, res) {
         todoid: itemid2,
       })
       .then(function (response) {
-        console.log(response.data);
         if (response.data.todo != null) {
-          console.log("Creating new ItemId for this new ToDo in production");
           itemid = getRandomNumberBetween(10000, 99999);
           checkitemid(itemid);
         } else {
-          console.log(
-            "Ok, we don't need a new ItemId for this new ToDo in production"
-          );
         }
       });
   }
@@ -91,7 +86,6 @@ export default async function handler(req, res) {
           },
         }
       );
-      console.log("Todo added");
       return res.status(201).send({
         status: "Todo added",
         todo: {

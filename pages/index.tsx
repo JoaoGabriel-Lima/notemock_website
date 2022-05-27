@@ -67,8 +67,8 @@ const Home: NextPage = () => {
                           {({ active }) => (
                             <button
                               className={`${
-                                active ? "bgmenucolor text-white" : "text-white"
-                              } group flex rounded-xl items-center w-full py-3 text-sm `}
+                                active ? " text-white/50" : "text-white/50"
+                              } group flex rounded-xl cursor-default items-center w-full py-3 text-sm `}
                             >
                               <span className="ml-3">Change View Mode</span>
                             </button>
@@ -137,8 +137,8 @@ const Home: NextPage = () => {
                           {({ active }) => (
                             <button
                               className={`${
-                                active ? "bgmenucolor text-white" : "text-white"
-                              } group flex rounded-xl items-center w-full py-3 text-sm `}
+                                active ? " text-white/50" : "text-white/50"
+                              } group flex rounded-xl cursor-default items-center w-full py-3 text-sm `}
                             >
                               <span className="ml-3">Change View Mode</span>
                             </button>
@@ -173,7 +173,7 @@ const Home: NextPage = () => {
                     </span>
                     <div>
                       <span className="ml-3 uppercase font-semibold rounded-[2px] tracking-wider  bg-[#9ae6b4]/[.16] px-1 py-[1px] text-green-200 text-[.75rem]">
-                        Stable 0.8
+                        Stable 0.85
                       </span>
                     </div>
                   </h2>
@@ -186,11 +186,19 @@ const Home: NextPage = () => {
                         - Custom accent color for collections
                       </li>
                       <li className="text-white/50 font-light text-sm">
+                        - collection tab preference is now saved on local
+                        storage
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - last custom color preference is now saved on local
+                        storage
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
                         - Collection Icon color matches with collection accent
                         color
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - Remove and add collection functionality
+                        - Remove, update and add collection functionality
                       </li>
                       <li className="text-white/50 font-light text-sm">
                         - Remove and add task scale animation
@@ -199,7 +207,7 @@ const Home: NextPage = () => {
                         - Welcome instructions for new users
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - Version logs
+                        - Version changelogs
                       </li>
                     </ul>
                   </section>
@@ -209,6 +217,16 @@ const Home: NextPage = () => {
                     </h3>
                     <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
                       <li className="text-white/50 font-light text-sm">
+                        - Tooltip padding issue on desktop version
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Custom color selector issue
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Remove search icon instead of collection icon on
+                        android version
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
                         - Realtime collection tasks length counter
                       </li>
                       <li className="text-white/50 font-light text-sm">
@@ -216,6 +234,18 @@ const Home: NextPage = () => {
                       </li>
                       <li className="text-white/50 font-light text-sm">
                         - PWA accent color
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Collections more options button position issue
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Collections name length issue
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Collections content length issue
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Collections content white line length issue
                       </li>
                       <li className="text-white/50 font-light text-sm">
                         - Sidebar tooltip double animation bug on desktop

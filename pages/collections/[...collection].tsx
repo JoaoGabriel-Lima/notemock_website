@@ -116,21 +116,21 @@ const Collection: NextPage = ({ content }: any) => {
         className="body "
       >
         <Layout className="">
-          <div className="page_overview flex w-full justify-between items-start mb-10">
-            <div className="flex items-center justify-start ">
+          <div className="page_overview flex w-full justify-between relative items-center mb-10">
+            <div className="flex items-center justify-start w-[90%]">
               <div
-                className="w-11 h-11 rounded-2xl bg-[#21212b] mr-4 flex items-center justify-center cursor-pointer"
+                className="w-11 min-w-[2.75rem] h-11 rounded-2xl bg-[#21212b] mr-4 flex items-center justify-center cursor-pointer"
                 onClick={() => router.back()}
               >
                 <i className="bx bx-chevron-left text-white text-3xl"></i>
               </div>
-              <h4 className="text-white font-semibold tracking-wide text-2xl">
+              <h4 className="text-white nametodoh4 text-ellipsis overflow-hidden font-semibold tracking-wide text-2xl">
                 {content.collection.groupname}
               </h4>
             </div>
             <Menu as="div" className="relative inline-block">
-              <div>
-                <Menu.Button className="inline-flex justify-center w-full mt-3 text-sm font-medium focus:outline-none focus-visible:ring-opacity-75">
+              <div className="">
+                <Menu.Button className=" flex items-center justify-center w-full h-full text-sm font-medium focus:outline-none focus-visible:ring-opacity-75">
                   <i className="bx bx-dots-horizontal-rounded cursor-pointer text-gray-400 text-2xl"></i>
                 </Menu.Button>
               </div>
@@ -164,6 +164,11 @@ const Collection: NextPage = ({ content }: any) => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
+                          onClick={() =>
+                            router.push(
+                              `/collections/edit/${content.collection.groupid}`
+                            )
+                          }
                           className={`${
                             active ? "bgmenucolor text-white" : "text-white"
                           } group flex rounded-xl items-center w-full py-3 text-sm `}

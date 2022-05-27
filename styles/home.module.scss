@@ -52,6 +52,9 @@ label.todo_label {
   padding: 0 0.25em 0;
   user-select: none;
   &::before {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
     position: absolute;
     content: attr(data-content);
     color: transparent;

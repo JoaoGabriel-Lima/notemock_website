@@ -279,7 +279,7 @@ function Navbar() {
           </Menu>
 
           <div className="search-box flex items-center justify-center">
-            <button className="btn-search">
+            <button className="btn-search hidden sm:block">
               <i className="bx bx-search text-2xl text-white cursor-pointer searchicon"></i>
             </button>
             <input

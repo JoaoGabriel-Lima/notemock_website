@@ -59,7 +59,9 @@ export default function Collection(props: any) {
       </div>
       <div className="collectionBottom flex flex-col ">
         <div className="collectionName mb-2">
-          <h3 className="text-xl font-medium text-white">{props.groupnane}</h3>
+          <h3 className="text-xl font-medium text-white text-ellipsis overflow-hidden nametodoh4">
+            {props.groupnane}
+          </h3>
         </div>
         <div className="CollectionProgress flex justify-between items-center">
           {isComplete ? (
