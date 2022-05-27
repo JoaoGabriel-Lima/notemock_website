@@ -310,9 +310,13 @@ export const HomeCointainer = styled.div<{ textColor?: string }>`
     background-color: transparent;
   }
   @media only screen and (min-width: 758px) {
+    ::-webkit-scrollbar {
+      cursor: pointer;
+    }
     .custom_scrollbar::-webkit-scrollbar {
       background-color: transparent;
       height: 0.5rem;
+      cursor: pointer;
     }
     .custom_scrollbar::-webkit-scrollbar-thumb {
       background-color: #414052;

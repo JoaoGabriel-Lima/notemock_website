@@ -34,6 +34,7 @@ const Collection: NextPage = ({ content }: any) => {
   const { data: session, status } = useSession();
   const [isFavorite, setIsFavorite] = useState(content.collection.favorite);
 
+  const [taskLength, setTaskLength] = useState(content.collection.todos.length);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [inputvalue, setInputvalue] = useState("");
@@ -83,6 +84,7 @@ const Collection: NextPage = ({ content }: any) => {
       await axios
         .post(`${process.env.NEXT_PUBLIC_URL}/api/addtodo`, nw)
         .then((res) => {
+          setTaskLength(taskLength + 1);
           doRefetch().then(setIsLoading(false));
         });
     }
@@ -278,7 +280,7 @@ const Collection: NextPage = ({ content }: any) => {
           >
             <div className="flex w-full justify-between items-center">
               <h4 className="text-white font-normal tracking-wide">
-                Tasks - {content.collection.todos.length}
+                Tasks - {taskLength}
               </h4>
               {isLoading && (
                 <div className="h-auto flex justify-center">
@@ -287,7 +289,11 @@ const Collection: NextPage = ({ content }: any) => {
               )}
             </div>
             <QueryClientProvider client={queryClient}>
-              <Todo content={content} session={session} />
+              <Todo
+                content={content}
+                session={session}
+                reduceCounter={() => setTaskLength(taskLength - 1)}
+              />
             </QueryClientProvider>
           </div>
         </Layout>
@@ -376,6 +382,7 @@ function Todo(props: any) {
             .reverse()
             .map((todo: any) => (
               <ToDoCollectionItem
+                reduceCounter={() => props.reduceCounter()}
                 key={todo.itemid}
                 itemcontent={todo.itemcontent}
                 itemtime={todo.itemtime}

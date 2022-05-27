@@ -209,6 +209,9 @@ const Home: NextPage = () => {
                     </h3>
                     <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
                       <li className="text-white/50 font-light text-sm">
+                        - Realtime collection tasks length counter
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
                         - Calendar text matching accent color
                       </li>
                       <li className="text-white/50 font-light text-sm">

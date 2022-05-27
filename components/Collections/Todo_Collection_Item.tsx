@@ -162,6 +162,7 @@ function ToDoCollectionItem(props: any) {
       })
       .then((res) => {
         // props.rerender();
+        props.reduceCounter();
         props.refetch();
       });
   }
