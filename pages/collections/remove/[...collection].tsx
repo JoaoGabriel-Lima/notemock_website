@@ -134,7 +134,9 @@ const RemoveCollection: NextPage = ({ content }: any) => {
                     ),
                   }}
                 >
-                  {content.collection.groupname}
+                  {content.collection.groupname.length > 14
+                    ? content.collection.groupname.substring(0, 14) + "..."
+                    : content.collection.groupname}
                 </span>
                 " Collection.
               </p>
@@ -171,7 +173,7 @@ const RemoveCollection: NextPage = ({ content }: any) => {
               {isLoading ? (
                 <i className="bx bx-loader-alt text-white text-2xl animate-spin"></i>
               ) : (
-                <span>Remove Collection</span>
+                <span className="">Remove Collection</span>
               )}
             </button>
           </div>

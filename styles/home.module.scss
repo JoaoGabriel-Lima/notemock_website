@@ -52,6 +52,9 @@ label.todo_label {
   padding: 0 0.25em 0;
   user-select: none;
   &::before {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 22.5px;
     white-space: pre-wrap;
     word-break: break-word;
     overflow-wrap: anywhere;

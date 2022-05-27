@@ -249,14 +249,17 @@ const AddCollection: NextPage = ({ content }: any) => {
               </h4>
               <input
                 maxLength={33}
+                max={33}
                 type="text"
                 disabled={isLoading}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) =>
+                  e.target.value.length <= 33 && setName(e.target.value)
+                }
                 placeholder="Ex: Compras da semana"
                 className={`mt-5 w-full h-[3.45rem] bg-transparent rounded-2xl border-[3px] ${
                   error ? "border-red-500/70" : "border-[#21212b]"
-                } pl-3 box-box placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium`}
+                } px-3 box-box placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium`}
               ></input>
               <div
                 id="IconSection"

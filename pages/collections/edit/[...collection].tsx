@@ -110,7 +110,13 @@ const EditCollection: NextPage = ({ content }: any) => {
               >
                 <i className="bx bx-chevron-left text-white text-3xl"></i>
               </div>
-              <h4 className="text-white text-ellipsis font-semibold overflow-hidden tracking-wide text-xl">
+              <h4
+                style={{
+                  wordBreak: "break-word",
+                  overflowWrap: "anywhere",
+                }}
+                className="line-clamp-2 whitespace-pre-wrap text-white text-ellipsis font-semibold overflow-hidden tracking-wide text-xl"
+              >
                 Edit "{content.collection.groupname}"
               </h4>
             </div>
@@ -252,14 +258,17 @@ const EditCollection: NextPage = ({ content }: any) => {
               </h4>
               <input
                 maxLength={33}
+                max={33}
                 type="text"
                 disabled={isLoading}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) =>
+                  e.target.value.length <= 33 && setName(e.target.value)
+                }
                 placeholder="Ex: Compras da semana"
                 className={`mt-5 w-full h-[3.45rem] bg-transparent rounded-2xl border-[3px] ${
                   error ? "border-red-500/70" : "border-[#21212b]"
-                } pl-3 box-box placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium`}
+                } px-3 box-box placeholder:text-gray-500 text-gray-400 placeholder:font-medium font-medium`}
               ></input>
               <div
                 id="IconSection"
@@ -268,7 +277,7 @@ const EditCollection: NextPage = ({ content }: any) => {
                 <h4
                   className={`${
                     error ? "text-red-500/60" : "text-gray-100/[.5]"
-                  }  font-normal text-sm tracking-wide mb-5`}
+                  }  font-normal text-sm tracking-wide mb-5 `}
                 >
                   Collection icon
                 </h4>
@@ -367,23 +376,23 @@ const EditCollection: NextPage = ({ content }: any) => {
               </div>
             </section>
           </div>
-          <div className="w-full flex items-center justify-center mt-10 gap-x-5">
+          <div className="w-full flex items-center justify-center mt-10 gap-x-2">
             <button
               onClick={() =>
                 router.push(`/collections/remove/${content.collection.groupid}`)
               }
-              className="text-white w-full flex justify-center items-center h-14 rounded-3xl bg-red-600/80"
+              className="text-white w-full flex justify-center items-center min-h-[3.5rem] rounded-3xl bg-red-600/80"
             >
-              <span>Remove Collection</span>
+              <span className="px-3 text-center">Remove Collection</span>
             </button>
             <button
               onClick={() => updateCollection()}
-              className="text-white w-full flex justify-center items-center h-14 rounded-3xl bg-[#2c2c3a]"
+              className="text-white w-full flex justify-center items-center min-h-[3.5rem] rounded-3xl bg-[#2c2c3a]"
             >
               {isLoading ? (
                 <i className="bx bx-loader-alt text-white text-2xl animate-spin"></i>
               ) : (
-                <span>Update Collection</span>
+                <span className="px-3 text-center">Update Collection</span>
               )}
             </button>
           </div>

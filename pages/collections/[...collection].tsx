@@ -124,7 +124,13 @@ const Collection: NextPage = ({ content }: any) => {
               >
                 <i className="bx bx-chevron-left text-white text-3xl"></i>
               </div>
-              <h4 className="text-white nametodoh4 text-ellipsis overflow-hidden font-semibold tracking-wide text-2xl">
+              <h4
+                className="text-white mr-4 whitespace-pre-wrap line-clamp-2 nametodoh4 text-ellipsis overflow-hidden font-semibold tracking-wide text-2xl"
+                style={{
+                  wordBreak: "break-word",
+                  overflowWrap: "anywhere",
+                }}
+              >
                 {content.collection.groupname}
               </h4>
             </div>

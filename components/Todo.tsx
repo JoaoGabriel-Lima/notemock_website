@@ -47,7 +47,13 @@ function ToDo(props: any) {
                     }}
                   ></i>
                 </div>
-                <h4 className="text-white font-medium text-lg nametodoh4 text-ellipsis overflow-hidden  w-full">
+                <h4
+                  className="text-white whitespace-pre-wrap font-medium text-lg nametodoh4 line-clamp-2 text-ellipsis overflow-hidden  w-full"
+                  style={{
+                    wordBreak: "break-word",
+                    overflowWrap: "anywhere",
+                  }}
+                >
                   {props.groupname}
                 </h4>
               </div>
