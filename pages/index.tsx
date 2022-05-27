@@ -335,7 +335,7 @@ function Collections() {
           </h4>
           <button
             onClick={() => {
-              router.push("http://localhost:3000/collections/add");
+              router.push("/collections/add");
             }}
             className="bg-[#414052] px-7 py-3 rounded-lg font-medium text-center"
           >
