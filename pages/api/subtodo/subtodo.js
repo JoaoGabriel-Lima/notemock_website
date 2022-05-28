@@ -1,15 +1,15 @@
 /* eslint-disable require-jsdoc */
 import axios from "axios";
-import { connectToDatabase } from "../../lib/dbConnect";
+import { connectToDatabase } from "../../../lib/dbConnect";
 // import { getSession } from "next-auth/react";
 export default async function handler(req, res) {
   const { db } = await connectToDatabase();
   const session = req.body.session;
   const token = req.body.token;
-  const collectiongroupid = req.body.collectionid;
 
+  const todogroupid = req.body.todogroupid;
+  const collectiongroupid = req.body.collectionid;
   const itemcontent = req.body.itemcontent;
-  const itemtime = req.body.itemtime;
 
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   // console.log(token);
@@ -37,23 +37,25 @@ export default async function handler(req, res) {
   async function checkitemid(itemid2) {
     // console.log(itemid2);
     await axios
-      .post(`${publicurl}/api/todoid`, {
+      .post(`${publicurl}/api/subtodo/subtodoid`, {
         session: session,
         token: token,
         collectionid: collectiongroupid,
-        todoid: itemid2,
+        todoid: todogroupid,
+        subtodoid: itemid2,
       })
       .then(function (response) {
         if (response.data.todo != null) {
           itemid = getRandomNumberBetween(10000, 99999);
           checkitemid(itemid);
         } else {
+          return itemid;
         }
       });
   }
 
   let itemid = getRandomNumberBetween(10000, 99999);
-  checkitemid(itemid);
+  await checkitemid(itemid);
   await delay(100);
 
   if (req.method === "POST") {
@@ -65,10 +67,22 @@ export default async function handler(req, res) {
       function findCollection(collection) {
         return collection.groupid === collectiongroupid;
       }
+      function findTodo(todo) {
+        return todo.itemid === todogroupid;
+      }
       const collection = user.collections.findIndex(findCollection);
-      if (collection === undefined) {
+      const todo = user.collections[collection].todos.findIndex(findTodo);
+
+      if (collection == -1) {
         return res.status(200).send({
           status: "Collection not found",
+          collection: null,
+        });
+      }
+
+      if (todo == -1) {
+        return res.status(200).send({
+          status: "To-do not found",
           collection: null,
         });
       }
@@ -77,24 +91,20 @@ export default async function handler(req, res) {
         { email: session.user.email },
         {
           $push: {
-            [`collections.${collection}.todos`]: {
+            [`collections.${collection}.todos.${todo}.subtodo`]: {
               itemcontent: itemcontent,
-              itemtime: itemtime,
               checked: false,
-              subtodo: [],
-              itemid: itemid,
+              subtodoid: itemid,
             },
           },
         }
       );
       return res.status(201).send({
-        status: "Todo added",
+        status: "Subtodo added",
         todo: {
           itemcontent: itemcontent,
-          itemtime: itemtime,
           checked: false,
-          subtodo: [],
-          itemid: itemid,
+          subtodoid: itemid,
         },
       });
     } else {

@@ -47,9 +47,10 @@ export default async function handler(req, res) {
         });
       }
       if (subtodoid != null || subtodoid != undefined) {
-        const findSubItem = user.collections[collection].todos[
-          findItem
-        ].subtodo.findIndex((subtodo) => subtodo.subtodoid === subtodoid);
+        const findTodo = user.collections[collection].todos[findItem];
+        const findSubItem = findTodo.subtodo.findIndex(
+          (subtodo) => subtodo.subtodoid === subtodoid
+        );
         if (findSubItem <= -1) {
           console.log("Subtodo not found");
           return res.status(200).send({
@@ -70,7 +71,7 @@ export default async function handler(req, res) {
           { email: session.user.email },
           {
             $pull: {
-              [`collections.${collection}.todos.subtodo`]: null,
+              [`collections.${collection}.todos.${findItem}.subtodo`]: null,
             },
           }
         );

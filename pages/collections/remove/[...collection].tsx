@@ -36,6 +36,7 @@ const RemoveCollection: NextPage = ({ content }: any) => {
       });
       setIsLoading(false);
       if (data.data.status == "Collection Removed") {
+        localStorage.removeItem(content.collection.groupid);
         router.push(`/`);
       } else {
         setError(true);
@@ -166,14 +167,16 @@ const RemoveCollection: NextPage = ({ content }: any) => {
             <button
               onClick={() => removeCollection()}
               disabled={isLoading || !checktext}
-              className={`text-white w-full flex justify-center items-center h-14 rounded-3xl ${
+              className={`text-white w-full flex justify-center items-center min-h-[3.5rem] rounded-3xl ${
                 checktext ? "bg-red-500/80" : "bg-red-500/50 text-white/50"
               }`}
             >
               {isLoading ? (
                 <i className="bx bx-loader-alt text-white text-2xl animate-spin"></i>
               ) : (
-                <span className="">Remove Collection</span>
+                <span className="text-center px-5 py-3">
+                  Remove Collection. This action cannot be undone
+                </span>
               )}
             </button>
           </div>

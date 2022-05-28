@@ -91,6 +91,10 @@ const Collection: NextPage = ({ content }: any) => {
     // mutation.mutate(nw);
   }
 
+  const todoActionLoad = (a: boolean) => {
+    setIsLoading(a);
+  };
+
   async function favoriteCollection(favorite: boolean) {
     await axios
       .post(`${process.env.NEXT_PUBLIC_URL}/api/favoritecollection`, {
@@ -289,8 +293,8 @@ const Collection: NextPage = ({ content }: any) => {
             id="TasksToDo"
             className="w-full flex flex-col items-start justify-start mb-[140px]"
           >
-            <div className="flex w-full justify-between items-center">
-              <h4 className="text-white font-normal tracking-wide">
+            <div className="flex w-full justify-between items-center h-7">
+              <h4 className="text-white font-normal tracking-wide ">
                 Tasks - {taskLength}
               </h4>
               {isLoading && (
@@ -301,6 +305,7 @@ const Collection: NextPage = ({ content }: any) => {
             </div>
             <QueryClientProvider client={queryClient}>
               <Todo
+                todoActionLoad={todoActionLoad}
                 content={content}
                 session={session}
                 reduceCounter={() => setTaskLength(taskLength - 1)}
@@ -360,7 +365,7 @@ function Todo(props: any) {
   if (error)
     return (
       <ToDoCollectionItem
-        key={Math.random()}
+        key={"500"}
         itemcontent="Error"
         itemtime="1997-06-30"
         checked={false}
@@ -374,7 +379,7 @@ function Todo(props: any) {
   if (data.collection === null) {
     return (
       <ToDoCollectionItem
-        key={Math.random()}
+        key={"404"}
         itemcontent="Error"
         itemtime="1997-06-30"
         checked={false}
@@ -403,6 +408,7 @@ function Todo(props: any) {
                 collectionid={props.content.collection.groupid}
                 subtodo={todo.subtodo}
                 refetch={sendmsg}
+                setIsLoading={(e: boolean) => props.todoActionLoad(e)}
               ></ToDoCollectionItem>
             ))}
         </AnimatePresence>

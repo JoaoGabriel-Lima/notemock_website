@@ -152,11 +152,28 @@ function ToDoItem(props: any) {
           >
             {props.itemcontent}
           </h4>
-          <div className="flex justify-start items-center">
-            <i className={`bx bx-calendar-alt mr-1 ${props.color} text-md`}></i>
-            <h5 className={`${props.color} font-light text-sm`}>
-              {messageusingdaysremaining()}
-            </h5>
+          <div className=" flex items-center justify-start ">
+            <div className="flex justify-start items-center">
+              <i
+                className={`bx bx-calendar-alt mr-1 ${props.color} text-md`}
+              ></i>
+              <h5 className={`${props.color} font-light text-sm`}>
+                {messageusingdaysremaining()}
+              </h5>
+            </div>
+            {/* {props.subtodo.length > 0 ? (
+              <div className="flex justify-start items-center ml-3 ">
+                <i
+                  className="bx bx-folder-open mt-[2px]"
+                  style={{ color: "#a8a7a7" }}
+                ></i>
+                <h5 className="text-sm ml-1" style={{ color: "#a8a7a7" }}>
+                  {props.subtodo.length}
+                </h5>
+              </div>
+            ) : (
+              <></>
+            )} */}
           </div>
         </div>
       </label>

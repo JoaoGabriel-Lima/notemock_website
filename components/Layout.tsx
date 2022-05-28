@@ -68,7 +68,7 @@ function Layout(props: any) {
   return (
     <>
       <Head>
-        <title>Notemock</title>
+        <title>Notemock - Homepage</title>
       </Head>
       <main>
         <Navbar />

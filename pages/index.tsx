@@ -421,6 +421,7 @@ function Collections() {
                 key={todo.itemid}
                 itemcontent={todo.itemcontent}
                 itemtime={todo.itemtime}
+                subtodo={todo.subtodo}
                 checked={todo.checked}
                 groupcolor={collection.groupcolor}
                 itemid={todo.itemid}

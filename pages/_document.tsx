@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-title-in-document-head */
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
@@ -14,7 +15,25 @@ export default function Document() {
           href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css"
           rel="stylesheet"
         ></link>
-        <meta name="description" content="A A.I Powered ToDo App" />
+        <meta name="theme-color" content="#c33939" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@juaozin__" />
+        <meta name="twitter:creator" content="@juaozin__" />
+
+        <meta property="og:site_name" content="Notemock" />
+        <meta property="og:type" content="website" />
+        <meta name="author" content="João Gabriel Lima Marinho" />
+        <meta name="twitter:title" content="Notemock - Homepage" />
+        <meta name="og:title" content="Notemock - Homepage" />
+
+        <meta
+          name="description"
+          content="A to-do list website made with Next.js focused on students and developers, offering better organization and customization options"
+        />
+        <meta
+          property="og:description"
+          content="A to-do list website made with Next.js focused on students and developers, offering better organization and customization options"
+        />
         <link rel="icon" href="/favicon.ico" />
         <link
           rel="apple-touch-icon"

@@ -13,13 +13,15 @@ import SubToDoItem from "./SubToDo_Collection";
  * @return {string} This is a description of what the function returns.
  */
 function ToDoCollectionItem(props: any) {
-  /** This is a description of the foo function.
-  //  * @return {boolean} This is a description of what the function returns.
-   * @param {string} e - This is a description of the foo parameter.
-   */
-  // if the day has already gone, return a negative number
-  // if the day has not yet gone, return a positive number
-  // if the date is today, return 0
+  const [subtodoChecked, setSubTodoChecked]: any = useState([]);
+  const [inputValue, setInputvalue] = useState("");
+
+  const setsubTodoCheckedDetails = (index: number, action: boolean) => {
+    const array = subtodoChecked;
+    array[index] = action;
+    setSubTodoChecked(array);
+  };
+
   function getadateandcalculatetimeremaingindays() {
     const today = new Date();
     const eventdate = new Date(props.itemtime);
@@ -32,10 +34,6 @@ function ToDoCollectionItem(props: any) {
       return value ? value : 0;
     }
   }
-  // Create a function that get today's date and calculate the time remaining in days
-  // if the day has already gone, return a negative int number
-  // if the day has not yet gone, return a positive int number
-  // if the date is today, return int 0
 
   const yellow = "#E09E51";
   const gray = "#B2B2B6";
@@ -118,41 +116,71 @@ function ToDoCollectionItem(props: any) {
 
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(props.checked);
-
-  // const [isft, setIsft] = useState(false);
+  const [isOpenSub, setIsOpenSub] = useState(false);
 
   function getopenstatus() {
-    const localdata = `${props.collectionid}.${props.itemid}`;
+    const localdata = `${props.collectionid}`;
     if (
       localStorage.getItem(localdata) != null ||
       localStorage.getItem(localdata) != undefined
     ) {
-      if (localStorage.getItem(localdata) === "true") {
-        return true;
+      const lsData: any = localStorage.getItem(localdata);
+      const lsDataJson = JSON.parse(lsData);
+      const itemidvalue = `${props.itemid}`;
+      if (lsDataJson[itemidvalue] == undefined) {
+        lsDataJson[itemidvalue] = "false";
+        localStorage.setItem(localdata, JSON.stringify(lsDataJson));
       } else {
-        return false;
+        if (lsDataJson[itemidvalue] === "true") {
+          return true;
+        } else {
+          return false;
+        }
       }
-    } else {
-      localStorage.setItem(localdata, "false");
-      return false;
     }
+    const lsDataJson: any = {};
+    const itemidvalue = `${props.itemid}`;
+    lsDataJson[itemidvalue] = "false";
+
+    localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+    return false;
   }
 
   function openclose() {
-    const localdata = `${props.collectionid}.${props.itemid}`;
+    const localdata = `${props.collectionid}`;
     if (isOpenCollection) {
       setIsOpenCollection(false);
       refetchSubtodo();
 
-      localStorage.setItem(localdata, "false");
+      const lsData: any = localStorage.getItem(localdata);
+      const lsDataJson = JSON.parse(lsData);
+      const itemidvalue = `${props.itemid}`;
+      lsDataJson[itemidvalue] = "false";
+      localStorage.setItem(localdata, JSON.stringify(lsDataJson));
     } else {
       setIsOpenCollection(true);
 
-      localStorage.setItem(localdata, "true");
+      const lsData: any = localStorage.getItem(localdata);
+      const lsDataJson = JSON.parse(lsData);
+      const itemidvalue = `${props.itemid}`;
+      lsDataJson[itemidvalue] = "true";
+
+      localStorage.setItem(localdata, JSON.stringify(lsDataJson));
     }
   }
 
+  const removeItem = () => {
+    const localdata = `${props.collectionid}`;
+    const lsData: any = localStorage.getItem(localdata);
+    const lsDataJson = JSON.parse(lsData);
+    const itemidvalue = `${props.itemid}`;
+    delete lsDataJson[itemidvalue];
+
+    localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+  };
+
   async function deleteitem() {
+    props.setIsLoading(true);
     await axios
       .post(`/api/deletetodo`, {
         collectionid: props.collectionid,
@@ -162,32 +190,16 @@ function ToDoCollectionItem(props: any) {
       })
       .then((res) => {
         // props.rerender();
+        removeItem();
+        props.setIsLoading(false);
         props.reduceCounter();
         props.refetch();
       });
   }
 
-  // create a function that will find the checked todo inside a array of objects and return the number of checked todos in the array
-  // function getChecked(array: any) {
-  //   let checked = 0;
-  //   array.forEach((element: any) => {
-  //     if (element.checked) checked++;
-  //   });
-  //   return checked;
-  // }
-
   function refetchSubtodo() {
     props.refetch();
   }
-
-  // const [checked] = useState(getChecked(props.subtodo));
-  // const counter = (c: any) => {
-  //   if (c == true) {
-  //     setChecked(checked + 1);
-  //   } else {
-  //     setChecked(checked - 1);
-  //   }
-  // };
 
   function sendcheck(c: any) {}
   const [isOpenCollection, setIsOpenCollection] = useState(getopenstatus());
@@ -201,6 +213,29 @@ function ToDoCollectionItem(props: any) {
       collectionid: props.collectionid,
     });
   }
+
+  const addSubTodo = async () => {
+    if (inputValue.trim() === "") {
+      return;
+    }
+    setInputvalue("");
+    props.setIsLoading(true);
+    await axios
+      .post(`/api/subtodo/subtodo`, {
+        collectionid: props.collectionid,
+        todogroupid: props.itemid,
+        itemcontent: inputValue.trim(),
+        session: session,
+        token: process.env.NEXT_PUBLIC_DBTOKEN,
+      })
+      .then((res) => {
+        // props.rerender();
+        props.setIsLoading(false);
+
+        setIsOpenSub(false);
+        props.refetch();
+      });
+  };
   return (
     <motion.div
       key={props.itemid}
@@ -308,28 +343,81 @@ function ToDoCollectionItem(props: any) {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.1 }}
             className={`ml-8 flex flex-col items-start justify-start`}
           >
-            {props.subtodo.length > 0 &&
-              props.subtodo[0] != "" &&
-              props.subtodo.map((subtodo: any) => (
-                <SubToDoItem
-                  key={subtodo.subtodoid}
-                  itemcontent={subtodo.itemcontent}
-                  checked={subtodo.checked}
-                  groupcolor={props.groupcolor}
-                  subtodoid={subtodo.subtodoid}
-                  collectionid={props.collectionid}
-                  itemid={props.itemid}
-                  refetch={props.refetch}
-                  sendcheck={sendcheck}
-                ></SubToDoItem>
-              ))}
-
+            <AnimatePresence>
+              {props.subtodo.length > 0 &&
+                props.subtodo[0] != "" &&
+                props.subtodo.map((subtodo: any, index: number) => (
+                  <SubToDoItem
+                    setsubTodoCheckedDetails={(action: boolean) =>
+                      setsubTodoCheckedDetails(index, action)
+                    }
+                    setIsLoading={props.setIsLoading}
+                    subtodoChecked={subtodoChecked[index]}
+                    key={subtodo.subtodoid}
+                    itemcontent={subtodo.itemcontent}
+                    checked={subtodo.checked}
+                    groupcolor={props.groupcolor}
+                    subtodoid={subtodo.subtodoid}
+                    collectionid={props.collectionid}
+                    itemid={props.itemid}
+                    refetch={props.refetch}
+                    sendcheck={sendcheck}
+                  ></SubToDoItem>
+                ))}
+            </AnimatePresence>
+            <AnimatePresence>
+              {isOpenSub && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.1 }}
+                  className="flex items-center justify-between w-full border-4 border-[#21212b] py-3 mt-3 h-8 rounded-3xl"
+                >
+                  <form className="flex items-center justify-between w-full">
+                    <div className="w-full h-11 flex justify-start items-center px-4">
+                      <input
+                        maxLength={50}
+                        id="add_SubToDo"
+                        onChange={(e) => setInputvalue(e.target.value)}
+                        className="placeholder:text-gray-500 text-gray-400 bg-transparent placeholder:font-medium font-medium w-full h-full border-0 focus:border-0 rounded-md autofill:bg-transparent "
+                        placeholder="Add a subtask"
+                        value={inputValue}
+                      ></input>
+                    </div>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addSubTodo();
+                      }}
+                      className="text-white rounded-lg min-w-max px-4 mr-4 py-1 origin-right"
+                      style={{ backgroundColor: props.groupcolor }}
+                    >
+                      <i
+                        className="bx bx-plus text-xl"
+                        style={{
+                          color: pickTextColorBasedOnBgColorSimple(
+                            props.groupcolor,
+                            "white",
+                            "black"
+                          ),
+                        }}
+                      ></i>
+                    </button>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
             <div className="flex flex-row mt-4 items-start justify-center w-full ">
-              <div className="cursor-pointer text-sm  w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center font-medium text-center text-[#8e8e9b] items-center border-[#21212b] h-[45px] mr-3">
-                Add a SubToDo
+              <div
+                onClick={() => setIsOpenSub(!isOpenSub)}
+                className="cursor-pointer text-sm  w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center font-medium text-center text-[#8e8e9b] items-center border-[#21212b] h-[45px] mr-3"
+              >
+                {isOpenSub ? "Close Input" : "Add a SubToDo"}
               </div>
               {isOpen ? (
                 <div
