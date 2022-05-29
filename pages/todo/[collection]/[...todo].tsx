@@ -31,7 +31,9 @@ const EditTodo: NextPage = ({ content, tododata2 }: any) => {
 
   const startdate = getDate(new Date());
   const [startDate, setStartDate] = useState(new Date(tododata2.todo.itemtime));
-  const [sendDate, setSendDate] = useState(startdate);
+  const [sendDate, setSendDate] = useState(
+    getDate(new Date(tododata2.todo.itemtime))
+  );
   const [isOpenDate, setIsOpenDate] = useState(false);
 
   const handleChange = (e: any) => {

@@ -41,34 +41,36 @@ const Collection: NextPage = ({ content }: any) => {
 
   const getInitialOrderPreference = () => {
     const localdata = `${content.collection.groupid}`;
-    if (
-      localStorage.getItem(localdata) != null ||
-      localStorage.getItem(localdata) != undefined
-    ) {
-      const lsData: any = localStorage.getItem(localdata);
-      const lsDataJson = JSON.parse(lsData);
-      if (lsDataJson.preferences == undefined) {
-        lsDataJson.preferences = false;
-        localStorage.setItem(localdata, JSON.stringify(lsDataJson));
-        return false;
-      } else {
-        return lsDataJson.preferences;
+    if (typeof window !== "undefined") {
+      if (
+        localStorage.getItem(localdata) != null ||
+        localStorage.getItem(localdata) != undefined
+      ) {
+        const lsData: any = localStorage.getItem(localdata);
+        const lsDataJson = JSON.parse(lsData);
+        if (lsDataJson.preferences == undefined) {
+          lsDataJson.preferences = false;
+          localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+          return false;
+        } else {
+          return lsDataJson.preferences;
+        }
       }
-    }
-    let lsDataJson: any;
-    if (
-      localStorage.getItem(localdata) != null ||
-      localStorage.getItem(localdata) != undefined
-    ) {
-      const lsData: any = localStorage.getItem(localdata);
-      lsDataJson = JSON.parse(lsData);
-    } else {
-      lsDataJson = {};
-    }
-    lsDataJson.preferences = false;
+      let lsDataJson: any;
+      if (
+        localStorage.getItem(localdata) != null ||
+        localStorage.getItem(localdata) != undefined
+      ) {
+        const lsData: any = localStorage.getItem(localdata);
+        lsDataJson = JSON.parse(lsData);
+      } else {
+        lsDataJson = {};
+      }
+      lsDataJson.preferences = false;
 
-    localStorage.setItem(localdata, JSON.stringify(lsDataJson));
-    return false;
+      localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+      return false;
+    }
   };
 
   const [queryClient] = React.useState(() => new QueryClient());

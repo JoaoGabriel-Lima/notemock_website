@@ -183,16 +183,16 @@ const Home: NextPage = () => {
                     </h3>
                     <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
                       <li className="text-white/50 font-light text-sm">
-                        - Better organization of to-do lists with filters
+                        - Better organization of tasks lists with filters
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - Subtaks progression on Dashboard
+                        - Subtasks progression on Dashboard
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - Dashboard preferences is now saved on localstorage
+                        - Dashboard preferences are now saved on local storage
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - Add, update, and delete subtasks
+                        - Add, update, and delete subtasks functionality
                       </li>
                       <li className="text-white/50 font-light text-sm">
                         - Custom accent color for collections
@@ -241,10 +241,13 @@ const Home: NextPage = () => {
                         - Remove button has a new description
                       </li>
                       <li className="text-white/50 font-light text-sm">
+                        - Error 500 issue
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
                         - Loading padding issue
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - Loading animation while removing to-do
+                        - Loading animation while removing tasks
                       </li>
                       <li className="text-white/50 font-light text-sm">
                         - Search button is now disabled
@@ -256,8 +259,8 @@ const Home: NextPage = () => {
                         - Custom color selector issue
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - Remove search icon instead of collection icon on
-                        android version
+                        - Remove the search icon instead of the collection icon
+                        on Android viewport
                       </li>
                       <li className="text-white/50 font-light text-sm">
                         - Realtime collection tasks length counter

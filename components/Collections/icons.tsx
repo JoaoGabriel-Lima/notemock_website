@@ -144,6 +144,30 @@ const CustomIconsComponent = ({ icon, selectoption }: IconsComponentProps) => {
         selectedicon={icon}
         selectoption={selectoption}
       />
+      <CollectionIcon
+        iconname="award"
+        icontitle="Award Icon"
+        selectedicon={icon}
+        selectoption={selectoption}
+      />
+      <CollectionIcon
+        iconname="briefcase-alt"
+        icontitle="Briefcase Icon"
+        selectedicon={icon}
+        selectoption={selectoption}
+      />
+      <CollectionIcon
+        iconname="dumbbell"
+        icontitle="Dumbbell Icon"
+        selectedicon={icon}
+        selectoption={selectoption}
+      />
+      <CollectionIcon
+        iconname="home"
+        icontitle="Home Icon"
+        selectedicon={icon}
+        selectoption={selectoption}
+      />
     </>
   );
 };
