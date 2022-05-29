@@ -363,6 +363,54 @@ const AddCollection: NextPage = ({ content }: any) => {
                     selectedicon={icon}
                     selectoption={selectoption}
                   />
+                  <CollectionIcon
+                    iconname="dollar"
+                    icontitle="Dollar Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="music"
+                    icontitle="Music Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="math"
+                    icontitle="Math Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="landscape"
+                    icontitle="Landscape Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="bus-school"
+                    icontitle="Bus School Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="palette"
+                    icontitle="Palette Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="joystick-alt"
+                    icontitle="Joystick Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
+                  <CollectionIcon
+                    iconname="atom"
+                    icontitle="Atom Icon"
+                    selectedicon={icon}
+                    selectoption={selectoption}
+                  />
                 </div>
               </div>
             </section>
