@@ -161,6 +161,11 @@ export const SidebardContainer = styled.div`
     border-radius: 10px;
     transition: all 0.2s ease;
   }
+  @media only screen and (max-width: 1110px) {
+    .tooltip {
+      display: none;
+    }
+  }
   @media only screen and (max-width: 750px) {
     #sidebar {
       z-index: 4 !important;
