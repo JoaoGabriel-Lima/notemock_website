@@ -173,7 +173,7 @@ const Home: NextPage = () => {
                     </span>
                     <div>
                       <span className="ml-3 uppercase font-semibold rounded-[2px] tracking-wider  bg-[#9ae6b4]/[.16] px-1 py-[1px] text-green-200 text-[.75rem]">
-                        Stable 0.85
+                        Stable 0.9
                       </span>
                     </div>
                   </h2>
@@ -183,14 +183,20 @@ const Home: NextPage = () => {
                     </h3>
                     <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
                       <li className="text-white/50 font-light text-sm">
+                        - Dashboard preferences is now saved on localstorage
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Add, update, and delete subtasks
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
                         - Custom accent color for collections
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - collection tab preference is now saved on local
+                        - Collection tab preference is now saved on local
                         storage
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - last custom color preference is now saved on local
+                        - Last custom color preference is now saved on local
                         storage
                       </li>
                       <li className="text-white/50 font-light text-sm">
@@ -216,6 +222,21 @@ const Home: NextPage = () => {
                       Fixed:
                     </h3>
                     <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
+                      <li className="text-white/50 font-light text-sm">
+                        - Remove button has a new description
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Loading padding issue
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Loading animation while removing to-do
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - New Metadata
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Search button is now disabled
+                      </li>
                       <li className="text-white/50 font-light text-sm">
                         - Tooltip padding issue on desktop version
                       </li>
@@ -429,7 +450,7 @@ function Collections() {
               />
             ))}
             {/* {collection.todos.length > 4 && (
-              <div className="text-white/80 mb-2 mt-[-15px] py-2 rounded-md flex w-full justify-center">
+              <div className="text-white/80 mb-2 mt-[-15px] py-2 rounded-md flex w-full justify-start">
                 And {collection.todos.length - 4} more...
               </div>
             )} */}

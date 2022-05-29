@@ -22,14 +22,62 @@ function ToDo(props: any) {
   function goToCollection(id: string) {
     router.push(`/collections/${id}`);
   }
+
+  const getopenstatus = () => {
+    const localdata = `collectionStatus`;
+    if (
+      localStorage.getItem(localdata) != null ||
+      localStorage.getItem(localdata) != undefined
+    ) {
+      const lsData: any = localStorage.getItem(localdata);
+      const lsDataJson = JSON.parse(lsData);
+      const itemidvalue = `${props.groupid}`;
+      if (lsDataJson[itemidvalue] == undefined) {
+        lsDataJson[itemidvalue] = "true";
+        localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+        return true;
+      } else {
+        if (lsDataJson[itemidvalue] === "true") {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+    const lsDataJson: any = {};
+    const itemidvalue = `${props.groupid}`;
+    lsDataJson[itemidvalue] = "true";
+
+    localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+    return true;
+  };
+
+  const openclose = (a: boolean) => {
+    const localdata = `collectionStatus`;
+    if (a) {
+      const lsData: any = localStorage.getItem(localdata);
+      const lsDataJson = JSON.parse(lsData);
+      const itemidvalue = `${props.groupid}`;
+      lsDataJson[itemidvalue] = "false";
+      localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+    } else {
+      const lsData: any = localStorage.getItem(localdata);
+      const lsDataJson = JSON.parse(lsData);
+      const itemidvalue = `${props.groupid}`;
+      lsDataJson[itemidvalue] = "true";
+
+      localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+    }
+  };
+
   return (
     <motion.div
       id="todo"
       className="todonotation flex flex-col w-full todo-bg rounded-2xl"
     >
       <AnimatePresence>
-        <motion.details open>
-          <summary>
+        <motion.details open={getopenstatus()}>
+          <summary onClick={() => openclose(getopenstatus())}>
             <div className="todo-header w-full todo-bg-header h-20 flex justify-between items-center rounded-2xl ">
               <div className="overflow-hidden flex items-center w-full">
                 <div

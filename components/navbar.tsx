@@ -280,22 +280,16 @@ function Navbar() {
 
           <div className="search-box flex items-center justify-center">
             <button className="btn-search hidden sm:block">
-              <i className="bx bx-search text-2xl text-white cursor-pointer searchicon"></i>
+              <i className="bx bx-search text-2xl text-white/50 cursor-default searchicon"></i>
             </button>
             <input
               type="text"
               className="input-search"
-              placeholder="Search a Task"
+              placeholder="Coming Soon"
             />
           </div>
           {session ? (
-            <Link
-              href={
-                router.pathname == "/collections"
-                  ? "/collections/add"
-                  : "/collections"
-              }
-            >
+            <Link href={"/collections/add"}>
               <div
                 id="add_todo_btn"
                 className="cursor-pointer bg-gradient-to-tr from-pink-600 border-2 border-white/[.4] to-orange-300 w-9 h-9 rounded-xl flex justify-center items-center"

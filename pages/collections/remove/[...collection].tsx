@@ -37,6 +37,18 @@ const RemoveCollection: NextPage = ({ content }: any) => {
       setIsLoading(false);
       if (data.data.status == "Collection Removed") {
         localStorage.removeItem(content.collection.groupid);
+        const localdata = `collectionStatus`;
+        if (
+          localStorage.getItem(localdata) != null ||
+          localStorage.getItem(localdata) != undefined
+        ) {
+          const lsData: any = localStorage.getItem(localdata);
+          const lsDataJson = JSON.parse(lsData);
+          const itemidvalue = `${content.collection.groupid}`;
+
+          delete lsDataJson[itemidvalue];
+          localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+        }
         router.push(`/`);
       } else {
         setError(true);

@@ -7,6 +7,7 @@ import scss from "../../styles/home.module.scss";
 import { useSession } from "next-auth/react";
 import { AnimatePresence, motion } from "framer-motion";
 import SubToDoItem from "./SubToDo_Collection";
+import { useRouter } from "next/router";
 
 /** This is a description of the foo function.
  * @param {string} props - This is a description of the foo parameter.
@@ -128,8 +129,13 @@ function ToDoCollectionItem(props: any) {
       const lsDataJson = JSON.parse(lsData);
       const itemidvalue = `${props.itemid}`;
       if (lsDataJson[itemidvalue] == undefined) {
-        lsDataJson[itemidvalue] = "false";
+        if (lsDataJson[itemidvalue] == null) {
+          delete lsDataJson[itemidvalue];
+        } else {
+          lsDataJson[itemidvalue] = "false";
+        }
         localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+        return false;
       } else {
         if (lsDataJson[itemidvalue] === "true") {
           return true;
@@ -138,7 +144,16 @@ function ToDoCollectionItem(props: any) {
         }
       }
     }
-    const lsDataJson: any = {};
+    let lsDataJson: any;
+    if (
+      localStorage.getItem(localdata) != null ||
+      localStorage.getItem(localdata) != undefined
+    ) {
+      const lsData: any = localStorage.getItem(localdata);
+      lsDataJson = JSON.parse(lsData);
+    } else {
+      lsDataJson = {};
+    }
     const itemidvalue = `${props.itemid}`;
     lsDataJson[itemidvalue] = "false";
 
@@ -174,9 +189,9 @@ function ToDoCollectionItem(props: any) {
     const lsData: any = localStorage.getItem(localdata);
     const lsDataJson = JSON.parse(lsData);
     const itemidvalue = `${props.itemid}`;
-    delete lsDataJson[itemidvalue];
-
+    lsDataJson[itemidvalue] = null;
     localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+    return lsDataJson;
   };
 
   async function deleteitem() {
@@ -188,12 +203,13 @@ function ToDoCollectionItem(props: any) {
         session: session,
         token: process.env.NEXT_PUBLIC_DBTOKEN,
       })
-      .then((res) => {
+      .then(async (res) => {
         // props.rerender();
-        removeItem();
         props.setIsLoading(false);
         props.reduceCounter();
-        props.refetch();
+
+        await props.refetch();
+        removeItem();
       });
   }
 
@@ -236,6 +252,7 @@ function ToDoCollectionItem(props: any) {
         props.refetch();
       });
   };
+  const router = useRouter();
   return (
     <motion.div
       key={props.itemid}
@@ -427,7 +444,10 @@ function ToDoCollectionItem(props: any) {
                   Delete Todo
                 </div>
               ) : (
-                <div className="cursor-pointer text-sm w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]">
+                <div
+                  onClick={() => router.push(`/todo/${props.collectionid}/${props.itemid}`)}
+                  className="cursor-pointer text-sm w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]"
+                >
                   Edit Todo
                 </div>
               )}
