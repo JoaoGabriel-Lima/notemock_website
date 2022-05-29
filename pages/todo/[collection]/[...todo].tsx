@@ -182,13 +182,13 @@ const EditTodo: NextPage = ({ content, tododata2 }: any) => {
                     To-Do Content
                   </h4>
                   <input
-                    maxLength={55}
-                    max={55}
+                    maxLength={100}
+                    max={100}
                     type="text"
                     disabled={isLoading}
                     value={name}
                     onChange={(e) =>
-                      e.target.value.length <= 50 && setName(e.target.value)
+                      e.target.value.length <= 100 && setName(e.target.value)
                     }
                     placeholder="Ex: Compras da semana"
                     className={`mt-2 w-full h-[3.45rem] bg-transparent rounded-2xl border-[3px] ${
@@ -284,11 +284,11 @@ const EditTodo: NextPage = ({ content, tododata2 }: any) => {
                             }`}
                           >
                             <input
-                              max={50}
-                              maxLength={50}
+                              max={100}
+                              maxLength={100}
                               className="text-white/70 px-4 bg-transparent w-full h-full"
                               onChange={(e) => {
-                                if (e.target.value.length <= 50) {
+                                if (e.target.value.length <= 100) {
                                   const newArray: any = subtodoText;
                                   newArray[index] = e.target.value;
                                   setSubTodoText(newArray);

@@ -370,7 +370,14 @@ export const HomeCointainer = styled.div<{ textColor?: string }>`
       width: 100%;
     }
   }
-  @media only screen and (max-width: 313px) {
+  @media only screen and (max-width: 363px) {
+    .dash-margins {
+      margin: 0;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  @media only screen and (max-width: 323px) {
     .dash-margins {
       margin: 0;
       padding-left: 10px;

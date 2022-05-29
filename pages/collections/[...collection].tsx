@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable require-jsdoc */
 import type { NextPage } from "next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { HomeCointainer } from "../../styles/components/home/home";
@@ -30,10 +30,52 @@ function pickTextColorBasedOnBgColorSimple(
   return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? darkColor : lightColor;
 }
 const Collection: NextPage = ({ content }: any) => {
+  const changeOrderPreference = (e: boolean) => {
+    const localdata = `${content.collection.groupid}`;
+    setOrderBy(e);
+    const lsData: any = localStorage.getItem(localdata);
+    const lsDataJson = JSON.parse(lsData);
+    lsDataJson.preferences = e;
+    localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+  };
+
+  const getInitialOrderPreference = () => {
+    const localdata = `${content.collection.groupid}`;
+    if (
+      localStorage.getItem(localdata) != null ||
+      localStorage.getItem(localdata) != undefined
+    ) {
+      const lsData: any = localStorage.getItem(localdata);
+      const lsDataJson = JSON.parse(lsData);
+      if (lsDataJson.preferences == undefined) {
+        lsDataJson.preferences = false;
+        localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+        return false;
+      } else {
+        return lsDataJson.preferences;
+      }
+    }
+    let lsDataJson: any;
+    if (
+      localStorage.getItem(localdata) != null ||
+      localStorage.getItem(localdata) != undefined
+    ) {
+      const lsData: any = localStorage.getItem(localdata);
+      lsDataJson = JSON.parse(lsData);
+    } else {
+      lsDataJson = {};
+    }
+    lsDataJson.preferences = false;
+
+    localStorage.setItem(localdata, JSON.stringify(lsDataJson));
+    return false;
+  };
+
   const [queryClient] = React.useState(() => new QueryClient());
   const { data: session, status } = useSession();
   const [isFavorite, setIsFavorite] = useState(content.collection.favorite);
 
+  const [orderBy, setOrderBy] = useState(getInitialOrderPreference());
   const [taskLength, setTaskLength] = useState(content.collection.todos.length);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -187,6 +229,24 @@ const Collection: NextPage = ({ content }: any) => {
                         </button>
                       )}
                     </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          onClick={() =>
+                            router.push(
+                              `/collections/remove/${content.collection.groupid}`
+                            )
+                          }
+                          className={`${
+                            active
+                              ? "bgmenucolor text-red-100/100"
+                              : "text-red-500/80"
+                          } group flex rounded-xl items-center w-full py-3 text-sm `}
+                        >
+                          <span className="ml-3 ">Delete collection</span>
+                        </button>
+                      )}
+                    </Menu.Item>
                   </div>
                 </Menu.Items>
               </Transition>
@@ -196,11 +256,12 @@ const Collection: NextPage = ({ content }: any) => {
             className="mb-10 border-4 hover:border-[#23232c] border-[#1D1D25] rounded-3xl"
             initial={false}
           >
-            <form>
+            <form autoComplete="off">
               <motion.li className=" cursor-pointer w-full rounded-3xl  h-14 flex justify-between items-center ">
                 <div className="w-full h-11 flex justify-start items-center px-4">
                   <input
-                    maxLength={50}
+                    autoComplete={"off"}
+                    maxLength={100}
                     id="add_ToDo"
                     onClick={() => setIsOpen(true)}
                     onSubmit={() =>
@@ -297,14 +358,29 @@ const Collection: NextPage = ({ content }: any) => {
               <h4 className="text-white font-normal tracking-wide ">
                 Tasks - {taskLength}
               </h4>
-              {isLoading && (
-                <div className="h-auto flex justify-center">
-                  <i className="animate-spin bx bx-loader-alt text-[#ffffff]/80 text-xl"></i>
-                </div>
-              )}
+              <div className="flex items-center">
+                <button
+                  onClick={() => changeOrderPreference(!orderBy)}
+                  className="h-auto flex justify-center "
+                >
+                  <i
+                    className={`bx ${
+                      orderBy
+                        ? "bx-sort-down mt-[1px] text-[#ffffff]/100"
+                        : "bx-sort-up text-[#ffffff]/60"
+                    }  text-2xl`}
+                  ></i>
+                </button>
+                {isLoading && (
+                  <div className="h-auto flex justify-center ml-3">
+                    <i className="animate-spin bx bx-loader-alt text-[#ffffff]/80 text-xl"></i>
+                  </div>
+                )}
+              </div>
             </div>
             <QueryClientProvider client={queryClient}>
               <Todo
+                orderBy={orderBy}
                 todoActionLoad={todoActionLoad}
                 content={content}
                 session={session}
@@ -342,6 +418,18 @@ export async function getServerSideProps(context: any) {
 export default Collection;
 let doRefetch: any;
 function Todo(props: any) {
+  function getadateandcalculatetimeremaingindays(time: string) {
+    const today = new Date();
+    const eventdate = new Date(time);
+    const timeremaining = eventdate.getTime() - today.getTime();
+    const daysremainingfloat = timeremaining / (1000 * 60 * 60 * 24) + 1;
+    if (daysremainingfloat < 0) {
+      return Math.floor(daysremainingfloat);
+    } else {
+      const value = parseInt(daysremainingfloat.toString().split(".")[0], 10); // before
+      return value ? value : 0;
+    }
+  }
   const { content } = props;
   const { data: session } = useSession();
   const { isLoading, error, data, refetch } = useQuery(
@@ -362,6 +450,10 @@ function Todo(props: any) {
     await refetch();
     return true;
   };
+  useEffect(() => {
+    doRefetch();
+  }, [props.orderBy]);
+
   if (error)
     return (
       <ToDoCollectionItem
@@ -391,26 +483,58 @@ function Todo(props: any) {
     );
   } else {
     if (data.collection.todos.length > 0 && data.collection.todos[0] != "") {
+      const todoToSort = [...data.collection.todos];
+      const todos = todoToSort.sort((a: any, b: any) => {
+        const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
+        const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
+
+        // order witch one is next to 0
+        if (
+          Math.abs(0 - aTime) == Math.abs(0 - bTime) &&
+          a.checked < b.checked
+        ) {
+          return -1;
+        } else {
+          return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+        }
+      });
+
       return (
         <AnimatePresence>
-          {data.collection.todos
-            .slice()
-            .reverse()
-            .map((todo: any) => (
-              <ToDoCollectionItem
-                reduceCounter={() => props.reduceCounter()}
-                key={todo.itemid}
-                itemcontent={todo.itemcontent}
-                itemtime={todo.itemtime}
-                checked={todo.checked}
-                groupcolor={props.content.collection.groupcolor}
-                itemid={todo.itemid}
-                collectionid={props.content.collection.groupid}
-                subtodo={todo.subtodo}
-                refetch={sendmsg}
-                setIsLoading={(e: boolean) => props.todoActionLoad(e)}
-              ></ToDoCollectionItem>
-            ))}
+          {props.orderBy
+            ? todos.map((todo: any) => (
+                <ToDoCollectionItem
+                  reduceCounter={() => props.reduceCounter()}
+                  key={todo.itemid}
+                  itemcontent={todo.itemcontent}
+                  itemtime={todo.itemtime}
+                  checked={todo.checked}
+                  groupcolor={props.content.collection.groupcolor}
+                  itemid={todo.itemid}
+                  collectionid={props.content.collection.groupid}
+                  subtodo={todo.subtodo}
+                  refetch={sendmsg}
+                  setIsLoading={(e: boolean) => props.todoActionLoad(e)}
+                ></ToDoCollectionItem>
+              ))
+            : data.collection.todos
+                .slice()
+                .reverse()
+                .map((todo: any) => (
+                  <ToDoCollectionItem
+                    reduceCounter={() => props.reduceCounter()}
+                    key={todo.itemid}
+                    itemcontent={todo.itemcontent}
+                    itemtime={todo.itemtime}
+                    checked={todo.checked}
+                    groupcolor={props.content.collection.groupcolor}
+                    itemid={todo.itemid}
+                    collectionid={props.content.collection.groupid}
+                    subtodo={todo.subtodo}
+                    refetch={sendmsg}
+                    setIsLoading={(e: boolean) => props.todoActionLoad(e)}
+                  ></ToDoCollectionItem>
+                ))}
         </AnimatePresence>
       );
     } else {

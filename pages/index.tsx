@@ -173,7 +173,7 @@ const Home: NextPage = () => {
                     </span>
                     <div>
                       <span className="ml-3 uppercase font-semibold rounded-[2px] tracking-wider  bg-[#9ae6b4]/[.16] px-1 py-[1px] text-green-200 text-[.75rem]">
-                        Stable 0.9
+                        Stable 0.95
                       </span>
                     </div>
                   </h2>
@@ -182,6 +182,12 @@ const Home: NextPage = () => {
                       Added:
                     </h3>
                     <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
+                      <li className="text-white/50 font-light text-sm">
+                        - Better organization of to-do lists with filters
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Subtaks progression on Dashboard
+                      </li>
                       <li className="text-white/50 font-light text-sm">
                         - Dashboard preferences is now saved on localstorage
                       </li>
@@ -213,6 +219,15 @@ const Home: NextPage = () => {
                         - Welcome instructions for new users
                       </li>
                       <li className="text-white/50 font-light text-sm">
+                        - New Metadata
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Remove and add collection functionality
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
+                        - Better arrangement of collections on the Dashboard
+                      </li>
+                      <li className="text-white/50 font-light text-sm">
                         - Version changelogs
                       </li>
                     </ul>
@@ -230,9 +245,6 @@ const Home: NextPage = () => {
                       </li>
                       <li className="text-white/50 font-light text-sm">
                         - Loading animation while removing to-do
-                      </li>
-                      <li className="text-white/50 font-light text-sm">
-                        - New Metadata
                       </li>
                       <li className="text-white/50 font-light text-sm">
                         - Search button is now disabled
@@ -273,13 +285,7 @@ const Home: NextPage = () => {
                         viewport
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - Remove and add collection functionality
-                      </li>
-                      <li className="text-white/50 font-light text-sm">
                         - Disable buttons for features not yet available
-                      </li>
-                      <li className="text-white/50 font-light text-sm">
-                        - Better arrangement of collections on the Dashboard
                       </li>
                     </ul>
                   </section>
@@ -377,8 +383,7 @@ function Collections() {
     const collectionsWithTodos = collectionsSorted.filter((collection: any) => {
       return collection.todos.length > 0;
     });
-
-    if (collectionsSorted.length === 0) {
+    if (data.user.collections.length === 0) {
       return (
         <div className="text-white w-full h-auto py-7 rounded-xl bg-[#21212b] flex justify-start items-center flex-col">
           <h2 className="text-white text-xl mb-1 text-center px-5">
@@ -397,7 +402,7 @@ function Collections() {
           </button>
         </div>
       );
-    } else if (collectionsWithTodos.length === 0) {
+    } else if (collectionsWithTodos.length == 0) {
       return (
         <div className="text-white w-full h-auto py-7 rounded-xl bg-[#21212b] flex justify-start items-center flex-col">
           <h2 className="text-white text-xl mb-1 px-5 text-center">

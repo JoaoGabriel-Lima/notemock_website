@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable require-jsdoc */
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CheckboxContainer } from "../../styles/components/home/checkbox";
 import scss from "../../styles/home.module.scss";
 import { useSession } from "next-auth/react";
@@ -219,6 +219,13 @@ function ToDoCollectionItem(props: any) {
 
   function sendcheck(c: any) {}
   const [isOpenCollection, setIsOpenCollection] = useState(getopenstatus());
+
+  useEffect(() => {
+    if (!isOpenCollection) {
+      setIsOpenSub(false);
+    }
+  }, [isOpenCollection]);
+
   function handleClick(id: any) {
     setIsOpen(!isOpen);
     axios.post("/api/check", {
@@ -248,7 +255,7 @@ function ToDoCollectionItem(props: any) {
         // props.rerender();
         props.setIsLoading(false);
 
-        setIsOpenSub(false);
+        setIsOpenSub(true);
         props.refetch();
       });
   };
@@ -397,8 +404,9 @@ function ToDoCollectionItem(props: any) {
                   <form className="flex items-center justify-between w-full">
                     <div className="w-full h-11 flex justify-start items-center px-4">
                       <input
-                        maxLength={50}
+                        maxLength={100}
                         id="add_SubToDo"
+                        autoComplete="off"
                         onChange={(e) => setInputvalue(e.target.value)}
                         className="placeholder:text-gray-500 text-gray-400 bg-transparent placeholder:font-medium font-medium w-full h-full border-0 focus:border-0 rounded-md autofill:bg-transparent "
                         placeholder="Add a subtask"
@@ -445,7 +453,9 @@ function ToDoCollectionItem(props: any) {
                 </div>
               ) : (
                 <div
-                  onClick={() => router.push(`/todo/${props.collectionid}/${props.itemid}`)}
+                  onClick={() =>
+                    router.push(`/todo/${props.collectionid}/${props.itemid}`)
+                  }
                   className="cursor-pointer text-sm w-full border-[3px] hover:bg-[#1b1b24] rounded-3xl flex justify-center text-center font-medium text-[#8e8e9b] items-center border-[#21212b] h-[45px]"
                 >
                   Edit Todo

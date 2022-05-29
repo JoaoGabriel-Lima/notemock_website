@@ -112,6 +112,9 @@ function ToDoItem(props: any) {
       collectionid: props.collectionid,
     });
   }
+
+  // return subtodos that is checked
+
   return (
     <CheckboxContainer
       color={colorsoftodo()}
@@ -161,19 +164,30 @@ function ToDoItem(props: any) {
                 {messageusingdaysremaining()}
               </h5>
             </div>
-            {/* {props.subtodo.length > 0 ? (
+            {props.subtodo.length > 0 ? (
               <div className="flex justify-start items-center ml-3 ">
                 <i
                   className="bx bx-folder-open mt-[2px]"
                   style={{ color: "#a8a7a7" }}
                 ></i>
                 <h5 className="text-sm ml-1" style={{ color: "#a8a7a7" }}>
-                  {props.subtodo.length}
+                  {props.subtodo.filter((subtodo: any) => subtodo.checked)
+                    .length == 0 ? (
+                    <>{props.subtodo.length}</>
+                  ) : (
+                    <>
+                      {
+                        props.subtodo.filter((subtodo: any) => subtodo.checked)
+                          .length
+                      }
+                      /{props.subtodo.length}
+                    </>
+                  )}
                 </h5>
               </div>
             ) : (
               <></>
-            )} */}
+            )}
           </div>
         </div>
       </label>

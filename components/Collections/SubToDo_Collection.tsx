@@ -163,7 +163,7 @@ function SubToDoItem(props: any) {
         </label>
       </CheckboxContainer>
       <button onClick={() => removeSubTodo()}>
-        <i className="bx bx-trash text-gray-400 mr-6 ml-3 text-xl"></i>
+        <i className="bx bx-trash text-gray-400 hover:text-red-600/80 mr-6 ml-3 text-xl"></i>
       </button>
     </motion.div>
   );
