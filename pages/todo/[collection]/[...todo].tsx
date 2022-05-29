@@ -182,8 +182,8 @@ const EditTodo: NextPage = ({ content, tododata2 }: any) => {
                     To-Do Content
                   </h4>
                   <input
-                    maxLength={33}
-                    max={33}
+                    maxLength={55}
+                    max={55}
                     type="text"
                     disabled={isLoading}
                     value={name}
@@ -284,11 +284,15 @@ const EditTodo: NextPage = ({ content, tododata2 }: any) => {
                             }`}
                           >
                             <input
+                              max={50}
+                              maxLength={50}
                               className="text-white/70 px-4 bg-transparent w-full h-full"
                               onChange={(e) => {
-                                const newArray: any = subtodoText;
-                                newArray[index] = e.target.value;
-                                setSubTodoText(newArray);
+                                if (e.target.value.length <= 50) {
+                                  const newArray: any = subtodoText;
+                                  newArray[index] = e.target.value;
+                                  setSubTodoText(newArray);
+                                }
                               }}
                               defaultValue={subtodo.itemcontent}
                             ></input>

@@ -176,18 +176,21 @@ function Navbar() {
                       <Menu.Item>
                         {({ active }) => (
                           <button
+                            onClick={() =>
+                              router.push(
+                                "https://github.com/JoaoGabriel-Lima/notemock_website/issues"
+                              )
+                            }
                             className={`${
-                              active
-                                ? "cursor-default text-white/60"
-                                : "text-white/60"
+                              active ? "bgmenucolor text-white" : "text-white"
                             } group flex rounded-md items-center w-full py-2 text-sm`}
                           >
                             {active ? (
-                              <i className="bx bx-support text-white/60 ml-3 text-xl  mr-2"></i>
+                              <i className="bx bx-support text-white ml-3 text-xl  mr-2"></i>
                             ) : (
-                              <i className="bx bx-support text-white/60 ml-3 text-xl  mr-2"></i>
+                              <i className="bx bx-support text-white ml-3 text-xl  mr-2"></i>
                             )}
-                            Support
+                            Github Issues
                           </button>
                         )}
                       </Menu.Item>
