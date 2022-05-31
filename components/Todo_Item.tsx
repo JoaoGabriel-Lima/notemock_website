@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CheckboxContainer } from "../styles/components/home/checkbox";
 import scss from "../styles/home.module.scss";
 import { useSession } from "next-auth/react";
@@ -102,6 +102,22 @@ function ToDoItem(props: any) {
   }
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(props.checked);
+
+  useEffect(() => {
+    axios
+      .post("/api/todoid", {
+        todoid: props.itemid,
+        collectionid: props.collectionid,
+        session: session,
+        token: process.env.NEXT_PUBLIC_DBTOKEN,
+      })
+      .then((res) => {
+        if (res.data.status == "Todo found") {
+          setIsOpen(res.data.todo.checked);
+        }
+      });
+  }, []);
+
   function handleClick(id: any) {
     setIsOpen(!isOpen);
     axios.post("/api/check", {

@@ -259,7 +259,7 @@ const Home: NextPage = () => {
                         - Custom color selector issue
                       </li>
                       <li className="text-white/50 font-light text-sm">
-                        - Remove the search icon instead of the collection icon
+                        - Removed the search icon instead of the collection icon
                         on Android viewport
                       </li>
                       <li className="text-white/50 font-light text-sm">
@@ -349,18 +349,42 @@ function Collections() {
     const newCollections: any = [];
     data.user.collections.map((collection: any) => {
       if (collection.todos.length > 0) {
-        const todos = collection.todos.sort((a: any, b: any) => {
+        const todosChecked = collection.todos.filter((todo: any) => {
+          return todo.checked === true;
+        });
+        const todosUnchecked = collection.todos.filter((todo: any) => {
+          return todo.checked === false;
+        });
+        const todosCheckedSort = todosChecked.sort((a: any, b: any) => {
           const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
           const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
 
           // order witch one is next to 0
-
-          if (Math.abs(0 - aTime) == Math.abs(0 - bTime)) {
-            return a.checked > b.checked;
+          if (
+            Math.abs(0 - aTime) == Math.abs(0 - bTime) &&
+            a.checked < b.checked
+          ) {
+            return -1;
           } else {
             return Math.abs(0 - aTime) - Math.abs(0 - bTime);
           }
         });
+
+        const todosUncheckedSort = todosUnchecked.sort((a: any, b: any) => {
+          const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
+          const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
+
+          if (
+            Math.abs(0 - aTime) == Math.abs(0 - bTime) &&
+            a.checked < b.checked
+          ) {
+            return -1;
+          } else {
+            return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+          }
+        });
+
+        const todos = [...todosUncheckedSort, ...todosCheckedSort];
 
         newCollections.push({
           ...collection,
@@ -380,6 +404,9 @@ function Collections() {
         b.todos[0].itemtime
       );
 
+      if (a.todos[0].checked === true || b.todos[0].checked === true) {
+        return 1;
+      }
       return Math.abs(0 - aTime) - Math.abs(0 - bTime);
     });
 
@@ -419,7 +446,13 @@ function Collections() {
     }
 
     return collectionsSorted.map((collection: any) => {
-      const todos = collection.todos.sort((a: any, b: any) => {
+      const todosChecked = collection.todos.filter((todo: any) => {
+        return todo.checked === true;
+      });
+      const todosUnchecked = collection.todos.filter((todo: any) => {
+        return todo.checked === false;
+      });
+      const todosCheckedSort = todosChecked.sort((a: any, b: any) => {
         const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
         const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
 
@@ -433,6 +466,22 @@ function Collections() {
           return Math.abs(0 - aTime) - Math.abs(0 - bTime);
         }
       });
+
+      const todosUncheckedSort = todosUnchecked.sort((a: any, b: any) => {
+        const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
+        const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
+
+        if (
+          Math.abs(0 - aTime) == Math.abs(0 - bTime) &&
+          a.checked < b.checked
+        ) {
+          return -1;
+        } else {
+          return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+        }
+      });
+
+      const todos = [...todosUncheckedSort, ...todosCheckedSort];
 
       if (todos.length === 0) {
         return;

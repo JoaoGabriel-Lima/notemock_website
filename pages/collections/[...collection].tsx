@@ -486,7 +486,13 @@ function Todo(props: any) {
   } else {
     if (data.collection.todos.length > 0 && data.collection.todos[0] != "") {
       const todoToSort = [...data.collection.todos];
-      const todos = todoToSort.sort((a: any, b: any) => {
+      const todosChecked = todoToSort.filter((todo: any) => {
+        return todo.checked === true;
+      });
+      const todosUnchecked = todoToSort.filter((todo: any) => {
+        return todo.checked === false;
+      });
+      const todosCheckedSort = todosChecked.sort((a: any, b: any) => {
         const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
         const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
 
@@ -500,6 +506,22 @@ function Todo(props: any) {
           return Math.abs(0 - aTime) - Math.abs(0 - bTime);
         }
       });
+
+      const todosUncheckedSort = todosUnchecked.sort((a: any, b: any) => {
+        const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
+        const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
+
+        if (
+          Math.abs(0 - aTime) == Math.abs(0 - bTime) &&
+          a.checked < b.checked
+        ) {
+          return -1;
+        } else {
+          return Math.abs(0 - aTime) - Math.abs(0 - bTime);
+        }
+      });
+
+      const todos = [...todosUncheckedSort, ...todosCheckedSort];
 
       return (
         <AnimatePresence>
