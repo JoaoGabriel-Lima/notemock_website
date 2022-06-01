@@ -464,12 +464,8 @@ function ToDoCollectionItem(props: any) {
             </div>
           </motion.div>
         )}
-        {/* {isOpenCollection && props.refetch()} */}
       </AnimatePresence>
     </motion.div>
   );
 }
-// TodoItem.defaultProps = {
-//   color: "gray",
-// };
 export default ToDoCollectionItem;

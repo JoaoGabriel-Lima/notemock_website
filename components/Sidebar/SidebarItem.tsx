@@ -36,7 +36,9 @@ function CollectionItem(props: any) {
     groupname = props.groupname;
   }
   function goToCollection(id: string) {
-    router.push(`/collections/${id}`);
+    if (props.error != true) {
+      router.push(`/collections/${id}`);
+    }
   }
   const isloading = props.loadingbool;
   return (

@@ -58,6 +58,7 @@ function SidebarCollections({ isLoadingBool }: any) {
       <CollectionItem
         groupname="Error"
         icon="x"
+        error={true}
         groupcolor="#f83d3d"
         groupid="404"
       ></CollectionItem>
@@ -68,6 +69,7 @@ function SidebarCollections({ isLoadingBool }: any) {
         className="animate-pulse"
         groupname="Loading"
         icon="message-square-dots"
+        error={true}
         groupcolor="#2c2c2c"
         groupid="200"
       ></CollectionItem>
@@ -77,6 +79,7 @@ function SidebarCollections({ isLoadingBool }: any) {
       <CollectionItem
         groupname="Error"
         icon="x"
+        error={true}
         groupcolor="#f83d3d"
         groupid="404"
       ></CollectionItem>

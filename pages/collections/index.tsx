@@ -281,6 +281,7 @@ function CollectionsProgress() {
         groupicon="message-square-dots"
         groupcolor="#2c2c2c"
         groupid="200"
+        error={true}
         groupprogress={6}
         groupmax={6}
       ></Collection>
@@ -293,6 +294,7 @@ function CollectionsProgress() {
         groupicon="x"
         groupcolor="#f83d3d"
         groupid="404"
+        error={true}
         groupprogress={6}
         groupmax={6}
       ></Collection>

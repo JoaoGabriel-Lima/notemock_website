@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const Home: NextPage = () => {
+const Home: NextPage = ({ sessiontoken }: any) => {
   const { data: session } = useSession();
   const greet = () => {
     const date = new Date();
@@ -173,7 +173,7 @@ const Home: NextPage = () => {
                     </span>
                     <div>
                       <span className="ml-3 uppercase font-semibold rounded-[2px] tracking-wider  bg-[#9ae6b4]/[.16] px-1 py-[1px] text-green-200 text-[.75rem]">
-                        Stable 0.97
+                        Stable 1.0
                       </span>
                     </div>
                   </h2>
@@ -182,6 +182,9 @@ const Home: NextPage = () => {
                       Added:
                     </h3>
                     <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
+                      <li className="text-white/50 font-light text-sm">
+                        - JWT authentication
+                      </li>
                       <li className="text-white/50 font-light text-sm">
                         - Better organization of tasks lists with filters
                       </li>
@@ -312,10 +315,19 @@ function Collections() {
   const { data: session } = useSession();
   const { isLoading, error, data } = useQuery("repoData", () =>
     axios
-      .post(`/api/user`, {
-        session: session,
-        token: process.env.NEXT_PUBLIC_DBTOKEN,
-      })
+      .post(
+        `/api/user`,
+        {
+          session: session,
+          token: process.env.NEXT_PUBLIC_DBTOKEN,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${sessiontoken}`,
+          },
+        }
+      )
       .then((res) => res.data)
   );
 
@@ -332,7 +344,9 @@ function Collections() {
       </div>
     );
   if (data.user === undefined || data.user === null) {
-    return <div className="text-white text-2xl">No Todos</div>;
+    return (
+      <div className="text-white font-semibold text-xl mt-5">Session Error</div>
+    );
   } else {
     // check the first todo of each collection and reorder the todo list by the item_time
     function getadateandcalculatetimeremaingindays(time: string) {
@@ -521,3 +535,27 @@ function Collections() {
     });
   }
 }
+// export async function getServerSideProps(context: any) {
+//   const session = await getSession(context);
+//   if (!session) {
+//     return {
+//       props: {
+//         session: null,
+//       },
+//     };
+//   }
+
+//   jwt.verify(
+//     "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..6hMT1egQc1Q20xfs.Hf6GIm5IDZ5ddbnoC9U18IfnB67mpdYfH7ppLmW4ENKf2KXSddFzRioiDnKSOYCn0bpPqqdpMoBo-P2CKgZVea_m-YNEAynNmcEFlW8106veH1jJbZNWL_ah0lELXy-RtqBL1XQwpLoWxfGGxy5ErxDr_ooytGuXsBLbjS36e8FMhM2OgQd-rMJ-g6AQNJEeze33jCJV47Kz8DOgmLy9X-QhD3VlK8CLWrP8PGNCflo0thzXl4TioyswX9_myv3nxuFAvb1aID2ZVo49gkFiweFVLE1THRzTBKX274_0YWFQ5rBeQkMfquhs8Rq9lTg9gCDlxsXWJa3R46c0bYrzAiX8QoWRPYLxEPZZ-FpY.RDUd64G3IWb2jGBXPt2HRQ",
+//     "2121265",
+//     function (err: any, decoded: any) {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         console.log(decoded);
+//       }
+//     }
+//   );
+//   const sessiontoken = jwt.sign(session, `${process.env.JWT_SECRET}`);
+//   return { props: { sessiontoken } };
+// }

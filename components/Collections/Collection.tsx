@@ -27,7 +27,9 @@ export default function Collection(props: any) {
     return r + "," + g + "," + b;
   }
   function goToCollection(id: string) {
-    router.push(`/collections/${id}`);
+    if (props.error != true) {
+      router.push(`/collections/${id}`);
+    }
   }
   const isComplete = props.groupprogress === props.groupmax;
   return (

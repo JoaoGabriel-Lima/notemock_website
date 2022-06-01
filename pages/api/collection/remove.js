@@ -1,5 +1,6 @@
 /* eslint-disable require-jsdoc */
 
+import { getToken } from "next-auth/jwt";
 import { connectToDatabase } from "../../../lib/dbConnect";
 // import { getSession } from "next-auth/react";
 export default async function handler(req, res) {
@@ -10,6 +11,23 @@ export default async function handler(req, res) {
 
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
+
+  const secret = process.env.JWT_SECRET;
+
+  const token2 = await getToken({ req, secret });
+
+  if (token2 == null) {
+    return res.status(400).send({
+      status: "Unauthorized",
+      user: null,
+    });
+  }
+  if (token2.email != session.user.email) {
+    return res.status(200).send({
+      status: "Unauthorized",
+      user: null,
+    });
+  }
 
   if (token != rt) {
     return res.status(200).send({
