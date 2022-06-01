@@ -173,7 +173,7 @@ const Home: NextPage = () => {
                     </span>
                     <div>
                       <span className="ml-3 uppercase font-semibold rounded-[2px] tracking-wider  bg-[#9ae6b4]/[.16] px-1 py-[1px] text-green-200 text-[.75rem]">
-                        Stable 0.95
+                        Stable 0.97
                       </span>
                     </div>
                   </h2>
@@ -237,6 +237,9 @@ const Home: NextPage = () => {
                       Fixed:
                     </h3>
                     <ul className="flex flex-col items-start ml-4 mt-1 gap-y-2">
+                      <li className="text-white/50 font-light text-sm">
+                        - Dashboard Collection Organization
+                      </li>
                       <li className="text-white/50 font-light text-sm">
                         - Remove button has a new description
                       </li>
@@ -359,7 +362,6 @@ function Collections() {
           const aTime: any = getadateandcalculatetimeremaingindays(a.itemtime);
           const bTime: any = getadateandcalculatetimeremaingindays(b.itemtime);
 
-          // order witch one is next to 0
           if (
             Math.abs(0 - aTime) == Math.abs(0 - bTime) &&
             a.checked < b.checked
@@ -404,8 +406,10 @@ function Collections() {
         b.todos[0].itemtime
       );
 
-      if (a.todos[0].checked === true || b.todos[0].checked === true) {
+      if (a.todos[0].checked === true) {
         return 1;
+      } else if (b.todos[0].checked === true) {
+        return -1;
       }
       return Math.abs(0 - aTime) - Math.abs(0 - bTime);
     });

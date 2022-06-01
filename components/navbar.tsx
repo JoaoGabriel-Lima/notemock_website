@@ -141,10 +141,10 @@ function Navbar() {
                           </h4>
                         ) : (
                           <h4 className="ml-3 flex flex-col items-start justify-center">
-                            Você não está logado.
+                            You are not logged in
                             <br />
                             <span className="font-bold text-left left-0">
-                              Faça login com Google
+                              Login with Google
                             </span>
                           </h4>
                         )}
