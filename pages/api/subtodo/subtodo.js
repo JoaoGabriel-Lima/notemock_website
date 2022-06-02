@@ -55,13 +55,21 @@ export default async function handler(req, res) {
   async function checkitemid(itemid2) {
     // console.log(itemid2);
     await axios
-      .post(`${publicurl}/api/subtodo/subtodoid`, {
-        session: session,
-        token: token,
-        collectionid: collectiongroupid,
-        todoid: todogroupid,
-        subtodoid: itemid2,
-      })
+      .post(
+        `${publicurl}/api/subtodo/subtodoid`,
+        {
+          session: session,
+          token: token,
+          collectionid: collectiongroupid,
+          todoid: todogroupid,
+          subtodoid: itemid2,
+        },
+        {
+          headers: {
+            Cookie: req.headers.cookie,
+          },
+        }
+      )
       .then(function (response) {
         if (response.data.todo != null) {
           itemid = getRandomNumberBetween(10000, 99999);

@@ -52,11 +52,19 @@ export default async function handler(req, res) {
   async function checkcol(collectioniditem) {
     // console.log(itemid2);
     await axios
-      .post("https://notemock-website.vercel.app/api/collections", {
-        session: session,
-        token: token,
-        collectionid: collectioniditem,
-      })
+      .post(
+        "https://notemock-website.vercel.app/api/collections",
+        {
+          session: session,
+          token: token,
+          collectionid: collectioniditem,
+        },
+        {
+          headers: {
+            Cookie: req.headers.cookie,
+          },
+        }
+      )
       .then(function (response) {
         if (response.data.collection != null) {
           collectionid = getRandomNumberBetween(10000, 99999);
