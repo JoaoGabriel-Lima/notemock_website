@@ -1,15 +1,20 @@
 /* eslint-disable require-jsdoc */
 import { connectToDatabase } from "../../lib/dbConnect";
 import { getToken } from "next-auth/jwt";
+import { NextApiRequest, NextApiResponse } from "next";
 // import { getSession } from "next-auth/react";
-export default async function handler(req, res) {
+type Delay = (ms: number) => Promise<unknown>;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { db } = await connectToDatabase();
   const session = req.body.session;
   const token = req.body.token;
 
   // console.log(token);
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
-  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  const delay: Delay = (ms) => new Promise((res) => setTimeout(res, ms));
   const secret = process.env.JWT_SECRET;
 
   const token2 = await getToken({ req, secret });
