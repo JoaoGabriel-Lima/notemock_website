@@ -1,8 +1,27 @@
 /* eslint-disable require-jsdoc */
 import { connectToDatabase } from "../../lib/dbConnect";
 import { getToken } from "next-auth/jwt";
+import { NextApiRequest, NextApiResponse } from "next";
 // import { getSession } from "next-auth/react";
-export default async function handler(req, res) {
+interface Collection {
+  groupname: string;
+  groupicon: string;
+  groupcolor: string;
+  groupid: string;
+  todos: Todo[];
+}
+interface Todo {
+  itemcontent: string;
+  itemtime: string;
+  checked: boolean;
+  subtodo: Array<object>;
+  itemid: string;
+}
+type Find<T> = (args: T) => boolean;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { db } = await connectToDatabase();
   const session = req.body.session;
   const token = req.body.token;
@@ -48,22 +67,21 @@ export default async function handler(req, res) {
     });
     if (user) {
       // console.log(user);
-      function findCollection(collection) {
-        return collection.groupid === collectiongroupid;
-      }
-      function findTodo(todo) {
-        return todo.itemid === todoid;
-      }
-      const collection = user.collections.find(findCollection);
-      const todo = collection.todos.find(findTodo);
+      const findCollection: Find<Collection> = (collection) =>
+        collection.groupid === collectiongroupid;
+      const findTodo: Find<Todo> = (todo) => todo.itemid === todoid;
+      const collections = user.collections as Collection[];
+      const collection = collections !== [] && collections.find(findCollection);
+      const todos = collection ? collection.todos : [];
+      const todo = todos !== [] && todos.find(findTodo);
 
-      if (collection === undefined) {
+      if (collection === undefined || collection === false) {
         return res.status(200).send({
           status: "Todo not found",
           todo: null,
         });
       }
-      if (todo === undefined) {
+      if (todo === undefined || todo === false) {
         return res.status(200).send({
           status: "Todo not found",
           todo: null,
