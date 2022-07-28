@@ -2,22 +2,9 @@
 import { connectToDatabase } from "../../lib/dbConnect";
 import { getToken } from "next-auth/jwt";
 import { NextApiRequest, NextApiResponse } from "next";
+import { Collection, Find, Todo } from "../../types";
 // import { getSession } from "next-auth/react";
-interface Collection {
-  groupname: string;
-  groupicon: string;
-  groupcolor: string;
-  groupid: string;
-  todos: Todo[];
-}
-interface Todo {
-  itemcontent: string;
-  itemtime: string;
-  checked: boolean;
-  subtodo: Array<object>;
-  itemid: string;
-}
-type Find<T> = (args: T) => boolean;
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
