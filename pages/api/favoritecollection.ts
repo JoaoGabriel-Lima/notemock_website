@@ -2,14 +2,28 @@
 
 import { connectToDatabase } from "../../lib/dbConnect";
 import { getToken } from "next-auth/jwt";
+import { NextApiRequest, NextApiResponse } from "next";
+import { Collection, Find } from "../../types";
 // import { getSession } from "next-auth/react";
-export default async function handler(req, res) {
+interface UserSession {
+  name: string;
+  email: string;
+  image: string;
+}
+type RequestBody = {
+  session: {
+    user: UserSession;
+  };
+  token: string;
+  favorite: boolean;
+  collectionid: string;
+};
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { db } = await connectToDatabase();
-  const session = req.body.session;
-  const token = req.body.token;
-  const favorite = req.body.favorite;
-  const collectionid = req.body.collectionid;
-
+  const { session, token, favorite, collectionid } = req.body as RequestBody;
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
 
   const secret = process.env.JWT_SECRET;
@@ -46,11 +60,10 @@ export default async function handler(req, res) {
       email: session.user.email,
     });
     if (user) {
-      // console.log(user);
-      function findCollection(collection) {
-        return collection.groupid === collectionid;
-      }
-      const collection = user.collections.findIndex(findCollection);
+      const findCollection: Find<Collection> = (collection) =>
+        collection.groupid === collectionid;
+      const collection: number = user.collections.findIndex(findCollection);
+      console.log(collection);
       await db.collection("users").updateOne(
         { email: session.user.email },
         {
