@@ -21,8 +21,7 @@ export default async function handler(
   const { db } = await connectToDatabase();
   const { session, token, todoid, collectionid, subtodoid }: RequestBodyDelete =
     req.body;
-  const rt = process.env.NEXT_PUBLIC_DBTOKEN;
-  console.log("passou aqui");
+  const rt = process.env.NEXT_PUBLIC_DBTOKEN as string;
   // const session = await getSession({ req });
   // console.log(`Session Info: ${session}`);
 
