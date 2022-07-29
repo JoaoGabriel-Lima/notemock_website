@@ -199,7 +199,7 @@ function ToDoCollectionItem(props: any) {
     await axios
       .post(`/api/deletetodo`, {
         collectionid: props.collectionid,
-        id: props.itemid,
+        todoid: props.itemid,
         session: session,
         token: process.env.NEXT_PUBLIC_DBTOKEN,
       })

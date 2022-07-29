@@ -2,6 +2,7 @@
 import { connectToDatabase } from "../../lib/dbConnect";
 import { getToken } from "next-auth/jwt";
 import { NextApiRequest, NextApiResponse } from "next";
+import { RequestBody } from "../../types";
 // import { getSession } from "next-auth/react";
 type Delay = (ms: number) => Promise<unknown>;
 export default async function handler(
@@ -9,9 +10,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { db } = await connectToDatabase();
-  const session = req.body.session;
-  const token = req.body.token;
-
+  const { session, token }: RequestBody = req.body;
   // console.log(token);
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
   const delay: Delay = (ms) => new Promise((res) => setTimeout(res, ms));
