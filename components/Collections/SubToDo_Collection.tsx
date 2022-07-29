@@ -75,7 +75,7 @@ function SubToDoItem(props: any) {
       .post(`/api/deletetodo`, {
         collectionid: props.collectionid,
         subtodoid: props.subtodoid,
-        id: props.itemid,
+        todoid: props.itemid,
         session: session,
         token: process.env.NEXT_PUBLIC_DBTOKEN,
       })

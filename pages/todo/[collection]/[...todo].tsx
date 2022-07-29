@@ -52,7 +52,7 @@ const EditTodo: NextPage = ({ content, tododata2 }: any) => {
     try {
       const data = await axios.post("/api/deletetodo", {
         session: session,
-        id: tododata2.todo.itemid,
+        todoid: tododata2.todo.itemid,
         collectionid: content.collection.groupid,
         token: process.env.NEXT_PUBLIC_DBTOKEN,
       });
