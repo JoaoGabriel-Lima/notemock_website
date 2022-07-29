@@ -2,18 +2,19 @@
 import { connectToDatabase } from "../../lib/dbConnect";
 import { getToken } from "next-auth/jwt";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Collection, Find, Todo } from "../../types";
+import { Collection, Find, RequestBody, Todo, TodoID } from "../../types";
 // import { getSession } from "next-auth/react";
-
+type RequestBodyTodoid = RequestBody & CollectionGroupId & TodoID;
+type CollectionGroupId = {
+  collectiongroupid: string;
+};
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { db } = await connectToDatabase();
-  const session = req.body.session;
-  const token = req.body.token;
-  const collectiongroupid = req.body.collectionid;
-  const todoid = req.body.todoid;
+  const { session, token, collectiongroupid, todoid }: RequestBodyTodoid =
+    req.body;
   // console.log(token);
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
   // const session = await getSession({ req });

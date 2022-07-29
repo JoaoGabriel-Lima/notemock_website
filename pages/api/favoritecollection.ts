@@ -3,27 +3,20 @@
 import { connectToDatabase } from "../../lib/dbConnect";
 import { getToken } from "next-auth/jwt";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Collection, Find } from "../../types";
+import { Collection, CollectionID, Find, RequestBody } from "../../types";
 // import { getSession } from "next-auth/react";
-interface UserSession {
-  name: string;
-  email: string;
-  image: string;
-}
-type RequestBody = {
-  session: {
-    user: UserSession;
-  };
-  token: string;
+
+type Favorite = {
   favorite: boolean;
-  collectionid: string;
 };
+type RequestBodyFavorite = RequestBody & Favorite & CollectionID;
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { db } = await connectToDatabase();
-  const { session, token, favorite, collectionid } = req.body as RequestBody;
+  const { session, token, favorite, collectionid }: RequestBodyFavorite =
+    req.body;
   const rt = process.env.NEXT_PUBLIC_DBTOKEN;
 
   const secret = process.env.JWT_SECRET;
@@ -63,7 +56,6 @@ export default async function handler(
       const findCollection: Find<Collection> = (collection) =>
         collection.groupid === collectionid;
       const collection: number = user.collections.findIndex(findCollection);
-      console.log(collection);
       await db.collection("users").updateOne(
         { email: session.user.email },
         {
