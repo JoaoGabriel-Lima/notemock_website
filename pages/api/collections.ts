@@ -1,17 +1,24 @@
 /* eslint-disable require-jsdoc */
 import { connectToDatabase } from "../../lib/dbConnect";
-import { getToken } from "next-auth/jwt";
+import { getToken, JWT } from "next-auth/jwt";
+import { NextApiRequest, NextApiResponse } from "next";
+import { Collection, CollectionID, Find, RequestBody } from "../../types";
 // import { getSession } from "next-auth/react";
-export default async function handler(req, res) {
+type RequestBodyCollections = RequestBody & CollectionID;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { db } = await connectToDatabase();
-  const session = req.body.session;
-  const token = req.body.token;
-  const collectiongroupid = req.body.collectionid;
-  // console.log(token);
-  const rt = process.env.NEXT_PUBLIC_DBTOKEN;
-  const secret = process.env.JWT_SECRET;
+  const {
+    session,
+    token,
+    collectionid: collectiongroupid,
+  }: RequestBodyCollections = req.body;
+  const rt = process.env.NEXT_PUBLIC_DBTOKEN as string;
+  const secret = process.env.JWT_SECRET as string;
 
-  const token2 = await getToken({ req, secret });
+  const token2 = (await getToken({ req, secret })) as JWT;
 
   if (token2 == null) {
     return res.status(200).send({
@@ -47,10 +54,9 @@ export default async function handler(req, res) {
     });
     if (user) {
       // console.log(user);
-      function findCollection(collection) {
-        return collection.groupid === collectiongroupid;
-      }
-      const collection = user.collections.find(findCollection);
+      const findCollection: Find<Collection> = (collection) =>
+        collection.groupid === collectiongroupid;
+      const collection: Collection = user.collections.find(findCollection);
       if (collection === undefined) {
         return res.status(200).send({
           status: "Collection not found",
