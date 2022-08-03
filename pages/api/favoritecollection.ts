@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 
 import { connectToDatabase } from "../../lib/dbConnect";
-import { getToken } from "next-auth/jwt";
+import { getToken, JWT } from "next-auth/jwt";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Collection, CollectionID, Find, RequestBody } from "../../types";
 // import { getSession } from "next-auth/react";
@@ -17,11 +17,11 @@ export default async function handler(
   const { db } = await connectToDatabase();
   const { session, token, favorite, collectionid }: RequestBodyFavorite =
     req.body;
-  const rt = process.env.NEXT_PUBLIC_DBTOKEN;
+  const rt = process.env.NEXT_PUBLIC_DBTOKEN as string;
 
-  const secret = process.env.JWT_SECRET;
+  const secret = process.env.JWT_SECRET as string;
 
-  const token2 = await getToken({ req, secret });
+  const token2 = (await getToken({ req, secret })) as JWT;
 
   if (token2 == null) {
     return res.status(200).send({
