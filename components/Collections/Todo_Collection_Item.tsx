@@ -229,7 +229,7 @@ function ToDoCollectionItem(props: any) {
   function handleClick(id: any) {
     setIsOpen(!isOpen);
     axios.post("/api/check", {
-      id: id,
+      todoid: id,
       checked: !isOpen,
       session: session,
       token: process.env.NEXT_PUBLIC_DBTOKEN,
