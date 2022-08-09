@@ -363,7 +363,7 @@ export async function getServerSideProps(context: any) {
     {
       session: session,
       token: process.env.NEXT_PUBLIC_DBTOKEN,
-      collectionid: collection2,
+      collectiongroupid: collection2,
       todoid: todo2,
     },
     {

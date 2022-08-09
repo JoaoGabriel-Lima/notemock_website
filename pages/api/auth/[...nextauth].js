@@ -33,18 +33,4 @@ export default NextAuth({
   },
   secret: process.env.JWT_SECRET,
   useSecureCookies: process.env.NODE_ENV === "production",
-  //   callbacks: {
-  //     async jwt(token, account) {
-  //       if (account?.accessToken) {
-  //         token.accessToken = account.accessToken;
-  //       }
-  //       return token;
-  //     },
-  //     redirect: async (url, _baseUrl) => {
-  //       if (url === "/profile") {
-  //         return Promise.resolve("/");
-  //       }
-  //       return Promise.resolve("/");
-  //     },
-  //   },
 });
