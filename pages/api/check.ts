@@ -1,23 +1,46 @@
 /* eslint-disable require-jsdoc */
 import { connectToDatabase } from "../../lib/dbConnect";
-import { getToken } from "next-auth/jwt";
+import { getToken, JWT } from "next-auth/jwt";
+import {
+  Collection,
+  CollectionID,
+  Todo,
+  Subtodo,
+  Find,
+  RequestBody,
+  SubtodoID,
+  TodoID,
+} from "../../types";
+import { NextApiRequest, NextApiResponse } from "next";
 // import { getSession } from "next-auth/react";
-export default async function handler(req, res) {
+type Checked = {
+  checked: boolean;
+};
+type RequestBodyCheck = RequestBody &
+  CollectionID &
+  TodoID &
+  SubtodoID &
+  Checked;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { db } = await connectToDatabase();
-  const session = req.body.session;
-  const todoid = req.body.id;
-  const checked = req.body.checked;
-  const collectionid = req.body.collectionid;
-  const rt = process.env.NEXT_PUBLIC_DBTOKEN;
-  const token = req.body.token;
-  const subtodoid = req.body.subtodoid;
+  const {
+    token,
+    session,
+    collectionid,
+    todoid,
+    subtodoid,
+    checked,
+  }: RequestBodyCheck = req.body;
+  req.body.id;
+  const rt = process.env.NEXT_PUBLIC_DBTOKEN as string;
+  const secret = process.env.JWT_SECRET as string;
+  const token2 = (await getToken({ req, secret })) as JWT;
 
   // const session = await getSession({ req });
   // console.log(`Session Info: ${session}`);
-
-  const secret = process.env.JWT_SECRET;
-
-  const token2 = await getToken({ req, secret });
 
   if (token2 == null) {
     return res.status(200).send({
@@ -25,12 +48,12 @@ export default async function handler(req, res) {
       user: null,
     });
   }
-    if (token2.email != session.user.email) {
-      return res.status(200).send({
-        status: "Unauthorized",
-        user: null,
-      });
-    }
+  if (token2.email != session.user.email) {
+    return res.status(200).send({
+      status: "Unauthorized",
+      user: null,
+    });
+  }
   if (token != rt) {
     return res.status(200).send({
       status: "Unauthorized",
@@ -50,14 +73,12 @@ export default async function handler(req, res) {
       .collection("users")
       .findOne({ email: session.user.email });
     if (user) {
-      function findCollection(collection) {
-        return collection.groupid === collectionid;
-      }
-      const collection = user.collections.findIndex(findCollection);
-
-      const findItem = user.collections[collection].todos.findIndex(
-        (todos) => todos.itemid === todoid
-      );
+      const findCollection: Find<Collection> = (collection) =>
+        collection.groupid === collectionid;
+      const findTodo: Find<Todo> = (todos) => todos.itemid === todoid;
+      const collection: number = user.collections.findIndex(findCollection);
+      const findItem: number =
+        user.collections[collection].todos.findIndex(findTodo);
       if (findItem <= -1) {
         console.log("Item not found");
         return res.status(200).send({
@@ -66,9 +87,12 @@ export default async function handler(req, res) {
         });
       }
       if (subtodoid != null || subtodoid != undefined) {
-        const findSubItem = user.collections[collection].todos[
-          findItem
-        ].subtodo.findIndex((subtodo) => subtodo.subtodoid === subtodoid);
+        const findSubTodo: Find<Subtodo> = (subtodo) =>
+          subtodo.subtodoid === subtodoid;
+        const findSubItem: number =
+          user.collections[collection].todos[findItem].subtodo.findIndex(
+            findSubTodo
+          );
         if (findSubItem <= -1) {
           console.log("Subtodo not found");
           return res.status(200).send({

@@ -92,7 +92,7 @@ function SubToDoItem(props: any) {
     setIsOpenS(!isOpenS);
     props.setsubTodoCheckedDetails(!isOpenS);
     axios.post("/api/check", {
-      id: id,
+      todoid: id,
       subtodoid: subtodoid,
       checked: !isOpenS,
       session: session,
