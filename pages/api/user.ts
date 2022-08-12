@@ -2,9 +2,8 @@
 import { connectToDatabase } from "../../lib/dbConnect";
 import { getToken, JWT } from "next-auth/jwt";
 import { NextApiRequest, NextApiResponse } from "next";
-import { RequestBody } from "../../types";
+import { Delay, RequestBody } from "../../types";
 // import { getSession } from "next-auth/react";
-type Delay = (ms: number) => Promise<unknown>;
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
