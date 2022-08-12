@@ -1,24 +1,43 @@
 /* eslint-disable require-jsdoc */
 import axios from "axios";
 import { connectToDatabase } from "../../lib/dbConnect";
-import { getToken } from "next-auth/jwt";
+import { getToken, JWT } from "next-auth/jwt";
+import { NextApiRequest, NextApiResponse } from "next";
+import {
+  Collection,
+  CollectionID,
+  Delay,
+  Find,
+  RequestBody,
+} from "../../types";
 // import { getSession } from "next-auth/react";
-export default async function handler(req, res) {
+type ItemContent = {
+  itemcontent: string;
+};
+type ItemTime = {
+  itemtime: string;
+};
+type RandomNumberFuction = (min: number, max: number) => string;
+type RequestBodyAddTodo = RequestBody & CollectionID & ItemContent & ItemTime;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { db } = await connectToDatabase();
-  const session = req.body.session;
-  const token = req.body.token;
-  const collectiongroupid = req.body.collectionid;
+  const {
+    session,
+    token,
+    collectionid: collectiongroupid,
+    itemcontent,
+    itemtime,
+  }: RequestBodyAddTodo = req.body;
+  console.log(req.body);
+  const delay: Delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  const rt = process.env.NEXT_PUBLIC_DBTOKEN as string;
+  const publicurl = process.env.NEXT_PUBLIC_URL as string;
+  const secret = process.env.JWT_SECRET as string;
 
-  const itemcontent = req.body.itemcontent;
-  const itemtime = req.body.itemtime;
-
-  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-  // console.log(token);
-  const rt = process.env.NEXT_PUBLIC_DBTOKEN;
-  const publicurl = process.env.NEXT_PUBLIC_URL;
-  const secret = process.env.JWT_SECRET;
-
-  const token2 = await getToken({ req, secret });
+  const token2 = (await getToken({ req, secret })) as JWT;
 
   if (token2 == null) {
     return res.status(200).send({
@@ -32,11 +51,8 @@ export default async function handler(req, res) {
       user: null,
     });
   }
-  // const session = await getSession({ req });
-  // console.log(`Session Info: ${session}`);
-  function getRandomNumberBetween(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min).toString();
-  }
+  const getRandomNumberBetween: RandomNumberFuction = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1) + min).toString();
 
   if (token != rt) {
     return res.status(200).send({
@@ -51,8 +67,7 @@ export default async function handler(req, res) {
     });
   }
 
-  async function checkitemid(itemid2) {
-    // console.log(itemid2);
+  async function checkitemid(itemid2: string) {
     await axios
       .post(
         `${publicurl}/api/todoid`,
@@ -64,7 +79,7 @@ export default async function handler(req, res) {
         },
         {
           headers: {
-            Cookie: req.headers.cookie,
+            Cookie: req.headers.cookie as string,
           },
         }
       )
@@ -87,9 +102,8 @@ export default async function handler(req, res) {
     });
     if (user) {
       // console.log(user);
-      function findCollection(collection) {
-        return collection.groupid === collectiongroupid;
-      }
+      const findCollection: Find<Collection> = (collection) =>
+        collection.groupid === collectiongroupid;
       const collection = user.collections.findIndex(findCollection);
       if (collection === undefined) {
         return res.status(200).send({
